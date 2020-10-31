@@ -1,0 +1,217 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.Hellman.CAF">
+
+    <TextView
+        android:id="@+id/btn_alta"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/menu_orange"
+        android:gravity="center"
+        android:text="Alta Activo Fijo"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btn_baja"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/btn_baja"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/rojo_etiflex"
+        android:gravity="center"
+        android:text="Baja Activo Fijo"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_alta"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PanelAlta"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp">
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:src="@drawable/hellman_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+
+                    <Button
+                        android:id="@+id/btn_tomar_foto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blue_selected"
+                        android:padding="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Tomar foto"
+                        android:textColor="@color/white"
+                        android:drawableLeft="@drawable/camara_blanca"
+                        android:drawablePadding="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/image" />
+
+                    <EditText
+                        android:id="@+id/et_epc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textColor="@color/black"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="EPC"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_tomar_foto" />
+
+                    <EditText
+                        android:id="@+id/et_nombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textColor="@color/black"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="Nombre"
+                        app:layout_constraintTop_toBottomOf="@+id/et_epc" />
+                    <EditText
+                        android:id="@+id/et_descripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textColor="@color/black"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="Descripción"
+                        app:layout_constraintTop_toBottomOf="@+id/et_nombre" />
+                    <EditText
+                        android:id="@+id/et_almacen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textColor="@color/black"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="Almacen"
+                        app:layout_constraintTop_toBottomOf="@+id/et_descripcion" />
+                    <EditText
+                        android:id="@+id/et_categoria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textColor="@color/black"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="Categoría"
+                        app:layout_constraintTop_toBottomOf="@+id/et_almacen" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Ingrese su firma a continuación"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/et_categoria" />
+
+                    <com.github.gcacace.signaturepad.views.SignaturePad
+                        android:id="@+id/signature_pad_alta"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        app:layout_constraintTop_toBottomOf="@+id/textView6"
+                        android:background="@color/gray_light"/>
+
+                    <Button
+                        android:id="@+id/btn_terminar_alta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blue_selected"
+                        android:padding="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Generar Activo"
+                        android:textColor="@color/white"
+                        android:drawableLeft="@drawable/done_blanco"
+                        android:drawablePadding="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/signature_pad_alta" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PanelBaja"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Ingrese el EPC del producto que\ndesea dar de baja"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"/>
+                <EditText
+                    android:id="@+id/et_epc_baja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:hint="000000000000"
+                    android:gravity="center_horizontal"/>
+                <Button
+                    android:id="@+id/btn_buscar_articulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blue_selected"
+                    android:padding="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Buscar"
+                    android:textColor="@color/white"
+                    android:drawableLeft="@drawable/buscar_blanco"
+                    android:drawablePadding="10dp"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

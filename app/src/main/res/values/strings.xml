@@ -7,7 +7,7 @@
     <drawable name="list_normal">#00000000</drawable>
     <drawable name="list_pressed">#FF333333</drawable>
 
-    <string name="app_name">Etiflex RFID</string>
+    <string name="app_name">Demo Birmex</string>
     <string name="menu_settings">Settings</string>
 
     <!-- new data -->
@@ -403,5 +403,7 @@
     <string name="membank">Membank:</string>
     <string name="clear_target_mask">清理标签标示设置</string>
     <string name="setting_mask_tag">设置标签Mask</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

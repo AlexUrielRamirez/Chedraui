@@ -2,6 +2,8 @@
 <resources>
     <color name="transparent_background_button">#11000000</color>
     <color name="transparent_background">#ffffffff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="light_blue">#0bbbf7</color>
 
     <color name="rojo_etiflex">#c12622</color>
@@ -9,5 +11,8 @@
     <color name="menu_purple">#b6378e</color>
 
     <color name="gray_light">#c2c2c2</color>
+    <color name="gray_extra_light">#D2D2D2</color>
+    <color name="blue_selected">#1157A2</color>
+    <color name="green_2">#4BD05E</color>
 
 </resources>

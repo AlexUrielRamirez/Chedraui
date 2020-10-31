@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.com.tools.Beeper;
-import com.com.tools.ExcelUtils;
 import com.nativec.tools.ModuleManager;
 import com.reader.base.ERROR;
 import com.reader.base.ReaderBase;
@@ -103,7 +102,7 @@ public class MainActivity extends BaseActivity {
         activity = this;
 
         // Storage Permissions
-        ExcelUtils.verifyStoragePermissions(this);
+        //ExcelUtils.verifyStoragePermissions(this);
 
         mRefreshButton = (TextView) findViewById(R.id.refresh);
 

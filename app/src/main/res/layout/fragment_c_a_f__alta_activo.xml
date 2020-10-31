@@ -1,0 +1,449 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.Hellman.CAFv2.CAF_AltaActivo">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:background="@color/blue_selected">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/back_blanco"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:text="Alta Activo Fijo"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp"/>
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Número de activo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+
+                <EditText
+                    android:id="@+id/et_numero_activo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Número de activo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/txt_encontrar_activo_numero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Buscar activo existente"
+                    android:drawableLeft="@drawable/search_gray"
+                    android:drawablePadding="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/et_numero_activo"
+                    app:layout_constraintTop_toBottomOf="@+id/et_numero_activo" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de activo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+
+                <EditText
+                    android:id="@+id/et_nombre_activo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombre de activo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/txt_encontrar_activo_nombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Buscar activo existente"
+                    android:drawableLeft="@drawable/search_gray"
+                    android:drawablePadding="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/et_nombre_activo"
+                    app:layout_constraintTop_toBottomOf="@+id/et_nombre_activo" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fotos de activo"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_photo_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/card_photo_2">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/empty_photo"
+                            android:scaleType="centerCrop"/>
+
+                        <TextView
+                            android:id="@+id/btn_add_photo_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/blue_selected"
+                            android:drawableLeft="@drawable/add_blanco"
+                            android:gravity="center_horizontal"
+                            android:padding="10dp"
+                            android:text="Añadir imagen"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_photo_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/card_photo_1">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/empty_photo"
+                            android:scaleType="centerCrop"/>
+
+                        <TextView
+                            android:id="@+id/btn_add_photo_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/blue_selected"
+                            android:drawableLeft="@drawable/add_blanco"
+                            android:gravity="center_horizontal"
+                            android:padding="10dp"
+                            android:text="Añadir imagen"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ubicación de activo"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/spinner_Cedis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CEDIS"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:padding="6dp"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/fake_gray_button"
+                    android:textSize="18sp"
+                    android:drawableRight="@drawable/drop_arrow_black"/>
+
+                <TextView
+                    android:id="@+id/spinner_Departamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Departamento"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:padding="6dp"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/fake_gray_button"
+                    android:textSize="18sp"
+                    android:drawableRight="@drawable/drop_arrow_black"/>
+
+                <TextView
+                    android:id="@+id/spinner_Oficina"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Oficina (Opcional)"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:padding="6dp"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/fake_gray_button"
+                    android:textSize="18sp"
+                    android:drawableRight="@drawable/drop_arrow_black"/>
+
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Persona asignada"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+
+                <EditText
+                    android:id="@+id/et_persona_asignada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Persona asignada"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12"
+                    android:textSize="18sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cantidad de activos"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+                <TextView
+                    android:id="@+id/txt_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cantidad: "
+                    android:padding="4dp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView13"
+                    android:textSize="18sp"/>
+                <EditText
+                    android:id="@+id/et_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    app:layout_constraintStart_toEndOf="@id/txt_cantidad"
+                    app:layout_constraintTop_toTopOf="@id/txt_cantidad"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_cantidad"
+                    android:background="@drawable/fake_card_white"
+                    android:textSize="18sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de etiqueta"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+
+                <EditText
+                    android:id="@+id/et_tipo_etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tipo etiqueta"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15"
+                    android:textSize="18sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción del activo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="4dp" />
+
+                <EditText
+                    android:id="@+id/et_descripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="150dp"
+                    android:gravity="top|left"
+                    android:hint="Descripción"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView16"
+                    android:textSize="18sp"
+                    android:background="@drawable/fake_card_white"
+                    android:padding="8dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/btn_continuar_alta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Continuar"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:gravity="center_horizontal"
+                android:background="@drawable/fake_blue_selected_button"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Panel_buscador"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/et_buscador_activo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/fake_card_white"
+            android:drawableLeft="@drawable/buscar_gris"
+            android:drawablePadding="8dp"
+            android:hint="Buscar"
+            android:maxLines="1"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toStartOf="@+id/btn_camara_buscador_numero"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_camara_buscador_numero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_selected"
+            android:src="@drawable/camara_blanca"
+            app:layout_constraintBottom_toBottomOf="@+id/et_buscador_activo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/et_buscador_activo"
+            android:layout_marginEnd="10dp"
+            android:padding="8dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_buscador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/et_buscador_activo"
+            android:layout_marginTop="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/camera_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone"/>
+</FrameLayout>

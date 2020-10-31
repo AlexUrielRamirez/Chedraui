@@ -1,16 +1,28 @@
 package com.Etiflex.Splash;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 
+import androidx.core.content.ContextCompat;
+
 public class Methods {
+
+    public void CambiarColorStatusBar(Activity activity, int color){
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(activity, color));
+    }
 
     public void PlayBeep_Short(){
         new ToneGenerator(AudioManager.STREAM_MUSIC, 100).startTone(ToneGenerator.TONE_CDMA_PIP,100);

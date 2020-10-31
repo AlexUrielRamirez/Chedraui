@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="@color/blue_selected">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/inicio_main_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Seleccionie el archivo contenedor"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btn_add_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_add_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_selected"
+            android:drawableLeft="@drawable/add_file_drawable"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="8.5dp"
+            android:text="Añadir archivo texto"
+            android:textColor="@color/white"
+            android:textSize="17.5sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_add_file_xls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#257245"
+            android:drawableLeft="@drawable/excel_icon_drawable"
+            android:drawablePadding="10dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="8dp"
+            android:text="Añadir archivo Excel"
+            android:textColor="@color/white"
+            android:textSize="17.5sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_add_file" />
+
+        <TextView
+            android:id="@+id/btn_restaurar_lecturas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restaurar lecturas"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:textColor="@color/blue_selected"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="10dp"
+            android:padding="10dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingTop="15dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/hellman_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_inventario"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:background="@drawable/fake_card_white"
+            android:drawableTop="@drawable/inventario_black"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="15dp"
+            android:text="Inventario"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/btn_alta"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo" />
+
+        <Button
+            android:id="@+id/btn_alta"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:background="@drawable/fake_card_white"
+            android:drawableTop="@drawable/alta_activo"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="15dp"
+            android:text="Alta Activo"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/btn_inventario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo"  />
+        <Button
+            android:id="@+id/btn_espera"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:background="@drawable/fake_card_white"
+            android:drawableTop="@drawable/admin_black"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="15dp"
+            android:text="Administración"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/btn_alta"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_inventario"
+            android:layout_marginTop="50dp"/>
+
+        <Button
+            android:id="@+id/btn_ajustes"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:background="@drawable/fake_card_white"
+            android:drawableTop="@drawable/ic_baseline_settings_24"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="15dp"
+            android:text="Ajustes"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/btn_inventario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_alta"
+            android:layout_marginTop="50dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/MainFragmentHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

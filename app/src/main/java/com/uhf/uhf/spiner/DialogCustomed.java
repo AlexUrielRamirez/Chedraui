@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.com.tools.ExcelUtils;
 import com.reader.helper.InventoryBuffer;
 import com.reader.helper.OperateTagBuffer;
 import com.uhf.uhf.MainActivity;
@@ -144,9 +143,9 @@ public class DialogCustomed {
                     @Override
                     public void run() {
                         if (MainActivity.mSaveType == 0) {
-                            ExcelUtils.writeTagToExcel(file,mTags);
+                            //ExcelUtils.writeTagToExcel(file,mTags);
                         } else {
-                            ExcelUtils.writeOperateTagToExcel(file,mOperationTags);
+                            //ExcelUtils.writeOperateTagToExcel(file,mOperationTags);
                         }
                        MediaScannerConnection.scanFile(mContext,
                                 new String[] {file}, null, null);

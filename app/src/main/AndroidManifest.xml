@@ -16,13 +16,31 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <provider
+            android:name="com.Hellman.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <activity android:name="com.Hellman.ControlActivoFijo"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.Hellman.Hellman"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <service
             android:name="com.Etiflex.Splash.Inventario.RXService"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <activity android:name="com.Etiflex.Splash.Inventario.Inventario"
+        <activity
+            android:name="com.Etiflex.Splash.Inventario.Inventario"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            tools:ignore="InnerclassSeparator"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name="com.Etiflex.Splash.ROC.ReciboOrdenCompra"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
