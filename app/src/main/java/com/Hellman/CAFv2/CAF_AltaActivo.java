@@ -123,12 +123,8 @@ public class CAF_AltaActivo extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv_buscador.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        btn_encontrar_activo_numero.setOnClickListener(v->{
-            PanelBuscador.setVisibility(View.VISIBLE);
-        });
-        btn_camara_por_numero.setOnClickListener(v->{
-            HandleQRCodeReader(et_numero_activo, et_nombre_activo);
-        });
+        btn_encontrar_activo_numero.setOnClickListener(v-> PanelBuscador.setVisibility(View.VISIBLE));
+        btn_camara_por_numero.setOnClickListener(v-> HandleQRCodeReader(et_numero_activo, et_nombre_activo));
         et_buscador_activo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -284,6 +280,10 @@ public class CAF_AltaActivo extends Fragment {
         @Override
         public void onBindViewHolder(search_adapter.ViewHolder holder, int position) {
 
+            holder.item.setOnClickListener(v->{
+                setUpResult(child_list.get(position));
+            });
+
             Glide.with(child_context).load("https://rfidmx.com/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
 
             holder.nombre.setText(child_list.get(position).getNombre());
@@ -303,10 +303,12 @@ public class CAF_AltaActivo extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            ConstraintLayout item;
             ImageView img_activo;
             TextView numero, nombre, descripcion;
             public ViewHolder(View itemView) {
                 super(itemView);
+                item = itemView.findViewById(R.id.item);
                 img_activo = itemView.findViewById(R.id.img_activo);
                 numero = itemView.findViewById(R.id.numero_activo);
                 nombre = itemView.findViewById(R.id.nombre_activo);

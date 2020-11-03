@@ -58,6 +58,8 @@ import retrofit.mime.TypedFile;
 
 import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_AJUSTES;
 import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_ALTA;
+import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_INVENTARIO;
+
 public class Hellman extends AppCompatActivity {
 
     private DrawerLayout MotionLayout;
@@ -96,7 +98,7 @@ public class Hellman extends AppCompatActivity {
 
     //CAFv2
     private RelativeLayout MainFragmentHolder;
-    private Button btn_alta, btn_ajustes;
+    private Button btn_inventario, btn_alta, btn_ajustes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,7 @@ public class Hellman extends AppCompatActivity {
                     Log.e("EPCS", EPC);
                 }
                 try {
-                    if(getSupportFragmentManager().findFragmentByTag("Lecturas").isVisible()){
+                    if(getSupportFragmentManager().findFragmentByTag(FRAGMENT_INVENTARIO).isVisible()){
                         switch (GlobalPreferences.PAGE_STATE){
                             case GlobalPreferences.PAGE_STATE_INVENTORY:
                                 if(CAF_Inventario.tag_list.contains(EPC)){
@@ -155,6 +157,14 @@ public class Hellman extends AppCompatActivity {
                 }
             }
         };
+
+        btn_inventario.setOnClickListener(v->{
+            getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), new CAF_Inventario(), FRAGMENT_INVENTARIO).commit();
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
+            MainFragmentHolder.setAnimation(animation);
+            animation.start();
+            MainFragmentHolder.setVisibility(View.VISIBLE);
+        });
 
         btn_alta.setOnClickListener(v->{
             getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_AltaActivo.newInstance("", ""), FRAGMENT_ALTA).commit();
@@ -279,6 +289,7 @@ public class Hellman extends AppCompatActivity {
 
         btn_alta = findViewById(R.id.btn_alta);
         btn_ajustes = findViewById(R.id.btn_ajustes);
+        btn_inventario = findViewById(R.id.btn_inventario);
 
     }
 

@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.kript.rfidmx"
+        applicationId "com.kript.hellmacaf"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
@@ -46,9 +46,7 @@ dependencies {
 
     //implementation 'org.apache.poi:poi-ooxml:3.15'
     implementation 'com.fasterxml:aalto-xml:1.0.0'
-    implementation ('org.apache.poi:poi-ooxml:3.15') {
-        exclude group: 'stax', module: 'stax-api'
-    }
+    //implementation ('org.apache.poi:poi-ooxml:3.15') {exclude group: 'stax', module: 'stax-api'}
 
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.android.volley:volley:1.1.1'

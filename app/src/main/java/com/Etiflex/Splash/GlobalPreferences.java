@@ -38,5 +38,6 @@ public class GlobalPreferences {
 
     public static final String FRAGMENT_ALTA = "CAF_FragmentAlta";
     public static final String FRAGMENT_AJUSTES = "CAF_Ajustes";
+    public static final String FRAGMENT_INVENTARIO = "CAF_Inventario";
 
 }

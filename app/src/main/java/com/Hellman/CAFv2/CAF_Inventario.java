@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,13 +59,19 @@ public class CAF_Inventario extends Fragment {
 
     private View view = null;
     public static ProgressBar mProgress;
-    private Model model;
-    public static ArrayList<Model> main_list;
+    private ModelInventario model;
+    public static ArrayList<ModelInventario> main_list;
     public static ArrayList<String> tag_list;
     public static TextView txt_contador;
     public static RecyclerView rv_content;
     public static rv_adapter adapter;
     public static int conter = 0;
+
+    //Ubicación
+    private TextView Spinner_Departamento, Spinner_Oficina;
+    private PopupMenu menu_area, menu_oficinas;
+    private ArrayList<ModelUbicaciones> main_list_areas, main_list_oficinas;
+    private String IdArea = "0", IdOficina = "0";
 
     //Detalle
     public static ConstraintLayout PanelDetalle;
@@ -108,11 +116,105 @@ public class CAF_Inventario extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_lecturas, container, false);
         initViews(view);
-        DescargarInformacion(getContext());
+        getAreas();
         return view;
     }
 
+    private void getAreas() {
+        main_list_areas = new ArrayList<>();
+        menu_area = new PopupMenu(getContext(), Spinner_Departamento);
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis=1", null, response -> {
+            JSONArray json = response.optJSONArray("Data");
+
+            try {
+                for (int i = 0; i < json.length(); i++) {
+                    ModelUbicaciones model = new ModelUbicaciones();
+                    JSONObject jsonObject = null;
+                    jsonObject = json.getJSONObject(i);
+                    model.setId(jsonObject.optString("Id"));
+                    model.setNombre(jsonObject.optString("Nombre"));
+
+                    menu_area.getMenu().add(model.getNombre());
+                    main_list_areas.add(model);
+
+                }
+
+                menu_area.setOnMenuItemClickListener(item -> {
+                    Spinner_Departamento.setText(item.getTitle());
+                    Spinner_Oficina.setText("Oficina");
+                    for(int i = 0; i<main_list_areas.size(); i++){
+                        if(main_list_areas.get(i).getNombre().equals(item.getTitle())){
+                            IdOficina = "0";
+                            IdArea = main_list_areas.get(i).getId();
+                            getOficinas();
+                        }
+                    }
+                    return false;
+                });
+
+            } catch (JSONException | NullPointerException e) {
+                Log.e("Validacion", "JSON | Null Exception" + e);
+            }
+
+        }, error -> {
+            Log.e("Validacion", "Volley error" + error);
+        }));
+    }
+
+    private void getOficinas() {
+        main_list_oficinas = new ArrayList<>();
+        menu_oficinas = new PopupMenu(getContext(), Spinner_Oficina);
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+            JSONArray json = response.optJSONArray("Data");
+
+            try {
+                for (int i = 0; i < json.length(); i++) {
+                    ModelUbicaciones model = new ModelUbicaciones();
+                    JSONObject jsonObject = null;
+                    jsonObject = json.getJSONObject(i);
+                    model.setId(jsonObject.optString("Id"));
+                    model.setNombre(jsonObject.optString("Nombre"));
+
+                    menu_oficinas.getMenu().add(model.getNombre());
+                    main_list_oficinas.add(model);
+
+                }
+
+                menu_oficinas.setOnMenuItemClickListener(item -> {
+                    Spinner_Oficina.setText(item.getTitle());
+                    for(int i = 0; i<main_list_oficinas.size(); i++){
+                        if(main_list_oficinas.get(i).getNombre().equals(item.getTitle())){
+                            IdOficina = main_list_oficinas.get(i).getId();
+                        }
+                    }
+                    return false;
+                });
+
+            } catch (JSONException | NullPointerException e) {
+                Log.e("Validacion", "JSON | Null Exception" + e);
+            }
+
+        }, error -> {
+            Log.e("Validacion", "Volley error" + error);
+        }));
+    }
+
     private void initViews(View view) {
+        Spinner_Departamento = view.findViewById(R.id.spinner_Departamento);
+        Spinner_Oficina = view.findViewById(R.id.spinner_Oficina);
+        Spinner_Departamento.setOnClickListener(v->{
+            menu_area.show();
+        });
+        Spinner_Oficina.setOnClickListener(v->{
+            if(IdArea.equals("0"))
+                Toast.makeText(getContext(), "Primero seleccione un departamento", Toast.LENGTH_SHORT).show();
+            else
+                menu_oficinas.show();
+        });
+        view.findViewById(R.id.btn_continuar).setOnClickListener(v->{
+            view.findViewById(R.id.Panel_ubicacion).setVisibility(View.GONE);
+            DescargarInformacion(getContext());
+        });
         mProgress = view.findViewById(R.id.ProgressCount);
         txt_contador = view.findViewById(R.id.txt_contador);
         rv_content = view.findViewById(R.id.rv_content);
@@ -133,24 +235,22 @@ public class CAF_Inventario extends Fragment {
 
     private void DescargarInformacion(Context ctx) {
 
-        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/demo/android/get_data.php", null, response -> {
+        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list = new ArrayList<>();
             tag_list = new ArrayList<>();
 
             try {
                 for (int i = 0; i < json.length(); i++) {
-                    model = new Model();
+                    model = new ModelInventario();
                     JSONObject jsonObject = null;
                     jsonObject = json.getJSONObject(i);
-                    model.setId(jsonObject.optString("id"));
-                    model.setEPC(jsonObject.optString("epc"));
-                    model.setNombre(jsonObject.optString("field_1"));
-                    model.setDescripcion(jsonObject.optString("field_2"));
-                    model.setFoto(jsonObject.optString("field_3"));
-                    model.setIsla(jsonObject.optString("field_4"));
-                    model.setCategoria(jsonObject.optString("field_5"));
-                    model.setStatus(Integer.parseInt(jsonObject.optString("status")));
+                    model.setId(jsonObject.optString("Id"));
+                    model.setEPC(jsonObject.optString("EPC"));
+                    model.setNumero(jsonObject.optString("Numero"));
+                    model.setNombre(jsonObject.optString("Nombre"));
+                    model.setDescripcion(jsonObject.optString("Descripcion"));
+                    model.setStatus(Integer.parseInt(jsonObject.optString("Status")));
 
                     main_list.add(model);
                     tag_list.add(model.getEPC().replaceAll(" ", ""));
@@ -235,7 +335,7 @@ public class CAF_Inventario extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load("https://rfidmx.com/demo/assets/Products/"+main_list.get(position).getFoto()+".jpg").override(240).into(holder.img);
+            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).override(240).into(holder.img);
             holder.item_holder.setOnClickListener(v->{
 
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_DETAILS;
@@ -334,8 +434,8 @@ public class CAF_Inventario extends Fragment {
             });
             holder.nombre.setText(main_list.get(position).getNombre());
             holder.descripcion.setText(main_list.get(position).getDescripcion());
-            holder.almacen.setText("Almacen: "+main_list.get(position).getIsla());
-            holder.categoria.setText("Categoría: "+main_list.get(position).getCategoria());
+            holder.almacen.setText(main_list.get(position).getDescripcion());
+            holder.categoria.setText("Número: "+main_list.get(position).getNumero());
 
             if(main_list.get(position).getStatus() == 1){
                 holder.status.setText("ENCONTRADO");
@@ -346,12 +446,12 @@ public class CAF_Inventario extends Fragment {
             }
         }
 
-        private void setUpDetailData(Model model) {
-            Glide.with(context).load("https://rfidmx.com/demo/assets/Products/"+model.getFoto()+".jpg").override(360).into(ImgDetalle);
+        private void setUpDetailData(ModelInventario model) {
+            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
             NombreDetalle.setText("Nombre: "+model.getNombre());
             DescripcionDetalle.setText("Descripción: "+model.getDescripcion());
-            AlmacenDetalle.setText("Isal: "+model.getIsla());
-            CategoriaDetalle.setText("Categoría: "+model.getCategoria());
+            AlmacenDetalle.setText("Isal: "+model.getDescripcion());
+            CategoriaDetalle.setText("Número de activo: "+model.getNumero());
         }
 
 
@@ -382,14 +482,12 @@ public class CAF_Inventario extends Fragment {
         }
     }
 
-    public class Model{
+    public class ModelInventario{
         private String Id;
         private String EPC;
+        private String Numero;
         private String Nombre;
         private String Descripcion;
-        private String Foto;
-        private String Isla;
-        private String Categoria;
         private int Status;
 
         public String getId() {
@@ -408,6 +506,14 @@ public class CAF_Inventario extends Fragment {
             this.EPC = EPC;
         }
 
+        public String getNumero() {
+            return Numero;
+        }
+
+        public void setNumero(String numero) {
+            Numero = numero;
+        }
+
         public String getNombre() {
             return Nombre;
         }
@@ -424,36 +530,33 @@ public class CAF_Inventario extends Fragment {
             Descripcion = descripcion;
         }
 
-        public String getFoto() {
-            return Foto;
-        }
-
-        public void setFoto(String foto) {
-            Foto = foto;
-        }
-
-        public String getIsla() {
-            return Isla;
-        }
-
-        public void setIsla(String isla) {
-            Isla = isla;
-        }
-
-        public String getCategoria() {
-            return Categoria;
-        }
-
-        public void setCategoria(String categoria) {
-            Categoria = categoria;
-        }
-
         public int getStatus() {
             return Status;
         }
 
         public void setStatus(int status) {
             Status = status;
+        }
+    }
+
+    public class ModelUbicaciones{
+        private String Id;
+        private String Nombre;
+
+        public String getId() {
+            return Id;
+        }
+
+        public void setId(String id) {
+            Id = id;
+        }
+
+        public String getNombre() {
+            return Nombre;
+        }
+
+        public void setNombre(String nombre) {
+            Nombre = nombre;
         }
     }
 
