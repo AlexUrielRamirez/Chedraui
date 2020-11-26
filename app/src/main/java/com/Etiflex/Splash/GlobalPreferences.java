@@ -9,6 +9,16 @@ import java.util.ArrayList;
 public class GlobalPreferences {
     public static String DEVICE;
     public static String URL = "https://rfidmx.com/HellmanCAF/webservices/";
+    public static String SERVER_PRINTER_IP;
+
+    public static String ID_USUARIO;
+    public static String ID_CEDIS;
+    public static String NOMBRE_CEDIS;
+
+    public static final int PICK_IMAGE_FROM_CAMERA = 1;
+    public static final int PICK_IMAGE_FROM_GALLERY = 2;
+
+    public static final int CODE_BAR_READER = 350;
 
     public static ArrayList<String> tag_list;
     public static ArrayList<ModelInventory> main_list;
@@ -22,10 +32,19 @@ public class GlobalPreferences {
 
     public static int PAGE_STATE = 0;
     public static final int PAGE_STATE_IDLE = 0;
-    public static final int PAGE_STATE_INVENTORY = 1;
-    public static final int PAGE_STATE_SEARCHING = 2;
-    public static final int PAGE_STATE_DETAILS = 3;
-    public static final int PAGE_STATE_PROCESING = 4;
+    public static final int PAGE_STATE_SETTING_UBICATION = 1;
+    public static final int PAGE_STATE_INVENTORY = 2;
+    public static final int PAGE_STATE_SEARCHING = 3;
+    public static final int PAGE_STATE_DETAILS = 4;
+    public static final int PAGE_STATE_PROCESING = 5;
+    public static final int PAGE_STATE_INCIDENCE_FOUND = 6;
+
+    public static int ADMIN_PAGE_STATE = 0;
+    public static final int ADMIN_PAGE_STATE_IDLE = 0;
+    public static final int ADMIN_PAGE_STATE_UBICATIONS = 1;
+    public static final int ADMIN_PAGE_STATE_INCIDENCES = 2;
+    public static final int ADMIN_PAGE_STATE_TRANSFER = 3;
+    public static final int ADMIN_PAGE_STATE_ITEM = 4;
 
     public static int CAF_STATE = 0;
     public static final int CAF_STATE_IDLE = 1;

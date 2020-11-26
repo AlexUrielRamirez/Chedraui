@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.Hellman.CAFv2.BuscadorEPC.Buscador">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_buscador"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/holder_epc_buscador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/fake_card_white"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Buscando EPC" />
+
+            <TextView
+                android:id="@+id/txt_epc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="0000000000000000000000"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/holder_potencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/fake_card_white"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/holder_epc_buscador">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Ajuste de potencia" />
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/txt_indicador_potencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/black"/>
+                <SeekBar
+                    android:id="@+id/sb_potencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="30"
+                    android:progress="30"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/TrackPower"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/vertical_progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_potencia" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="100db -"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/TrackPower"
+            app:layout_constraintTop_toTopOf="@+id/TrackPower" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="75db -"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/TrackPower"
+            app:layout_constraintTop_toBottomOf="@+id/textView14"
+            app:layout_constraintBottom_toTopOf="@id/textView16"/>
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="50db -"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/TrackPower"
+            app:layout_constraintTop_toBottomOf="@+id/textView15"
+            app:layout_constraintBottom_toTopOf="@id/textView17"/>
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="50db -"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/textView18"
+            app:layout_constraintEnd_toStartOf="@+id/TrackPower"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="0db -"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/TrackPower"
+            app:layout_constraintEnd_toStartOf="@+id/TrackPower" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

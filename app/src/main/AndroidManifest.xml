@@ -16,6 +16,24 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.Hellman.CAFv2.Ajustes.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.Hellman.CAFv2.Login.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.Hellman.CAFv2.Alta.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.Hellman.CAFv2.BuscadorEPC.Buscador"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.Hellman.CAFv2.Administracion.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.Hellman.CAFv2.Inventario.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
             android:name="com.Hellman.GenericFileProvider"
@@ -24,10 +42,11 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name="com.Hellman.ControlActivoFijo"
+        <activity
+            android:name="com.Hellman.ControlActivoFijo"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.Hellman.Hellman"

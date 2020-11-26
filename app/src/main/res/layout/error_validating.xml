@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
-                android:text="Al parecer no se han encontrado todos los productos, por favor asegurese de contabilizar todo el inventario esperado e intente nuevamente"
+                android:text="Al parecer no se han encontrado todos los activos, por favor asegurese de contabilizar todo el inventario esperado o genere las incidencias correspondientes e intente nuevamente"
                 android:gravity="center_horizontal"
                 android:textColor="@color/black"
                 android:layout_marginTop="15dp"/>
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="Volver"
+                android:text="Seguir buscando"
                 android:background="@color/blue_selected"
                 android:layout_marginTop="25dp"
                 android:layout_marginStart="10dp"

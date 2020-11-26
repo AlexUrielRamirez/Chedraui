@@ -9,9 +9,9 @@
             android:gravity="bottom">
             <shape>
                 <gradient
-                    android:startColor="#00FF00"
+                    android:startColor="#FF0000"
                     android:centerColor="#FFFF00"
-                    android:endColor="#FF0000"
+                    android:endColor="#00FF00"
                     android:angle="90" />
             </shape>
         </clip>

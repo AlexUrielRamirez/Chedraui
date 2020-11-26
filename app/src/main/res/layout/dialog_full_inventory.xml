@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="37.5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="37.5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17.5dp"
+                android:text="¡Area completa!"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Al parecer todos los elementos de esta zona se encuentran en su lugar.\n¿Te gustaría añadir un nuevo elemento?"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/btn_volver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="No, gracias"
+                    android:background="@color/rojo_etiflex"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/btn_continuar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="Sí, añadir activo"
+                    android:background="@color/blue_selected"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerHorizontal="true"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        app:lottie_fileName="done_blue_selected.json"
+        android:elevation="2dp"/>
+    <View
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape_blank_circle"/>
+
+</RelativeLayout>

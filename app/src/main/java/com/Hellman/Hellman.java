@@ -12,9 +12,12 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +34,17 @@ import com.Etiflex.Splash.Methods;
 import com.Hellman.CAFv2.CAF_Ajustes;
 import com.Hellman.CAFv2.CAF_AltaActivo;
 import com.Hellman.CAFv2.CAF_Inventario;
+import com.Hellman.CAFv2.Inventario.Main;
+import com.bumptech.glide.Glide;
+import com.nativec.tools.SerialPort;
+import com.nativec.tools.SerialPortFinder;
+import com.reader.base.ReaderBase;
+import com.reader.helper.ReaderHelper;
+import com.reader.helper.ReaderSetting;
 import com.rfid.rxobserver.RXObserver;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.uhf.uhf.R;
+import com.uhf.uhf.UHFApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,14 +67,18 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
 
+import static com.Etiflex.Splash.GlobalPreferences.CAF_STATE;
 import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_AJUSTES;
 import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_ALTA;
 import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_INVENTARIO;
+import static com.Etiflex.Splash.GlobalPreferences.ID_CEDIS;
+import static com.Etiflex.Splash.GlobalPreferences.PAGE_STATE;
+import static com.Etiflex.Splash.GlobalPreferences.PAGE_STATE_INVENTORY;
+import static com.Etiflex.Splash.GlobalPreferences.PAGE_STATE_SETTING_UBICATION;
 
 public class Hellman extends AppCompatActivity {
 
     private DrawerLayout MotionLayout;
-    RXObserver rx = null;
     private ArrayList<String> tag_list;
     private TextView btn_addFile;
 
@@ -98,88 +113,62 @@ public class Hellman extends AppCompatActivity {
 
     //CAFv2
     private RelativeLayout MainFragmentHolder;
-    private Button btn_inventario, btn_alta, btn_ajustes;
-
+    private Button btn_inventario, btn_alta, btn_ajustes, btn_administracion;
+    private ImageView img_logo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.setProperty("javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
         System.setProperty("javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
         System.setProperty("javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+        try {
+            ReaderHelper.setContext(getApplicationContext());
+        }catch (Exception e){
+            Toast.makeText(this, "Ocurrió un error al iniciar los recursos, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
+        }
+
         super.onCreate(savedInstanceState);
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_hellman);
+        img_logo = findViewById(R.id.logo);
+        if(ID_CEDIS.equals("2")){
+            Glide.with(this).load(R.drawable.contract).into(img_logo);
+        }else{
+            Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
+        }
         initViews();
         tag_list = new ArrayList<>();
-        rx = new RXObserver(){
-            @Override
-            protected void onInventoryTag(RXInventoryTag tag) {
-                super.onInventoryTag(tag);
-                String EPC = tag.strEPC.replaceAll(" ", "");
-                if(!tag_list.contains(EPC)){
-                    tag_list.add(EPC);
-                    Log.e("EPCS", EPC);
-                }
-                try {
-                    if(getSupportFragmentManager().findFragmentByTag(FRAGMENT_INVENTARIO).isVisible()){
-                        switch (GlobalPreferences.PAGE_STATE){
-                            case GlobalPreferences.PAGE_STATE_INVENTORY:
-                                if(CAF_Inventario.tag_list.contains(EPC)){
-                                    new Thread(() -> {
-                                        for(int position = 0; position < CAF_Inventario.tag_list.size(); position++){
-                                            final int final_position = position;
-                                            if(CAF_Inventario.main_list.get(position).getEPC().equals(EPC) && CAF_Inventario.main_list.get(position).getStatus() == 0){
-                                                CAF_Inventario.main_list.get(position).setStatus(1);
-                                                Hellman.this.runOnUiThread(() -> {
-                                                    CAF_Inventario.adapter.notifyItemChanged(final_position, CAF_Inventario.main_list.get(final_position));
-                                                    CAF_Inventario.conter = CAF_Inventario.conter + 1;
-                                                    CAF_Inventario.mProgress.setProgress(CAF_Inventario.conter);
-                                                    CAF_Inventario.txt_contador.setText(CAF_Inventario.conter+"/"+ CAF_Inventario.main_list.size());
-                                                });
-                                                break;
-                                            }
-                                        }
-                                    }).run();
-                                }
-                                break;
-                            case GlobalPreferences.PAGE_STATE_SEARCHING:
-                                Log.e("Hellman", "SEARCHING");
-                                new Thread(() -> {
-                                    if(EPC.equals(GlobalPreferences.CURRENT_TAG)){
-                                        CAF_Inventario.pb_potencia.setProgress(Math.round(Float.parseFloat(tag.strRSSI)));
-                                        new Methods().PlayBeep_Short();
-                                    }
-                                }).run();
-                                break;
-                        }
-                    }
-                }catch (NullPointerException e){
-                    Log.e("Hellmann", "Lecturas"+e.getMessage());
-                }
-            }
-        };
 
         btn_inventario.setOnClickListener(v->{
-            getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), new CAF_Inventario(), FRAGMENT_INVENTARIO).commit();
+            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), new CAF_Inventario(), FRAGMENT_INVENTARIO).commit();
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
             MainFragmentHolder.setAnimation(animation);
             animation.start();
-            MainFragmentHolder.setVisibility(View.VISIBLE);
+            PAGE_STATE = PAGE_STATE_INVENTORY;
+            MainFragmentHolder.setVisibility(View.VISIBLE);*/
+            PAGE_STATE = PAGE_STATE_SETTING_UBICATION;
+            startActivity(new Intent(this, Main.class));
+        });
+
+        btn_administracion.setOnClickListener(v->{
+            startActivity(new Intent(this, com.Hellman.CAFv2.Administracion.Main.class));
         });
 
         btn_alta.setOnClickListener(v->{
-            getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_AltaActivo.newInstance("", ""), FRAGMENT_ALTA).commit();
+            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_AltaActivo.newInstance("", ""), FRAGMENT_ALTA).commit();
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
             MainFragmentHolder.setAnimation(animation);
             animation.start();
-            MainFragmentHolder.setVisibility(View.VISIBLE);
+            MainFragmentHolder.setVisibility(View.VISIBLE);*/
+            startActivity(new Intent(this, com.Hellman.CAFv2.Alta.Main.class));
         });
 
         btn_ajustes.setOnClickListener(v->{
-            getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_Ajustes.newInstance("", ""), FRAGMENT_AJUSTES).commit();
+            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_Ajustes.newInstance("", ""), FRAGMENT_AJUSTES).commit();
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
             MainFragmentHolder.setAnimation(animation);
             animation.start();
-            MainFragmentHolder.setVisibility(View.VISIBLE);
+            MainFragmentHolder.setVisibility(View.VISIBLE);*/
+            startActivity(new Intent(this, com.Hellman.CAFv2.Ajustes.Main.class));
         });
 
     }
@@ -290,6 +279,7 @@ public class Hellman extends AppCompatActivity {
         btn_alta = findViewById(R.id.btn_alta);
         btn_ajustes = findViewById(R.id.btn_ajustes);
         btn_inventario = findViewById(R.id.btn_inventario);
+        btn_administracion = findViewById(R.id.btn_administracion);
 
     }
 
@@ -411,22 +401,21 @@ public class Hellman extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == 134){
-            new ConnectorManager().Connect(rx);
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void onBackPressed() {
         try {
-            Fragment Lecturas = getSupportFragmentManager().findFragmentByTag("Lecturas");
+            Fragment Lecturas = getSupportFragmentManager().findFragmentByTag(FRAGMENT_INVENTARIO);
             assert Lecturas != null;
             if(Lecturas.isVisible()){
                 switch (GlobalPreferences.PAGE_STATE){
                     case GlobalPreferences.PAGE_STATE_PROCESING:
                         Toast.makeText(this, "Por favor, espere...", Toast.LENGTH_SHORT).show();
+                        break;
+                    case PAGE_STATE_SETTING_UBICATION:
+                        getSupportFragmentManager().beginTransaction().remove(Lecturas).commit();
+                        MainFragmentHolder.setVisibility(View.GONE);
+                        break;
+                    case PAGE_STATE_INVENTORY:
+                        GlobalPreferences.PAGE_STATE = PAGE_STATE_SETTING_UBICATION;
                         break;
                     case GlobalPreferences.PAGE_STATE_DETAILS:
                         GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;

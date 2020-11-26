@@ -32,6 +32,16 @@
                     android:gravity="center_vertical"
                     android:paddingStart="12dp"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/txt_encontrar_activo_numero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"
+                android:padding="4dp"
+                android:text="@string/buscar_activo_existente"
+                android:drawableLeft="@drawable/search_gray"
+                android:drawablePadding="8dp"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,17 +67,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView9"
                     android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/txt_encontrar_activo_numero"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="Buscar activo existente"
-                    android:drawableLeft="@drawable/search_gray"
-                    android:drawablePadding="8dp"
-                    app:layout_constraintEnd_toEndOf="@+id/et_numero_activo"
-                    app:layout_constraintTop_toBottomOf="@+id/et_numero_activo" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

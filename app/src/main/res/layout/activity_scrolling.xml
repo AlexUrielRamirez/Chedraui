@@ -86,9 +86,10 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginStart="25sp"
+            android:layout_marginEnd="25sp"
             android:src="@drawable/hellman_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +123,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo"  />
         <Button
-            android:id="@+id/btn_espera"
+            android:id="@+id/btn_administracion"
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:background="@drawable/fake_card_white"
@@ -144,7 +145,7 @@
             android:drawableTop="@drawable/ic_baseline_settings_24"
             android:gravity="center_horizontal|center_vertical"
             android:padding="15dp"
-            android:text="Ajustes"
+            android:text="Configuración"
             android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@id/btn_inventario"
             app:layout_constraintEnd_toEndOf="parent"

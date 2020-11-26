@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">hellman CAF</string>
+    <string name="app_name">hellmann CAF</string>
     <string name="MaskNo">Máscara Deshabilitada</string>
     <string name="com_port">Puerto Serie</string>
     <string name="Read_flash_error">Error en lector Flash</string>

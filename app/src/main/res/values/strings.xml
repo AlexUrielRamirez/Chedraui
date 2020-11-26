@@ -7,7 +7,7 @@
     <drawable name="list_normal">#00000000</drawable>
     <drawable name="list_pressed">#FF333333</drawable>
 
-    <string name="app_name">hellman CAF</string>
+    <string name="app_name">hellmann CAF</string>
     <string name="menu_settings">Settings</string>
 
     <!-- new data -->
@@ -405,5 +405,8 @@
     <string name="setting_mask_tag">设置标签Mask</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Inventario">Inventario</string>
+    <string name="buscar_activo_existente"><u>Buscar activo existente</u></string>
+    <string name="limpiar_activo_actual"><u>Limpiar activo actual</u></string>
 
 </resources>
