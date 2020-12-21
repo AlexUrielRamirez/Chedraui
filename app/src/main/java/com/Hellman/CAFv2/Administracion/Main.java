@@ -18,6 +18,7 @@ import com.Addons.ProgressBarAnimation;
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
 import com.Hellman.CAFv2.Administracion.Activo.admin_activo;
+import com.Hellman.CAFv2.Administracion.Impresion.admin_impresion;
 import com.Hellman.CAFv2.Administracion.Incidences.admin_incidences;
 import com.Hellman.CAFv2.Administracion.Traspasos.admin_traspasos;
 import com.Hellman.CAFv2.Administracion.Ubicaciones.admin_ubicaciones;
@@ -33,6 +34,7 @@ import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_IDLE;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_INCIDENCES;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_ITEM;
+import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_PRINT;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_TRANSFER;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_UBICATIONS;
 import static com.Etiflex.Splash.GlobalPreferences.CODE_BAR_READER;
@@ -46,7 +48,7 @@ public class Main extends AppCompatActivity {
     Methods methods;
 
     private ImageView btn_on_back_pressed;
-    private ConstraintLayout menu_ubicaciones, menu_incidencias, menu_activo, menu_traspasos;
+    private ConstraintLayout menu_ubicaciones, menu_incidencias, menu_activo, menu_traspasos, menu_impresion;
     private ConstraintLayout fragment_holder;
 
     @Override
@@ -65,6 +67,7 @@ public class Main extends AppCompatActivity {
         menu_incidencias = findViewById(R.id.menu_incidencias);
         menu_activo = findViewById(R.id.menu_activo);
         menu_traspasos = findViewById(R.id.menu_traspaso);
+        menu_impresion = findViewById(R.id.menu_impresion);
         fragment_holder = findViewById(R.id.fragment_holder);
     }
 
@@ -88,6 +91,11 @@ public class Main extends AppCompatActivity {
         menu_traspasos.setOnClickListener(v->{
             ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_TRANSFER;
             getSupportFragmentManager().beginTransaction().add(fragment_holder.getId(), admin_traspasos.newInstance(), "Traspasos").commit();
+            fragment_holder.setVisibility(View.VISIBLE);
+        });
+        menu_impresion.setOnClickListener(v->{
+            ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_PRINT;
+            getSupportFragmentManager().beginTransaction().add(fragment_holder.getId(), admin_impresion.newInstance(), "Impresion").commit();
             fragment_holder.setVisibility(View.VISIBLE);
         });
     }
@@ -132,6 +140,15 @@ public class Main extends AppCompatActivity {
                 if(admin_activo.Panel_detalle.getVisibility() == View.VISIBLE){
                     ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_ITEM;
                     admin_activo.Panel_detalle.setVisibility(View.GONE);
+                }else{
+                    ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_IDLE;
+                    fragment_holder.setVisibility(View.GONE);
+                }
+                break;
+            case ADMIN_PAGE_STATE_PRINT:
+                if(admin_impresion.Panel_etiquetas.getVisibility() == View.VISIBLE){
+                    ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_PRINT;
+                    admin_impresion.Panel_etiquetas.setVisibility(View.GONE);
                 }else{
                     ADMIN_PAGE_STATE = ADMIN_PAGE_STATE_IDLE;
                     fragment_holder.setVisibility(View.GONE);

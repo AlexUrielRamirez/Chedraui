@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,8 @@ public class Main extends AppCompatActivity {
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_main_login);
 
+        findViewById(R.id.btn_configuracion).setOnClickListener(v -> startActivity(new Intent(this, com.Hellman.CAFv2.Ajustes.Main.class)));
+
         et_usuario = findViewById(R.id.et_usuario);
         et_contrasena = findViewById(R.id.et_contrasena);
         btn_continuar = findViewById(R.id.btn_continuar);
@@ -65,7 +68,7 @@ public class Main extends AppCompatActivity {
             txt_error.setVisibility(View.GONE);
             if(et_usuario.getText().length() > 0 && et_contrasena.getText().length() > 0){
                 progressDialog.show();
-                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/Login").build().create(api_network.class).setData(et_usuario.getText().toString(), et_contrasena.getText().toString(), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Login").build().create(api_network.class).setData(et_usuario.getText().toString(), et_contrasena.getText().toString(), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         try{
@@ -73,6 +76,7 @@ public class Main extends AppCompatActivity {
                             if (!res.equals("INVALID_CREDENTIALS")){
                                 GlobalPreferences.ID_USUARIO = res;
                                 startActivity(new Intent(Main.this, Hellman.class));
+                                progressDialog.dismiss();
                                 Main.this.finish();
                             }else{
                                 txt_error.setVisibility(View.VISIBLE);
@@ -87,6 +91,7 @@ public class Main extends AppCompatActivity {
                     @Override
                     public void failure(RetrofitError error) {
                         Toast.makeText(Main.this, "Error, revise su conexión", Toast.LENGTH_SHORT).show();
+                        Log.e("Login","Error no connection->"+error.getMessage());
                         progressDialog.dismiss();
                     }
                 });

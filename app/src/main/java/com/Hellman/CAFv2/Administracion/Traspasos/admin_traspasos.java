@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ import retrofit.mime.TypedFile;
 
 import static android.app.Activity.RESULT_OK;
 import static com.Etiflex.Splash.GlobalPreferences.CODE_BAR_READER;
+import static com.Etiflex.Splash.GlobalPreferences.main_list;
 
 public class admin_traspasos extends Fragment {
 
@@ -101,9 +103,9 @@ public class admin_traspasos extends Fragment {
     };
     public ImageView more;
     public ArrayList<ModelSearchResult> main_list_search;
-    private PopupMenu menu_area, menu_oficinas;
-    private ArrayList<ModelUbicaciones> main_list_areas, main_list_oficinas;
-    private String IdArea = "0", IdOficina = "0";
+    private PopupMenu menu_cedis, menu_area, menu_oficinas;
+    private ArrayList<ModelUbicaciones> main_list_cedis, main_list_areas, main_list_oficinas;
+    private String IdCedis, IdArea = "0", IdOficina = "0";
 
     private interface api_network_get_ubications{
         @FormUrlEncoded
@@ -123,12 +125,21 @@ public class admin_traspasos extends Fragment {
         );
     }
 
+    private interface api_network_insert_traspaso{
+        @FormUrlEncoded
+        @POST("/InsertTraspaso.php")
+        void setData(
+                @Field("data") String Data,
+                Callback<Response> callback
+        );
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_traspasos, container, false);
         initViews(view);
         getData();
-        getAreas();
+        getCedis();
         return view;
     }
 
@@ -166,21 +177,15 @@ public class admin_traspasos extends Fragment {
         });
         more = view.findViewById(R.id.btn_menu_buscar);
         more.setOnClickListener(v->{
-            androidx.appcompat.widget.PopupMenu menu = new PopupMenu(getContext(), more);
-            menu.getMenu().add("Lector QR");
-            menu.setOnMenuItemClickListener(v_1->{
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.etiflex.sdl", "com.zebra.sdl.SDLguiActivity"));
-                startActivityForResult(intent, CODE_BAR_READER);
-                return true;
-            });
-            menu.show();
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.etiflex.sdl", "com.zebra.sdl.SDLguiActivity"));
+            startActivityForResult(intent, CODE_BAR_READER);
         });
     }
 
     private void searchItem(String key, String Type){
         Panel_carga_buscando.setVisibility(View.VISIBLE);
-        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_search_result.class).setData(key, Type, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_search_result.class).setData(key, Type, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try {
@@ -251,7 +256,7 @@ public class admin_traspasos extends Fragment {
 
     private void getData(){
         main_list_traspasos = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/AdministracionTraspasos/getTraspasos.php", null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos/getTraspasos.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
             try {
                 for (int i = 0; i < json.length(); i++) {
@@ -296,11 +301,11 @@ public class admin_traspasos extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombre());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcion());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumero());
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_ubications.class).setData(child_list.get(position).getUbicaciones(), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_ubications.class).setData(child_list.get(position).getUbicaciones(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     try {
@@ -374,25 +379,31 @@ public class admin_traspasos extends Fragment {
             holder.item.setOnClickListener(v->{
                 BottomSheetDialog bsd = new BottomSheetDialog(context);
                 bsd.setContentView(R.layout.bsd_traspaso);
+                TextView spinnerCedis = bsd.findViewById(R.id.spinner_Cedis);
                 TextView spinnerArea = bsd.findViewById(R.id.spinner_Departamento);
                 TextView spinnerOficina = bsd.findViewById(R.id.spinner_Oficina);
 
-                menu_area = new PopupMenu(getContext(), spinnerArea);
-                for(int i = 0; i < main_list_areas.size(); i++){
-                    menu_area.getMenu().add(main_list_areas.get(i).getNombre());   
-                }
-                menu_area.setOnMenuItemClickListener(item -> {
-                    spinnerArea.setText(item.getTitle());
-                    spinnerOficina.setText("Oficina");
-                    for(int i = 0; i<main_list_areas.size(); i++){
-                        if(main_list_areas.get(i).getNombre().equals(item.getTitle())){
-                            IdOficina = "0";
-                            IdArea = main_list_areas.get(i).getId();
-                            main_list_oficinas = new ArrayList<>();
-                            menu_oficinas = new PopupMenu(context, spinnerOficina);
-                            Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
-                                JSONArray json = response.optJSONArray("Data");
+                ProgressBar pb_loading_departamentos = bsd.findViewById(R.id.pb_loading_departamento);
+                ProgressBar pb_loading_ofices = bsd.findViewById(R.id.pb_loading_ofices);
 
+                menu_cedis = new PopupMenu(getContext(), spinnerCedis);
+                for(int i = 0; i < main_list_cedis.size(); i++){
+                    menu_cedis.getMenu().add(main_list_cedis.get(i).getNombre());
+                }
+                menu_cedis.setOnMenuItemClickListener(item -> {
+                    spinnerCedis.setText(item.getTitle());
+                    spinnerArea.setText("Departamento");
+                    spinnerOficina.setText("Oficina");
+                    for(int i = 0; i<main_list_cedis.size(); i++){
+                        if(main_list_cedis.get(i).getNombre().equals(item.getTitle())){
+                            IdArea = "0";
+                            IdOficina = "0";
+                            IdCedis = main_list_cedis.get(i).getId();
+                            main_list_areas = new ArrayList<>();
+                            menu_area = new PopupMenu(context, spinnerArea);
+                            Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+IdCedis, null, response -> {
+                                JSONArray json = response.optJSONArray("Data");
+                                pb_loading_departamentos.setVisibility(View.VISIBLE);
                                 try {
                                     for (int i_2 = 0; i_2 < json.length(); i_2++) {
                                         ModelUbicaciones model = new ModelUbicaciones();
@@ -400,26 +411,70 @@ public class admin_traspasos extends Fragment {
                                         model.setId(jsonObject.optString("Id"));
                                         model.setNombre(jsonObject.optString("Nombre"));
 
-                                        menu_oficinas.getMenu().add(model.getNombre());
-                                        main_list_oficinas.add(model);
+                                        menu_area.getMenu().add(model.getNombre());
+                                        main_list_areas.add(model);
+                                        pb_loading_departamentos.setVisibility(View.GONE);
 
                                     }
+                                    menu_area.setOnMenuItemClickListener(item2 -> {
+                                        spinnerArea.setText(item2.getTitle());
+                                        spinnerOficina.setText("Oficina");
+                                        for(int i3 = 0; i3<main_list_areas.size(); i3++){
+                                            if(main_list_areas.get(i3).getNombre().equals(item2.getTitle())){
+                                                IdOficina = "0";
+                                                IdArea = main_list_areas.get(i3).getId();
+                                                main_list_oficinas = new ArrayList<>();
+                                                menu_oficinas = new PopupMenu(context, spinnerOficina);
+                                                Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response2 -> {
+                                                    JSONArray json2 = response2.optJSONArray("Data");
+                                                    pb_loading_ofices.setVisibility(View.VISIBLE);
+                                                    try {
+                                                        for (int i_2 = 0; i_2 < json2.length(); i_2++) {
+                                                            ModelUbicaciones model = new ModelUbicaciones();
+                                                            JSONObject jsonObject = json2.getJSONObject(i_2);
+                                                            model.setId(jsonObject.optString("Id"));
+                                                            model.setNombre(jsonObject.optString("Nombre"));
 
-                                    menu_oficinas.setOnMenuItemClickListener(item2 -> {
-                                        spinnerOficina.setText(item2.getTitle());
-                                        for(int i3 = 0; i3<main_list_oficinas.size(); i3++){
-                                            if(main_list_oficinas.get(i3).getNombre().equals(item2.getTitle())){
-                                                IdOficina = main_list_oficinas.get(i3).getId();
+                                                            menu_oficinas.getMenu().add(model.getNombre());
+                                                            main_list_oficinas.add(model);
+                                                        }
+
+                                                        menu_oficinas.setOnMenuItemClickListener(item3 -> {
+                                                            spinnerOficina.setText(item3.getTitle());
+                                                            for(int i4 = 0; i4<main_list_oficinas.size(); i4++){
+                                                                if(main_list_oficinas.get(i4).getNombre().equals(item3.getTitle())){
+                                                                    IdOficina = main_list_oficinas.get(i4).getId();
+                                                                }
+                                                            }
+                                                            return false;
+                                                        });
+                                                        pb_loading_ofices.setVisibility(View.GONE);
+                                                    } catch (JSONException | NullPointerException e) {
+                                                        pb_loading_ofices.setVisibility(View.GONE);
+                                                        Toast.makeText(context, "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
+                                                        Log.e("Validacion", "JSON | Null Exception" + e);
+                                                    }
+
+                                                }, error -> {
+                                                    pb_loading_ofices.setVisibility(View.GONE);
+                                                    Toast.makeText(context, "Error, no hay conexión con el servidor", Toast.LENGTH_SHORT).show();
+                                                    Log.e("Validacion", "Volley error" + error);
+                                                }));
+                                                break;
                                             }
                                         }
                                         return false;
                                     });
-
+                                    pb_loading_departamentos.setVisibility(View.GONE);
                                 } catch (JSONException | NullPointerException e) {
+                                    pb_loading_departamentos.setVisibility(View.GONE);
+                                    Toast.makeText(context, "No hay conexión al servidor", Toast.LENGTH_SHORT).show();
                                     Log.e("Validacion", "JSON | Null Exception" + e);
                                 }
 
                             }, error -> {
+                                pb_loading_departamentos.setVisibility(View.GONE);
+                                Toast.makeText(context, "Error, No hay conexión al servidor", Toast.LENGTH_SHORT).show();
                                 Log.e("Validacion", "Volley error" + error);
                             }));
                             break;
@@ -427,19 +482,38 @@ public class admin_traspasos extends Fragment {
                     }
                     return false;
                 });
+                spinnerCedis.setOnClickListener(v1 -> menu_cedis.show());
                 spinnerArea.setOnClickListener(v1->{
-                    menu_area.show();
+                    try{
+                        menu_area.show();
+                    }catch (NullPointerException e){}
                 });
                 spinnerOficina.setOnClickListener(v1->{
                     try {
                         menu_oficinas.show();
                     }catch (NullPointerException e){}
                 });
+                ProgressDialog pd = new ProgressDialog(context);
+                pd.setMessage("Actualizando registros...");
                 bsd.findViewById(R.id.btn_aplicar_cambios).setOnClickListener(v1->{
                     bsd.findViewById(R.id.txt_error).setVisibility(View.GONE);
                     if(!IdArea.equals("0") || !IdOficina.equals("0")){
                         if(!IdOficina.equals(child_list.get(position).getIdOficina())){
-                            
+                            pd.show();
+                            String data = "{\"Cedis\":\""+IdCedis+"\", \"Area\":\""+IdArea+"\", \"Oficina\":\""+IdOficina+"\", \"IdCAF\":\""+child_list.get(position).getIdCAF()+"\"}";
+                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_insert_traspaso.class).setData(data, new Callback<Response>() {
+                                @Override
+                                public void success(Response response, Response response2) {
+                                    pd.dismiss();
+                                    Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    pd.dismiss();
+                                    Toast.makeText(context, "Error, no hay conexión con el servidor", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }else{
                             bsd.findViewById(R.id.txt_error).setVisibility(View.VISIBLE);
                         }
@@ -449,7 +523,7 @@ public class admin_traspasos extends Fragment {
                 });
                 bsd.show();
             });
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombre());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcion());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumero());
@@ -482,9 +556,36 @@ public class admin_traspasos extends Fragment {
         }
     }
 
+    private void getCedis() {
+        main_list_cedis = new ArrayList<>();
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getCedis.php", null, response -> {
+            JSONArray json = response.optJSONArray("Data");
+
+            try {
+                for (int i = 0; i < json.length(); i++) {
+                    ModelUbicaciones model = new ModelUbicaciones();
+                    JSONObject jsonObject = null;
+                    jsonObject = json.getJSONObject(i);
+                    model.setId(jsonObject.optString("Id"));
+                    model.setNombre(jsonObject.optString("Nombre"));
+
+
+                    main_list_cedis.add(model);
+
+                }
+
+            } catch (JSONException | NullPointerException e) {
+                Log.e("Validacion", "JSON | Null Exception" + e);
+            }
+
+        }, error -> {
+            Log.e("Validacion", "Volley error" + error);
+        }));
+    }
+
     private void getAreas() {
         main_list_areas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {

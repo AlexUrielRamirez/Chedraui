@@ -1,22 +1,12 @@
 package com.Hellman.CAFv2.Inventario;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
@@ -38,21 +28,21 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.Addons.ProgressBarAnimation;
-import com.Etiflex.Splash.ConnectorManager;
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
-import com.Hellman.CAFv2.CAF_Inventario;
 import com.Hellman.CAFv2.Incidencias.ControlIncidencias;
-import com.Hellman.Hellman;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.module.interaction.ModuleConnector;
 import com.nativec.tools.ModuleManager;
@@ -85,8 +75,7 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
 
-import static com.Etiflex.Splash.GlobalPreferences.DEVICE;
-import static com.Etiflex.Splash.GlobalPreferences.FRAGMENT_INVENTARIO;
+import static com.Etiflex.Splash.GlobalPreferences.DEVELOP_MODE;
 import static com.Etiflex.Splash.GlobalPreferences.PAGE_STATE_INVENTORY;
 import static com.Etiflex.Splash.GlobalPreferences.PAGE_STATE_SETTING_UBICATION;
 
@@ -117,6 +106,7 @@ public class Main extends AppCompatActivity {
     private PopupMenu menu_area, menu_oficinas;
     private ArrayList<ModelUbicaciones> main_list_areas, main_list_oficinas;
     private String IdArea = "0", IdOficina = "0";
+    private ProgressBar pb_loading_ofices;
 
     //Insidencias
     public static ArrayList<ModelInsidencias> main_list_insidencias;
@@ -207,6 +197,7 @@ public class Main extends AppCompatActivity {
             FragmentHolder.setVisibility(View.VISIBLE);
         });
         PanelUbicacion = findViewById(R.id.Panel_ubicacion);
+        pb_loading_ofices = findViewById(R.id.pb_loading_ofices);
         PanelDescarga = findViewById(R.id.Panel_descarga);
         txt_download_progress = findViewById(R.id.txt_progress);
         Spinner_Departamento = findViewById(R.id.spinner_Departamento);
@@ -271,7 +262,7 @@ public class Main extends AppCompatActivity {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(Main.this, Spinner_Departamento);
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -312,7 +303,8 @@ public class Main extends AppCompatActivity {
     private void getOficinas() {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(Main.this, Spinner_Oficina);
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        pb_loading_ofices.setVisibility(View.VISIBLE);
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -338,6 +330,8 @@ public class Main extends AppCompatActivity {
                     return false;
                 });
 
+                pb_loading_ofices.setVisibility(View.GONE);
+
             } catch (JSONException | NullPointerException e) {
                 Log.e("Validacion", "JSON | Null Exception" + e);
             }
@@ -352,7 +346,7 @@ public class Main extends AppCompatActivity {
 
         conter = 0;
         txt_download_progress.setText("Consiguiendo recursos de lectura...");
-        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
+        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list = new ArrayList<>();
             tag_list = new ArrayList<>();
@@ -403,7 +397,7 @@ public class Main extends AppCompatActivity {
                         }
                         String id_list = ids.toString();
                         id_list = id_list.substring(0, id_list.length() - 1);
-                        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/Inventario").build().create(api_network.class).setData(id_list, new Callback<Response>() {
+                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario").build().create(api_network.class).setData(id_list, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 try {
@@ -457,7 +451,7 @@ public class Main extends AppCompatActivity {
 
     private void DownloadInsidences() {
         txt_download_progress.setText("Consiguiendo registros de insidencias...");
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Inventario/getIncidencias.php", null, response -> {
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario/getIncidencias.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list_insidencias = new ArrayList<>();
             tag_list_insidencias = new ArrayList<>();
@@ -559,7 +553,9 @@ public class Main extends AppCompatActivity {
     }
 
     private void setUpData(){
-        setUpReader();
+        if(!DEVELOP_MODE){
+            setUpReader();
+        }
         new Handler().postDelayed(() -> {
             txt_download_progress.setText("Cargando...");
             PanelUbicacion.setVisibility(View.GONE);
@@ -597,18 +593,7 @@ public class Main extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero().replaceFirst("^0+(?!$)", "")).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).into(holder.img);
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
             holder.item_holder.setOnClickListener(v->{
 
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_DETAILS;
@@ -660,7 +645,7 @@ public class Main extends AppCompatActivity {
                                 fos.write(bitmapdata);
                                 fos.flush();
                                 fos.close();
-                                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), NombreCreador.getText().toString(),new TypedFile("multipart/form-data", f), new Callback<Response>() {
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), NombreCreador.getText().toString(),new TypedFile("multipart/form-data", f), new Callback<Response>() {
                                     @Override
                                     public void success(Response response, Response response2) {
                                         try{
@@ -735,7 +720,7 @@ public class Main extends AppCompatActivity {
 
 
         private void setUpDetailData(ModelInventario model) {
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
             NombreDetalle.setText("Nombre: "+model.getNombre());
             DescripcionDetalle.setText("Descripción: "+model.getDescripcion());
             AlmacenDetalle.setText("Isal: "+model.getDescripcion());

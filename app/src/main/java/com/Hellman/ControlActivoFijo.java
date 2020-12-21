@@ -150,7 +150,7 @@ public class ControlActivoFijo extends AppCompatActivity {
             pd_insidencia.setMessage("Por favor espere...");
             pd_insidencia.setCancelable(false);
             pd_insidencia.show();
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_upload_data.class).setData(EPCAlta.getText().toString(), NombreAlta.getText().toString(), DescripcionAlta.getText().toString(), AlmacenAlta.getText().toString(), CategoriaAlta.getText().toString(), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_upload_data.class).setData(EPCAlta.getText().toString(), NombreAlta.getText().toString(), DescripcionAlta.getText().toString(), AlmacenAlta.getText().toString(), CategoriaAlta.getText().toString(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     try {
@@ -178,7 +178,7 @@ public class ControlActivoFijo extends AppCompatActivity {
             bsd.setContentView(R.layout.bsd_baja_articulo);
             bsd.show();
 
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_get_item.class).setData(et_epc_baja.getText().toString(), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_get_item.class).setData(et_epc_baja.getText().toString(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     try {
@@ -194,7 +194,7 @@ public class ControlActivoFijo extends AppCompatActivity {
                             TextView Almacen = bsd.findViewById(R.id.almacen);
                             TextView Categoria = bsd.findViewById(R.id.Categoria);
 
-                            Glide.with(ControlActivoFijo.this).load("https://rfidmx.com/demo/assets/Products/"+json.getString("field_3")+".jpg").override(120).into(img);
+                            Glide.with(ControlActivoFijo.this).load(GlobalPreferences.URL+"/demo/assets/Products/"+json.getString("field_3")+".jpg").override(120).into(img);
 
                             Nombre.setText("Nombre: "+json.getString("field_1"));
                             Descripcion.setText("Descripción: "+json.getString("field_2"));
@@ -206,7 +206,7 @@ public class ControlActivoFijo extends AppCompatActivity {
                                 pd.setMessage("Procesando, por favor espere...");
                                 pd.show();
                                 try {
-                                    new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_delete_item.class).setData(json.getString("id"), new Callback<Response>() {
+                                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_delete_item.class).setData(json.getString("id"), new Callback<Response>() {
                                         @Override
                                         public void success(Response response, Response response2) {
                                             Toast.makeText(ControlActivoFijo.this, "Proceso finalizado con exito", Toast.LENGTH_LONG).show();
@@ -259,7 +259,7 @@ public class ControlActivoFijo extends AppCompatActivity {
         //Generar imagen firma
         File imagen_firma = getFileFromBitmap(signaturePad_alta.getSignatureBitmap(), "tmp_sign");
 
-        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_upload_images.class).setData(new TypedFile("multipart/form-data", imagen_articulo),new TypedFile("multipart/form-data", imagen_firma), IdInventario, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_upload_images.class).setData(new TypedFile("multipart/form-data", imagen_articulo),new TypedFile("multipart/form-data", imagen_firma), IdInventario, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 pd.dismiss();

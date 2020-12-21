@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.Addons.ProgressBarAnimation;
 import com.Etiflex.Splash.GlobalPreferences;
+import com.Etiflex.Splash.Methods;
 import com.module.interaction.ModuleConnector;
 import com.nativec.tools.ModuleManager;
 import com.rfid.RFIDReaderHelper;
@@ -37,6 +38,7 @@ public class Buscador extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_buscador2);
         initViews();
         connectToAntenna();

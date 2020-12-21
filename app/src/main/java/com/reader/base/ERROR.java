@@ -201,7 +201,8 @@ public class ERROR {
 					.getString(R.string.parameter_invaild_frequency_range);
 			break;
 		case FAIL_TO_GET_RN16_FROM_TAG:
-			strErrorCode = "fail_to_find_tag";
+			strErrorCode = UHFApplication.getContext().getResources()
+					.getString(R.string.fail_to_get_rn16_from_tag);
 			break;
 		case PARAMETER_INVALID_DRM_MODE:
 			strErrorCode = UHFApplication.getContext().getResources()

@@ -123,7 +123,7 @@ public class CAF_Inventario extends Fragment {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(getContext(), Spinner_Departamento);
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis=1", null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis=1", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -164,7 +164,7 @@ public class CAF_Inventario extends Fragment {
     private void getOficinas() {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(getContext(), Spinner_Oficina);
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -235,7 +235,7 @@ public class CAF_Inventario extends Fragment {
 
     private void DescargarInformacion(Context ctx) {
 
-        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
+        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list = new ArrayList<>();
             tag_list = new ArrayList<>();
@@ -277,7 +277,7 @@ public class CAF_Inventario extends Fragment {
                         }
                         String id_list = ids.toString();
                         id_list = id_list.substring(0, id_list.length() - 1);
-                        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network.class).setData(id_list, new Callback<Response>() {
+                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network.class).setData(id_list, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 try {
@@ -335,7 +335,7 @@ public class CAF_Inventario extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).override(240).into(holder.img);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).override(240).into(holder.img);
             holder.item_holder.setOnClickListener(v->{
 
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_DETAILS;
@@ -392,7 +392,7 @@ public class CAF_Inventario extends Fragment {
 
 
 
-                        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_insidencia.class).setData(new TypedFile("multipart/form-data", f), main_list.get(position).getId(), new Callback<Response>() {
+                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_insidencia.class).setData(new TypedFile("multipart/form-data", f), main_list.get(position).getId(), new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 try{
@@ -447,7 +447,7 @@ public class CAF_Inventario extends Fragment {
         }
 
         private void setUpDetailData(ModelInventario model) {
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
             NombreDetalle.setText("Nombre: "+model.getNombre());
             DescripcionDetalle.setText("Descripción: "+model.getDescripcion());
             AlmacenDetalle.setText("Isal: "+model.getDescripcion());

@@ -191,14 +191,14 @@ public class admin_activo extends Fragment {
             if(et_epc.getText().length() > 23){
                 progressDialog.setMessage("Buscando activo...");
                 progressDialog.show();
-                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_get_data.class).setData(et_epc.getText().toString(), GlobalPreferences.ID_CEDIS, new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_get_data.class).setData(et_epc.getText().toString(), GlobalPreferences.ID_CEDIS, new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         try {
                             json = new JSONObject(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine());
                             Log.e("admin_activo", "response -> " + json);
-                            Glide.with(getContext()).load("https://rfidmx.com/HellmanCAF/assets/Activo/"+json.getString("NumeroActivo")).into(img_activo);
-                            Glide.with(getContext()).load("https://rfidmx.com/HellmanCAF/assets/Activo/"+json.getString("NumeroActivo")+"_ref").into(img_activo_ref);
+                            Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+json.getString("NumeroActivo")).into(img_activo);
+                            Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+json.getString("NumeroActivo")+"_ref").into(img_activo_ref);
                             et_descripcion.setText(json.getString("Descripcion"));
                             txt_numero_activo.setText("Número de activo: " + json.getString("NumeroActivo"));
                             et_persona_asignada.setText(json.getString("PersonaAsignada"));
@@ -249,7 +249,7 @@ public class admin_activo extends Fragment {
                 }catch (JSONException e){
 
                 }
-                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_set_data.class).setData(json.toString(), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_set_data.class).setData(json.toString(), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         try {
@@ -332,7 +332,7 @@ public class admin_activo extends Fragment {
     }
 
     private void uploadPhoto(File file, String path, boolean SHOULD_DO_AGAIN){
-        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_upload_photos.class).setData(new TypedFile("multipart/form-data", file), path, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionActivo").build().create(api_network_upload_photos.class).setData(new TypedFile("multipart/form-data", file), path, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 if(SHOULD_DO_AGAIN){

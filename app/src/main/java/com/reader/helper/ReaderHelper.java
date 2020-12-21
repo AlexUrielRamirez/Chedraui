@@ -138,10 +138,8 @@ public class ReaderHelper {
      */
     public static ReaderHelper getDefaultHelper() throws Exception {
 
-        if (mReaderHelper == null)
-            throw new NullPointerException("mReaderHelper is Null!");
-        else if( mContext == null)
-            throw new NullPointerException("mContext is Null!");
+        if (mReaderHelper == null || mContext == null)
+            throw new NullPointerException("mReaderHelper Or mContext is Null!");
 
         return mReaderHelper;
     }

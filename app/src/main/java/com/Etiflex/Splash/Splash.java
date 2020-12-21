@@ -84,6 +84,7 @@ public class Splash extends AppCompatActivity {
                 GlobalPreferences.ID_CEDIS = settings.getString("IdCedis", "1");
                 GlobalPreferences.NOMBRE_CEDIS = settings.getString("NombreCedis", "No especificado");
                 GlobalPreferences.SERVER_PRINTER_IP = settings.getString("SERVER_PRINTER_IP", "0.0.0.0");
+                GlobalPreferences.URL = settings.getString("SERVER_IP", "0.0.0.0");
                 startActivity(new Intent(Splash.this, Main.class));
                 Splash.this.finish();
             }, 1500);

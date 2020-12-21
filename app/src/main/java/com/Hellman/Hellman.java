@@ -130,11 +130,12 @@ public class Hellman extends AppCompatActivity {
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_hellman);
         img_logo = findViewById(R.id.logo);
-        if(ID_CEDIS.equals("2")){
+        Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
+        /*if(ID_CEDIS.equals("2")){
             Glide.with(this).load(R.drawable.contract).into(img_logo);
         }else{
             Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
-        }
+        }*/
         initViews();
         tag_list = new ArrayList<>();
 
@@ -198,7 +199,7 @@ public class Hellman extends AppCompatActivity {
             ProgressDialog pd_restore = new ProgressDialog(this);
             pd_restore.setMessage("Procesando, por favor espere...");
             pd_restore.show();
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/Hellman/webservices/masterquerys").build().create(api_network_restore.class).setData("dummy-data", new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/Hellman/webservices/masterquerys").build().create(api_network_restore.class).setData("dummy-data", new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     try {
@@ -318,7 +319,7 @@ public class Hellman extends AppCompatActivity {
                             item.put("field_4", part5);
                             item.put("field_5", part6);
 
-                            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android").build().create(api_network_send_data.class).setData("1", item.toString(), new Callback<Response>() {
+                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android").build().create(api_network_send_data.class).setData("1", item.toString(), new Callback<Response>() {
                                 @Override
                                 public void success(Response response, Response response2) {
                                     try {
@@ -363,7 +364,7 @@ public class Hellman extends AppCompatActivity {
         if(requestCode == GlobalPreferences.INTENT_RESULT_ADD_FILE_EXCEL && resultCode == RESULT_OK && data != null) {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" + getFileName(data.getData()));
             Log.e("Excel","dentro excel");
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/demo/android/").build().create(ANUploadXLSX.class).setData("2", new TypedFile("multipart/form-data", file), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android/").build().create(ANUploadXLSX.class).setData("2", new TypedFile("multipart/form-data", file), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     Log.e("Excel","succes");

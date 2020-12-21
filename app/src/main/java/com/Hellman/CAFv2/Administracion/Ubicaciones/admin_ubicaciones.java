@@ -196,7 +196,7 @@ public class admin_ubicaciones extends Fragment {
                         "}";
                 break;
         }
-        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AdministracionUbicaciones/").build().create(api_network_create_ubicacion.class).setData(ChildTXTJson, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionUbicaciones/").build().create(api_network_create_ubicacion.class).setData(ChildTXTJson, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try{
@@ -230,8 +230,9 @@ public class admin_ubicaciones extends Fragment {
     }
 
     private void getAreas() {
+        Panel_loading_oficinas.setVisibility(View.VISIBLE);
         main_list_areas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+ GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+ GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -246,18 +247,21 @@ public class admin_ubicaciones extends Fragment {
                 }
                 rv_adapter areas_adapter = new rv_adapter(main_list_areas, 1);
                 rv_areas.setAdapter(areas_adapter);
+                Panel_loading_oficinas.setVisibility(View.GONE);
             } catch (JSONException | NullPointerException e) {
                 Log.e("Validacion", "JSON | Null Exception" + e);
             }
 
         }, error -> {
+            Panel_loading_oficinas.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Error, no hay conexión con el servidor", Toast.LENGTH_SHORT).show();
             Log.e("Validacion", "Volley error" + error);
         }));
     }
 
     private void getOficinas(String IdArea) {
         main_list_oficinas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -309,7 +313,7 @@ public class admin_ubicaciones extends Fragment {
             switch (AdapterType){
                 case 1:
                     holder.letter.setBackgroundColor(getContext().getColor(R.color.green_2));
-                    holder.letter.setText("A");
+                    holder.letter.setText("D");
                     holder.item.setOnClickListener(v->{
                         txt_indicador_area.setText(child_list.get(position).getNombre() + " >");
                         txt_indicador_area.setVisibility(View.VISIBLE);
@@ -320,9 +324,9 @@ public class admin_ubicaciones extends Fragment {
                     break;
                 case 2:
                     holder.letter.setBackgroundColor(getContext().getColor(R.color.menu_purple));
-                    holder.letter.setText("O");
+                    holder.letter.setText("U");
                     holder.item.setOnClickListener(v->{
-                        Toast.makeText(context, "Oficiné", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Oficina activa", Toast.LENGTH_SHORT).show();
                     });
                     break;
             }

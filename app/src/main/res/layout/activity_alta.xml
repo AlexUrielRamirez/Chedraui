@@ -11,7 +11,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -284,7 +285,8 @@
                 android:padding="8dp"
                 android:layout_margin="10dp"
                 android:orientation="vertical"
-                android:background="@drawable/fake_card_white">
+                android:background="@drawable/fake_card_white"
+                android:animateLayoutChanges="true">
 
                 <TextView
                     android:id="@+id/textView15"
@@ -317,6 +319,28 @@
                         android:text="Metálica"
                         android:layout_marginStart="25sp"/>
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/txt_epc_enlazado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rg_tipo_etiqueta"
+                    android:visibility="gone"/>
+                <Button
+                    android:id="@+id/btn_enlazar_etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/white"
+                    android:background="@color/blue_selected"
+                    android:text="Enlazar etiqueta"
+                    app:layout_constraintTop_toBottomOf="@id/txt_epc_enlazado"
+                    android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -409,6 +433,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/holder_cantidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"

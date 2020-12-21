@@ -4,11 +4,8 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,15 +28,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Addons.ProgressBarAnimation;
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
+import com.Hellman.CAFv2.Administracion.Impresion.admin_impresion;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -51,7 +47,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,7 +58,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -76,7 +70,7 @@ import retrofit.http.Part;
 import retrofit.mime.TypedFile;
 
 import static com.Etiflex.Splash.GlobalPreferences.CODE_BAR_READER;
-import static com.Etiflex.Splash.GlobalPreferences.URL;
+import static com.Etiflex.Splash.GlobalPreferences.ID_CEDIS;
 
 public class Main extends AppCompatActivity {
 
@@ -85,13 +79,13 @@ public class Main extends AppCompatActivity {
     private EditText et_buscador_activo, et_persona_asignada, et_descripcion, et_cantidad;
     private RadioGroup rg_tipo_etiqueta;
     private RadioButton rb_etiqueta_papel, rb_etiqueta_metal;
-    private TextView btn_encontrar_activo_numero, btn_encontrar_activo_nombre, spinner_departamento, spinner_oficina, contador_letras_descripcion;
+    private TextView btn_encontrar_activo_numero, btn_encontrar_activo_nombre, spinner_departamento, spinner_oficina, contador_letras_descripcion, txt_epc_enlazado;
     private ImageButton btn_camara_por_numero;
     private RecyclerView rv_buscador;
     private ArrayList<SearchModel> main_list_buscador;
     private boolean FIND_BY_CODE = false, SearchingIsAboutToStart = false;
     private ImageView img_1, img_2, img_preview;
-    private ConstraintLayout holder_image_buttons;
+    private ConstraintLayout holder_image_buttons, holder_cantidad;
     private final int PICK_IMAGE_FROM_GALLERY = 1;
     private final int PICK_IMAGE_FROM_CAMERA = 2;
     private final int IMAGE_1 = 3, IMAGE_2 = 4;
@@ -115,6 +109,9 @@ public class Main extends AppCompatActivity {
     private PopupMenu menu_area, menu_oficinas, menu_tipos;
     private ArrayList<ModelUbicaciones> main_list_areas, main_list_oficinas, main_list_tipos;
     private String IdArea = "0", IdOficina = "0", IdTipo, tipo_etiqueta = "Papel", TipoActivo = "0", DescripcionActivo = "";
+    private Button btn_enlazar_etiqueta;
+    private final int CODE_BAR_FOR_METAL = 250;
+    private String GenEPC = "false", MetalEPC = "none";
     interface guardar_caf_activo_nuevo{
         @Multipart
         @POST("/insert_nuevo_activo.php")
@@ -134,9 +131,27 @@ public class Main extends AppCompatActivity {
                 Callback<Response> callback
         );
     }
+    interface upload_caf{
+        @Multipart
+        @POST("/uploadCAF.php")
+        void setData(
+                @Part("data") String data,
+                Callback<Response> callback
+        );
+    }
+    interface upload_new_caf{
+        @Multipart
+        @POST("/uploadCAF.php")
+        void setData(
+                @Part("data") String data,
+                @Part("file_1")TypedFile file_1,
+                @Part("file_2")TypedFile file_2,
+                Callback<Response> callback
+        );
+    }
 
     private ArrayList<String> main_list_epcs, main_list_final_areas, main_list_final_oficinas;
-
+    private JSONObject jsonCAF;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,16 +215,80 @@ public class Main extends AppCompatActivity {
         btn_continuar_alta.setOnClickListener(v-> {
             progressDialog.setMessage("Subiendo información...");
             progressDialog.show();
+            ContadorNewCAF = 0;
+            try {
+                /**CREAMOS JSON*/
+                jsonCAF = new JSONObject();
+
+                /**Se cargó un activo?*/
+                if(ProductLoaded){
+                    jsonCAF.put("ProductLoaded","true");
+                    jsonCAF.put("Descripcion", "");
+                    jsonCAF.put("IdActivo", IdActivo);
+                    jsonCAF.put("NumeroActivo", NumeroActivo);
+                    jsonCAF.put("TipoActivo", "");
+                    jsonCAF.put("IdUbicacion", "0");
+                    jsonCAF.put("Cedis",ID_CEDIS);
+                    jsonCAF.put("Area",IdArea);
+                    jsonCAF.put("Oficina",IdOficina);
+                }else{
+                    jsonCAF.put("ProductLoaded","false");
+                    jsonCAF.put("Descripcion", et_descripcion.getText().toString());
+                    jsonCAF.put("IdActivo", "");
+                    jsonCAF.put("NumeroActivo", "");
+                    jsonCAF.put("TipoActivo", IdTipo);
+                    jsonCAF.put("IdUbicacion", "0");
+                    jsonCAF.put("Cedis",ID_CEDIS);
+                    jsonCAF.put("Area",IdArea);
+                    jsonCAF.put("Oficina",IdOficina);
+                }
+
+                /**Qué tipo de etiqueta tiene?*/
+                switch (rg_tipo_etiqueta.getCheckedRadioButtonId()){
+                    case R.id.rb_etiqueta_papel:
+                        jsonCAF.put("TipoEtiqueta","Papel");
+                        /**Cargamos EPC falso la primera vez*/
+                        jsonCAF.put("EPC", "000000000000000000000000");
+                        TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
+                        break;
+                    case R.id.rb_etiqueta_metal:
+                        jsonCAF.put("TipoEtiqueta","Metal");
+                        jsonCAF.put("EPC", txt_epc_enlazado.getText().toString());
+                        TotalNewCAF = 1;
+                        break;
+                }
+                /**Cargar persona asignada*/
+                jsonCAF.put("PersonaAsignada", et_persona_asignada.getText().toString());
+
+                Log.e("main_alta","prepared json --->"+jsonCAF.toString());
+            }catch (JSONException e){
+                Log.e("main_alta","prepared json error--->"+e.getMessage());
+            }
+            UploadData(jsonCAF);
+
+            //Preparar Producto
+            /*TotalNewCAF = 0;
+            progressDialog.setMessage("Subiendo información...");
+            progressDialog.show();
             main_list_epcs = new ArrayList<>();
             main_list_final_areas = new ArrayList<>();
             main_list_final_oficinas = new ArrayList<>();
-            TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
             switch (rg_tipo_etiqueta.getCheckedRadioButtonId()){
                 case R.id.rb_etiqueta_papel:
                     tipo_etiqueta = "Papel";
+                    GenEPC = "true";
+                    MetalEPC = "none";
+                    if(et_cantidad.getText().length() != 0) {
+                        TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
+                    }else{
+                        TotalNewCAF = 0;
+                    }
                     break;
                 case R.id.rb_etiqueta_metal:
                     tipo_etiqueta = "Metal";
+                    GenEPC = "false";
+                    MetalEPC = txt_epc_enlazado.getText().toString();
+                    TotalNewCAF = 1;
                     break;
             }
             String prepared_data = null;
@@ -221,6 +300,8 @@ public class Main extends AppCompatActivity {
                         "\"IdArea\":\""+IdArea+"\"," +
                         "\"IdOficina\":\""+IdOficina+"\"," +
                         "\"PersonaAsignada\":\""+et_persona_asignada.getText().toString()+"\"," +
+                        "\"GenEPC\":\""+GenEPC+"\"," +
+                        "\"MetalEPC\":\""+MetalEPC+"\"," +
                         "\"TipoEtiqueta\":\""+tipo_etiqueta+"\"}";
             }else{
                 DescripcionActivo = et_descripcion.getText().toString();
@@ -231,17 +312,95 @@ public class Main extends AppCompatActivity {
                         "\"IdOficina\":\""+IdOficina+"\"," +
                         "\"Tipo\":\""+IdTipo+"\"," +
                         "\"PersonaAsignada\":\""+et_persona_asignada.getText().toString()+"\"," +
+                        "\"GenEPC\":\""+GenEPC+"\"," +
+                        "\"MetalEPC\":\""+MetalEPC+"\"," +
+                        "\"mNumeroActivo\":\""+MetalEPC.substring(0, 4)+"\"," +
                         "\"TipoEtiqueta\":\""+tipo_etiqueta+"\"}";
             }
-            uploadCAF(prepared_data);
+            uploadCAF(prepared_data);*/
+        });
+        btn_enlazar_etiqueta.setOnClickListener(v->{
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.etiflex.sdl", "com.zebra.sdl.SDLguiActivity"));
+            startActivityForResult(intent, CODE_BAR_FOR_METAL);
+        });
+        rg_tipo_etiqueta.setOnCheckedChangeListener((group, checkedId) -> {
+            if(R.id.rb_etiqueta_metal == checkedId){
+                btn_enlazar_etiqueta.setVisibility(View.VISIBLE);
+                txt_epc_enlazado.setVisibility(View.VISIBLE);
+                holder_cantidad.setVisibility(View.GONE);
+            }else {
+                btn_enlazar_etiqueta.setVisibility(View.GONE);
+                txt_epc_enlazado.setVisibility(View.GONE);
+                holder_cantidad.setVisibility(View.VISIBLE);
+            }
         });
         txt_limpiar_activo.setOnClickListener(v->clearItem());
+    }
+
+    private void UploadData(JSONObject jsonCAF) {
+        ContadorNewCAF = ContadorNewCAF + 1;
+        try {
+            if(jsonCAF.getString("ProductLoaded").equals("false")){
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(upload_new_caf.class).setData(jsonCAF.toString(), new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        handelUploadResponse(response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("main_alta","Sin conexión al servidor"+error.getMessage());
+                        progressDialog.dismiss();
+                        Toast.makeText(Main.this, "Algo salió mal, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(upload_caf.class).setData(jsonCAF.toString(), new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        handelUploadResponse(response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("main_alta","Sin conexión al servidor"+error.getMessage());
+                        progressDialog.dismiss();
+                        Toast.makeText(Main.this, "Algo salió mal, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handelUploadResponse(Response response) {
+        String rep = null;
+        try {
+            rep = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
+            Log.e("main_alta","server response--->"+rep);
+            JSONObject jsonCAF = new JSONObject(rep);
+            if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
+                new printTags().execute(jsonCAF);
+            }
+            if(ContadorNewCAF < TotalNewCAF){
+                UploadData(jsonCAF);
+            }else{
+                progressDialog.dismiss();
+                Toast.makeText(Main.this, "Se crearon los nuevos registros con éxito", Toast.LENGTH_SHORT).show();
+            }
+        }catch (IOException | JSONException e){
+            Log.e("main_alta","upload_io_json_error->"+e.getMessage()+"\n--->"+rep);
+            progressDialog.dismiss();
+            Toast.makeText(Main.this, "Algo salió mal, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getTipos() {
         main_list_tipos = new ArrayList<>();
         menu_tipos = new PopupMenu(this, btn_tipo_activo);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/AltaActivo/getTipos.php", null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getTipos.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -277,6 +436,9 @@ public class Main extends AppCompatActivity {
     }
 
     private void initViews() {
+        btn_enlazar_etiqueta = findViewById(R.id.btn_enlazar_etiqueta);
+        txt_epc_enlazado = findViewById(R.id.txt_epc_enlazado);
+        holder_cantidad = findViewById(R.id.holder_cantidad);
         Card_Fotos = findViewById(R.id.card_fotos);
         Card_Descripcion = findViewById(R.id.card_descripcion);
         Card_Tipo = findViewById(R.id.card_tipo);
@@ -314,7 +476,7 @@ public class Main extends AppCompatActivity {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(this, spinner_departamento);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -355,7 +517,7 @@ public class Main extends AppCompatActivity {
     private void getOficinas() {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(this, spinner_oficina);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -392,17 +554,18 @@ public class Main extends AppCompatActivity {
 
     private void uploadCAF(String data){
         Log.e("main_alta", "Comenzando subida");
+        Log.e("main_alta", "DATA--->"+data);
         if(ProductLoaded){
-            if(!IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && et_cantidad.getText().length() > 0){
-                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AltaActivo/").build().create(guardar_caf_activo_existente.class).setData(data, new Callback<Response>() {
+            if(!IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && TotalNewCAF > 0){
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(guardar_caf_activo_existente.class).setData(data, new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         try {
                             String resp = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
-                            JSONObject json = new JSONObject(resp);
-                            main_list_epcs.add(json.getString("EPC"));
-                            main_list_final_areas.add(json.getString("NombreArea"));
-                            main_list_final_oficinas.add(json.getString("NombreOficina"));
+                            if(GenEPC.equals("true")){
+                                JSONObject json = new JSONObject(resp);
+                                main_list_epcs.add(json.getString("EPC"));
+                            }
                             ContadorNewCAF = ContadorNewCAF + 1;
                             if(ContadorNewCAF < TotalNewCAF){
                                 uploadCAF(resp);
@@ -413,6 +576,9 @@ public class Main extends AppCompatActivity {
                             Log.e("MainAlta", "Excepción de lecturas");
                         }catch (JSONException e){
                             Log.e("MainAlta", "Excepción de código EPC");
+                            Log.e("MainAlta", "Error--->"+e.getMessage());
+                            progressDialog.dismiss();
+                            Toast.makeText(Main.this, "Algo salió mal, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -425,14 +591,16 @@ public class Main extends AppCompatActivity {
                 Toast.makeText(this, "Por favor, introduzca información válida", Toast.LENGTH_SHORT).show();
             }
         }else{
-            if(file_img_1 != null && file_img_2 != null && !IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && et_cantidad.getText().length() > 0 && et_descripcion.getText().length() > 0){
-                new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/AltaActivo").build().create(guardar_caf_activo_nuevo.class).setData(data, new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
+            if(file_img_1 != null && file_img_2 != null && !IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && TotalNewCAF > 0 && et_descripcion.getText().length() > 0){
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo").build().create(guardar_caf_activo_nuevo.class).setData(data, new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
                             try {
                                 String respuesta = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
-                                JSONObject json = new JSONObject(respuesta);
-                                main_list_epcs.add(json.getString("EPC"));
+                                if(GenEPC.equals("true")){
+                                    JSONObject json = new JSONObject(respuesta);
+                                    main_list_epcs.add(json.getString("EPC"));
+                                }
                                 ContadorNewCAF = ContadorNewCAF + 1;
                                 if(ContadorNewCAF < TotalNewCAF){
                                     ProductLoaded = true;
@@ -460,7 +628,12 @@ public class Main extends AppCompatActivity {
 
     private void finishUpload(){
         if(rg_tipo_etiqueta.getCheckedRadioButtonId() == R.id.rb_etiqueta_papel){
-            new printTags().execute(main_list_epcs);
+            if(GenEPC.equals("true")){
+                //new printTags().execute(main_list_epcs);
+            }else{
+                progressDialog.dismiss();
+                Toast.makeText(Main.this, "Proceso finalizado con éxito", Toast.LENGTH_SHORT).show();
+            }
         }else{
             progressDialog.dismiss();
             Toast.makeText(Main.this, "Proceso finalizado con éxito", Toast.LENGTH_SHORT).show();
@@ -517,7 +690,10 @@ public class Main extends AppCompatActivity {
                     }
                     break;
                 case CODE_BAR_READER:
-                    et_buscador_activo.setText(data.getDataString());
+                    et_buscador_activo.setText(data.getDataString().substring(0,24));
+                    break;
+                case CODE_BAR_FOR_METAL:
+                    txt_epc_enlazado.setText(data.getDataString().substring(0,24));
                     break;
             }
         }else {
@@ -536,7 +712,7 @@ public class Main extends AppCompatActivity {
 
     private void searchItem(String key) {
         main_list_buscador = new ArrayList<>();
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/AltaActivo/getSearch.php?key=" + key.substring(0, 4), null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getSearch.php?key=" + key.substring(0, 4), null, response -> {
             JSONArray json= response.optJSONArray("Data");
             try {
 
@@ -671,7 +847,7 @@ public class Main extends AppCompatActivity {
                 setUpResult(child_list.get(position));
             });
 
-            Glide.with(child_context).load("https://rfidmx.com/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
+            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
 
             holder.nombre.setText(child_list.get(position).getNombre());
             holder.descripcion.setText(child_list.get(position).getDescripcion());
@@ -710,7 +886,7 @@ public class Main extends AppCompatActivity {
         NumeroActivo = result.getNumero();
         TipoActivo = result.getTipo();
         DescripcionActivo = result.getDescripcion();
-        Glide.with(this).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + result.getNumero()).override(360).into(img_preview);
+        Glide.with(this).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + result.getNumero()).override(360).into(img_preview);
         txt_descripcion_preview.setText(DescripcionActivo);
         txt_numero_preview.setText("Número de activo: "+NumeroActivo);
         Card_Tipo.setVisibility(View.GONE);
@@ -758,7 +934,97 @@ public class Main extends AppCompatActivity {
         }
     }
 
-    private class printTags extends AsyncTask<ArrayList<String>, Void, Boolean> {
+    private class printTags extends AsyncTask<JSONObject, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(JSONObject... jsonObjects) {
+            JSONObject json = jsonObjects[0];
+            try {
+                Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
+                DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                String desc_1 = " ",desc_2 = " " ,desc_3 = " " ,desc_4 = " ";
+                /*Cortar cadena*/
+                String Descripcion = "test";
+                int lenght = Descripcion.length();
+                if(lenght <= 50){
+                    desc_1 = Descripcion;
+                }else if(lenght <= 100){
+                    desc_1 = Descripcion.substring(0, 50);
+                    desc_2 = Descripcion.substring(51);
+                }else if(lenght <= 150){
+                    desc_1 = Descripcion.substring(0, 50);
+                    desc_2 = Descripcion.substring(51, 100);
+                    desc_3 = Descripcion.substring(101);
+                }
+                String zpl = "^XA\n" +
+                        "^RS,,,3,N,,,2\n" +
+                        "^RR10\n" +
+                        "^XZ\n" +
+                        "<xpml><page quantity='0' pitch='24.0 mm'></xpml>^XA\n" +
+                        "^SZ2^JMA\n" +
+                        "^MCY^PMN\n" +
+                        "^PW388\n" +
+                        "~JSN\n" +
+                        "^JZY\n" +
+                        "^LH0,0^LRN\n" +
+                        "^XZ\n" +
+                        "<xpml></page></xpml><xpml><page quantity='1' pitch='24.0 mm'></xpml>~DGR:SSGFX000.GRF,371,7,:Z64:eJwdkL1KA0EURs9m4y7iuFEsTLEkFhYpIzYjCWGfwEeQdFpOsHCRBEYU7FKKna/gE8iIoBZifIJkJYUWFmIKA1H0bm5xD8P9m+8D74E8GoNryd7o90fg98tjC6HjyEHVEmQQS8FAM4EU71MKLXiVtgjv9gVKhHYKCzbM2zxX4itHhZGg3WRX5uualsybmmrIRpPEq7ImSSpLj3BgwvMUdN2/1wJTushfWTTL0MoVO47Ds6wwcUxV2xulvovrPGvfakMl7VLOaLxNUY4tUVR0bA+sqRmqvZOh1kQ7vtMpe8cl0low+9CYTdW5W8EpNRlYsnj9qif/LPuRprCxrIZdgiS0s/dcUX590fpNub6G9z2aax/34Qn2Ld6luMTcJWWIRWEwPb2Z+/mX+0mksxyBKOIfImphyA==:3890\n" +
+                        "^XA\n" +
+                        "^FO27,157\n" +
+                        "^BY2^BCN,15,N,N^FD>;"+json.getString("EPC")+"^FS\n" +
+                        "^FO3,54\n" +
+                        "^BQN,2,4^FDLA,"+json.getString("EPC")+"^FS\n" +
+                        "^FT86,186\n" +
+                        "^CI0\n" +
+                        "^A0N,14,19^FD"+json.getString("EPC")+"^FS\n" +
+                        "^FT99,28\n" +
+                        "^A0N,14,18^FD"+json.getString("NombreTipo")+"^FS\n" +
+                        "^FT99,66\n" +
+                        "^A0N,14,18^FD"+json.getString("NombreOficina")+"^FS\n" +
+                        "^FT99,47\n" +
+                        "^A0N,14,18^FD"+json.getString("NombreArea")+"^FS\n" +
+                        "^FT283,44\n" +
+                        "^A0N,37,49^FD"+json.getString("EPC").substring(0,4)+"^FS\n" +
+                        "^FO292,48\n" +
+                        "^BY1^BCN,12,N,N^FD>;"+json.getString("EPC").substring(0,4)+"^FS\n" +
+                        "^FT99,84\n" +
+                        "^A0N,20,14^FD"+desc_1+"^FS\n" +
+                        "^FT99,104\n" +
+                        "^A0N,20,14^FD"+desc_2+"^FS\n" +
+                        "^FT99,124\n" +
+                        "^A0N,20,14^FD"+desc_3+"^FS\n" +
+                        "^FT99,145\n" +
+                        "^A0N,20,14^FD"+desc_4+"^FS\n" +
+                        "^FO20,7\n" +
+                        "^XGR:SSGFX000.GRF,1,1^FS\n" +
+                        "^PQ1,0,1,Y\n" +
+                        "^RFW,H,2,12,1^FD"+json.getString("EPC")+"^FS\n"+
+                        "^XZ\n" +
+                        "<xpml></page></xpml>^XA\n" +
+                        "^IDR:SSGFX000.GRF^XZ\n" +
+                        "<xpml><end/></xpml>";
+                outToServer.writeBytes(zpl);
+                clientSocket.close();
+                return true;
+            } catch (IOException e) {
+                Log.e("main_alta", "IO Error -> "+e.getMessage());
+                return false;
+            } catch (JSONException e){
+                Log.e("main_alta", "JSONException Error -> "+e.getMessage());
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean bool) {
+            super.onPostExecute(bool);
+            if(bool){
+            }else{
+            }
+        }
+    }
+
+    /*private class printTags extends AsyncTask<ArrayList<String>, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(ArrayList<String>... arrayLists) {
@@ -835,9 +1101,13 @@ public class Main extends AppCompatActivity {
                 return true;
             } catch (IOException e) {
                 Log.e("main_alta", "IO Error -> "+e.getMessage());
+                //Toast.makeText(Main.this, "Error, no se pudo conectar con la impresora", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
                 return false;
             } catch (InterruptedException e){
                 Log.e("main_alta", "Interruped Error -> "+e.getMessage());
+                //Toast.makeText(Main.this, "Error, se interrumpió la conexión con la impresora", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
                 return false;
             }
         }
@@ -852,5 +1122,5 @@ public class Main extends AppCompatActivity {
                 Toast.makeText(Main.this, "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }*/
 }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
+import com.Hellman.CAFv2.DevelopBeta.BluetoothManager;
 import com.uhf.uhf.R;
 
 import org.w3c.dom.Text;
@@ -48,8 +49,15 @@ public class Main extends AppCompatActivity {
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_main_ajustes);
         findViewById(R.id.btn_test).setOnClickListener(v->{
+            BluetoothManager btm = new BluetoothManager();
+            try {
+                btm.init();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             /*new SendPrint().execute();*/
-            new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/Loaders/").build().create(api_network_blank.class).setData("", new Callback<Response>() {
+            /*new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/").build().create(api_network_blank.class).setData("", new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     Toast.makeText(Main.this, "Reboot Complete", Toast.LENGTH_SHORT).show();
@@ -59,7 +67,7 @@ public class Main extends AppCompatActivity {
                 public void failure(RetrofitError error) {
                     Toast.makeText(Main.this, "Error, sin conexión al servidor", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
         });
         initViews();
         preferences = loadPreferences();
@@ -92,6 +100,7 @@ public class Main extends AppCompatActivity {
         preferences_editor.apply();
 
         GlobalPreferences.SERVER_PRINTER_IP = et_direccion_ip_impresora.getText().toString();
+        GlobalPreferences.URL = et_direccion_ip.getText().toString();
 
         Toast.makeText(this, "Ajustes guardados correctamente", Toast.LENGTH_SHORT).show();
     }

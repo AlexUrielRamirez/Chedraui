@@ -69,7 +69,8 @@ public class admin_incidences extends Fragment {
         admin_incidences fragment = new admin_incidences();
         return fragment;
     }
-    
+
+    private ConstraintLayout Panel_loading;
     private RecyclerView rv_incidencias;
     private ArrayList<ModelIncidencias> main_list_incidencias;
 
@@ -99,6 +100,7 @@ public class admin_incidences extends Fragment {
     }
 
     public void initViews(View view) {
+        Panel_loading = view.findViewById(R.id.Panel_loading);
         rv_incidencias = view.findViewById(R.id.rv_incidencias);
         rv_incidencias.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
@@ -107,7 +109,8 @@ public class admin_incidences extends Fragment {
 
     private void getData(){
         main_list_incidencias = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, "https://rfidmx.com/HellmanCAF/webservices/AdministracionIncidencias/getAllIncidences.php", null, response -> {
+        Panel_loading.setVisibility(View.VISIBLE);
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionIncidencias/getAllIncidences.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -134,15 +137,17 @@ public class admin_incidences extends Fragment {
                     model.setStatus(jsonObject.optInt("Status"));
 
                     main_list_incidencias.add(model);
-
                 }
                 rv_incidencias.setAdapter(new rv_adapter(main_list_incidencias));
+                Panel_loading.setVisibility(View.GONE);
             } catch (JSONException | NullPointerException e) {
+                Panel_loading.setVisibility(View.GONE);
                 Log.e("Validacion", "JSON | Null Exception" + e);
             }
 
         }, error -> {
-            Log.e("Validacion", "Volley error" + error);
+            Panel_loading.setVisibility(View.GONE);
+            Log.e("Validacion", "Error, no hay conexión con el servidor");
         }));
     }
 
@@ -197,7 +202,7 @@ public class admin_incidences extends Fragment {
                                         fos.flush();
                                         fos.close();
 
-                                        new RestAdapter.Builder().setEndpoint("https://rfidmx.com/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), child_list.get(position).getIdCAF(), child_list.get(position).getIdIncidencia(), NombreCreador.getText().toString(), new Callback<Response>() {
+                                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), child_list.get(position).getIdCAF(), child_list.get(position).getIdIncidencia(), NombreCreador.getText().toString(), new Callback<Response>() {
                                             @Override
                                             public void success(Response response, Response response2) {
                                                 try{
@@ -252,7 +257,7 @@ public class admin_incidences extends Fragment {
                 });
                 bsd.show();
             });
-            Glide.with(context).load("https://rfidmx.com/HellmanCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombreActivo());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcionActivo());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumeroActivo());

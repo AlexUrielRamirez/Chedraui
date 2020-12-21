@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="10dp"/>
     <LinearLayout
-        android:id="@+id/holder_selector_area"
+        android:id="@+id/holder_selector_cedis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -26,17 +26,17 @@
         app:layout_constraintTop_toBottomOf="@id/txt_header">
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seleccione el departamento "
+            android:text="Seleccione el CEDIS "
             android:padding="4dp" />
 
         <TextView
-            android:id="@+id/spinner_Departamento"
+            android:id="@+id/spinner_Cedis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Departamento"
+            android:text="CEDIS"
             android:layout_marginTop="5dp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -45,6 +45,55 @@
             android:background="@drawable/fake_gray_button"
             android:textSize="18sp"
             android:drawableRight="@drawable/drop_arrow_black"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/holder_selector_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/fake_card_white"
+        app:layout_constraintTop_toBottomOf="@id/holder_selector_cedis">
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccione el departamento "
+            android:padding="4dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/spinner_Departamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fake_gray_button"
+                android:drawableRight="@drawable/drop_arrow_black"
+                android:gravity="center_horizontal"
+                android:padding="6dp"
+                android:text="Departamento"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <ProgressBar
+                android:id="@+id/pb_loading_departamento"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:indeterminateDrawable="@drawable/progress"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
     <LinearLayout
@@ -63,20 +112,38 @@
             android:layout_height="wrap_content"
             android:text="Seleccione la oficina o lugar"
             android:padding="4dp" />
-
-        <TextView
-            android:id="@+id/spinner_Oficina"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Oficina"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:padding="6dp"
-            android:gravity="center_horizontal"
-            android:background="@drawable/fake_gray_button"
-            android:textSize="18sp"
-            android:drawableRight="@drawable/drop_arrow_black"/>
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/spinner_Oficina"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fake_gray_button"
+                android:drawableRight="@drawable/drop_arrow_black"
+                android:gravity="center_horizontal"
+                android:padding="6dp"
+                android:text="Oficina"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <ProgressBar
+                android:id="@+id/pb_loading_ofices"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:indeterminateDrawable="@drawable/progress"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

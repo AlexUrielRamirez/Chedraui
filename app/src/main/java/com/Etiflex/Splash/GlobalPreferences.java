@@ -7,8 +7,11 @@ import com.Etiflex.Splash.ROC.ModelInventory;
 import java.util.ArrayList;
 
 public class GlobalPreferences {
+
+    public static boolean DEVELOP_MODE = false;
+
     public static String DEVICE;
-    public static String URL = "https://rfidmx.com/HellmanCAF/webservices/";
+    public static String URL = GlobalPreferences.URL+"/HellmanCAF/webservices/";
     public static String SERVER_PRINTER_IP;
 
     public static String ID_USUARIO;
@@ -45,6 +48,7 @@ public class GlobalPreferences {
     public static final int ADMIN_PAGE_STATE_INCIDENCES = 2;
     public static final int ADMIN_PAGE_STATE_TRANSFER = 3;
     public static final int ADMIN_PAGE_STATE_ITEM = 4;
+    public static final int ADMIN_PAGE_STATE_PRINT = 5;
 
     public static int CAF_STATE = 0;
     public static final int CAF_STATE_IDLE = 1;

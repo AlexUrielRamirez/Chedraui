@@ -75,12 +75,12 @@
             android:id="@+id/txt_ubicacion_activo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:text="Ubicación: Recursos Humanos > Oficina Raúl Hernández"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardView2" />
+            app:layout_constraintTop_toBottomOf="@id/txt_numero_activo" />
         <TextView
             android:id="@+id/txt_creacion"
             android:layout_width="0dp"

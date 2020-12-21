@@ -67,6 +67,7 @@
             android:padding="8dp"
             android:maxLines="1"
             app:layout_constraintEnd_toStartOf="@+id/btn_menu_buscar"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:padding="5dp"
-            android:src="@drawable/mas_negro"
+            android:src="@drawable/qr_code_blanco"
+            android:background="@color/blue_selected"
             app:layout_constraintBottom_toBottomOf="@+id/et_buscador_activo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

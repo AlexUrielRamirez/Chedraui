@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Inventario.rv_adapter;
 import com.Etiflex.Splash.ROC.ModelInventory;
 import com.android.volley.Request;
@@ -284,7 +285,7 @@ public class CAF_AltaActivo extends Fragment {
                 setUpResult(child_list.get(position));
             });
 
-            Glide.with(child_context).load("https://rfidmx.com/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
+            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
 
             holder.nombre.setText(child_list.get(position).getNombre());
             holder.descripcion.setText(child_list.get(position).getDescripcion());
