@@ -12,7 +12,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.Addons.ProgressBarAnimation;
 import com.Etiflex.Splash.GlobalPreferences;
@@ -22,6 +24,7 @@ import com.Hellman.CAFv2.Administracion.Impresion.admin_impresion;
 import com.Hellman.CAFv2.Administracion.Incidences.admin_incidences;
 import com.Hellman.CAFv2.Administracion.Traspasos.admin_traspasos;
 import com.Hellman.CAFv2.Administracion.Ubicaciones.admin_ubicaciones;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.module.interaction.ModuleConnector;
 import com.nativec.tools.ModuleManager;
 import com.rfid.RFIDReaderHelper;
@@ -29,6 +32,18 @@ import com.rfid.ReaderConnector;
 import com.rfid.rxobserver.RXObserver;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.uhf.uhf.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE;
 import static com.Etiflex.Splash.GlobalPreferences.ADMIN_PAGE_STATE_IDLE;
@@ -51,6 +66,15 @@ public class Main extends AppCompatActivity {
     private ConstraintLayout menu_ubicaciones, menu_incidencias, menu_activo, menu_traspasos, menu_impresion;
     private ConstraintLayout fragment_holder;
 
+    private interface check_admin_pass{
+        @FormUrlEncoded
+        @POST("/check_admin_acces.php")
+        void setData(
+                @Field("pass") String Password,
+                Callback<Response> callback
+        );
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +83,50 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main_administracion);
         initViews();
         setUpViews();
+
+        checkUserLevel();
+
+    }
+
+    private void checkUserLevel() {
+        if(GlobalPreferences.NIVEL_USUARIO != 1){
+            BottomSheetDialog bsd = new BottomSheetDialog(this);
+            bsd.setContentView(R.layout.bsd_admin_password);
+            bsd.setCancelable(false);
+            EditText et_contrasena = bsd.findViewById(R.id.et_contrasena);
+            bsd.findViewById(R.id.btn_continuar).setOnClickListener(v->{
+                if(et_contrasena.getText().length() != 0){
+                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Administracion").build().create(check_admin_pass.class).setData(et_contrasena.getText().toString(), new Callback<Response>() {
+                        @Override
+                        public void success(Response response, Response response2) {
+                            try {
+                                if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("ok")){
+                                    Toast.makeText(Main.this, "¡Gracias!", Toast.LENGTH_SHORT).show();
+                                    bsd.dismiss();
+                                }else{
+                                    et_contrasena.setText("");
+                                    Toast.makeText(Main.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (IOException e){
+                                Toast.makeText(Main.this, "Algo salió mal, intente nuevamente por favor", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Toast.makeText(Main.this, "Error, revise su conexión", Toast.LENGTH_SHORT).show();
+                            Log.e("Administracion", error.getMessage());
+                        }
+                    });
+                }else{
+                    Toast.makeText(this, "Por favor, ingrese una contraseña válida", Toast.LENGTH_SHORT).show();
+                }
+            });
+            bsd.findViewById(R.id.btn_volver).setOnClickListener(v->{
+                this.finish();
+            });
+            bsd.show();
+        }
     }
 
     private void initViews() {

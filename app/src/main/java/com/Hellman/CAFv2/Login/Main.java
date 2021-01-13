@@ -18,6 +18,9 @@ import com.Etiflex.Splash.Splash;
 import com.Hellman.Hellman;
 import com.uhf.uhf.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -74,10 +77,21 @@ public class Main extends AppCompatActivity {
                         try{
                             String res = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
                             if (!res.equals("INVALID_CREDENTIALS")){
-                                GlobalPreferences.ID_USUARIO = res;
-                                startActivity(new Intent(Main.this, Hellman.class));
-                                progressDialog.dismiss();
-                                Main.this.finish();
+                                try {
+                                    JSONObject json = new JSONObject(res);
+                                    GlobalPreferences.ID_USUARIO = json.getString("Id");
+                                    GlobalPreferences.NOMBRE_USUARIO = json.getString("Nombre");
+                                    GlobalPreferences.CODIGO_USUARIO = json.getString("Codigo");
+                                    GlobalPreferences.NIVEL_USUARIO = Integer.parseInt(json.getString("Status"));
+
+                                    startActivity(new Intent(Main.this, Hellman.class));
+                                    progressDialog.dismiss();
+                                    Main.this.finish();
+                                }catch (JSONException e){
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Main.this, "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
+                                    Log.e("Login", e.getMessage());
+                                }
                             }else{
                                 txt_error.setVisibility(View.VISIBLE);
                                 progressDialog.dismiss();

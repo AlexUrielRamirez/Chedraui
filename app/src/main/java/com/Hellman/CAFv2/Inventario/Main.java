@@ -621,6 +621,7 @@ public class Main extends AppCompatActivity {
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     dialog.setContentView(R.layout.alert_insidence);
                     TextView NombreCreador = dialog.findViewById(R.id.et_persona_alta);
+                    NombreCreador.setText(GlobalPreferences.NOMBRE_USUARIO);
                     dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
                         dialog.dismiss();
                     });
@@ -629,7 +630,7 @@ public class Main extends AppCompatActivity {
                         signaturePad.clear();
                     });
                     dialog.findViewById(R.id.btn_continuar).setOnClickListener(v2->{
-                        if(NombreCreador.getText().length() > 3 && !signaturePad.isEmpty()){
+                        if(!signaturePad.isEmpty()){
                             ProgressDialog pd_insidencia = new ProgressDialog(context);
                             pd_insidencia.setMessage("Por favor espere...");
                             pd_insidencia.show();
@@ -645,7 +646,7 @@ public class Main extends AppCompatActivity {
                                 fos.write(bitmapdata);
                                 fos.flush();
                                 fos.close();
-                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), NombreCreador.getText().toString(),new TypedFile("multipart/form-data", f), new Callback<Response>() {
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), GlobalPreferences.NOMBRE_USUARIO,new TypedFile("multipart/form-data", f), new Callback<Response>() {
                                     @Override
                                     public void success(Response response, Response response2) {
                                         try{
@@ -930,6 +931,7 @@ public class Main extends AppCompatActivity {
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;
                 getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("ControlIncidencias")).commit();
                 FragmentHolder.setVisibility(View.GONE);
+                AlertLayout.setVisibility(View.GONE);
                 break;
             default:
                 conter = 0;

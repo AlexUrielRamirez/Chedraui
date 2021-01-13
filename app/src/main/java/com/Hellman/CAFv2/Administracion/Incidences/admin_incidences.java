@@ -178,6 +178,7 @@ public class admin_incidences extends Fragment {
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                         dialog.setContentView(R.layout.alert_insidence);
                         TextView NombreCreador = dialog.findViewById(R.id.et_persona_alta);
+                        NombreCreador.setText(GlobalPreferences.NOMBRE_USUARIO);
                         dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
                             dialog.dismiss();
                         });
@@ -187,7 +188,6 @@ public class admin_incidences extends Fragment {
                         });
                         dialog.findViewById(R.id.btn_continuar).setOnClickListener(v2->{
                             if(!signaturePad.isEmpty()){
-                                if(NombreCreador.getText().toString().length() > 3){
                                     progressDialog.setMessage("Actualizando índices...");
                                     progressDialog.show();
                                     try{
@@ -202,7 +202,7 @@ public class admin_incidences extends Fragment {
                                         fos.flush();
                                         fos.close();
 
-                                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), child_list.get(position).getIdCAF(), child_list.get(position).getIdIncidencia(), NombreCreador.getText().toString(), new Callback<Response>() {
+                                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), child_list.get(position).getIdCAF(), child_list.get(position).getIdIncidencia(), GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
                                             @Override
                                             public void success(Response response, Response response2) {
                                                 try{
@@ -234,9 +234,6 @@ public class admin_incidences extends Fragment {
                                     }catch (IOException e){
                                         Toast.makeText(getContext(), "Por favor, revise los permisos de almacenamiento", Toast.LENGTH_SHORT).show();
                                     }
-                                }else{
-                                    Toast.makeText(getContext(), "Por favor, ingrese un nombre válido", Toast.LENGTH_SHORT).show();
-                                }
                             }else{
                                 Toast.makeText(getContext(), "Por favor, ingrese una firma válida", Toast.LENGTH_SHORT).show();
                             }

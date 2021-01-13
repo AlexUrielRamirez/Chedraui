@@ -41,7 +41,7 @@
         <TextView
             android:id="@+id/txt_nombre_activo"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:text="Nombre Activo"
             android:textColor="@color/black"
@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Descripción activo"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView2"
             app:layout_constraintTop_toBottomOf="@id/txt_nombre_activo" />
@@ -80,7 +81,7 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_numero_activo" />
+            app:layout_constraintTop_toBottomOf="@id/cardView2" />
         <TextView
             android:id="@+id/txt_creacion"
             android:layout_width="0dp"

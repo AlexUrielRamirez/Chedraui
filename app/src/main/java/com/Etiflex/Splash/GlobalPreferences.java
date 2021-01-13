@@ -15,8 +15,11 @@ public class GlobalPreferences {
     public static String SERVER_PRINTER_IP;
 
     public static String ID_USUARIO;
+    public static String NOMBRE_USUARIO;
+    public static String CODIGO_USUARIO;
     public static String ID_CEDIS;
     public static String NOMBRE_CEDIS;
+    public static int NIVEL_USUARIO;
 
     public static final int PICK_IMAGE_FROM_CAMERA = 1;
     public static final int PICK_IMAGE_FROM_GALLERY = 2;

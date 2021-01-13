@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="done_blue_selected.json"
+        app:lottie_loop="false" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="¡Subida finalizada!\nLa información se guardó correctamente, ¿Que deseas hacer ahora?"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"/>
+    <Button
+        android:id="@+id/btn_igual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subir un activo igual"
+        android:layout_margin="5dp"
+        android:background="@color/blue_selected"
+        android:textColor="@color/white"/>
+    <Button
+        android:id="@+id/btn_nuevo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subir un activo diferente"
+        android:layout_margin="5dp"
+        android:background="@color/blue_selected"
+        android:textColor="@color/white"/>
+    <Button
+        android:id="@+id/btn_salir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        android:layout_margin="5dp"
+        android:background="@android:color/holo_red_dark"
+        android:textColor="@color/white"/>
+</LinearLayout>
