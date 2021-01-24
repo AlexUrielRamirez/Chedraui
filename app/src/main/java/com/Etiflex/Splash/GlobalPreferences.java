@@ -3,6 +3,7 @@ package com.Etiflex.Splash;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Etiflex.Splash.ROC.ModelInventory;
+import com.Hellman.CAFv2.Historial.ControladorHistorial;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,15 @@ public class GlobalPreferences {
     public static String ID_CEDIS;
     public static String NOMBRE_CEDIS;
     public static int NIVEL_USUARIO;
+
+    public static ControladorHistorial mHistorial;
+    public static final String HISTORIAL_TIPO_REIMPRESION = "1";
+    public static final String HISTORIAL_TIPO_INVENTARIOS = "2";
+    public static final String HISTORIAL_TIPO_ALTA_INCIDENCIA = "3";
+    public static final String HISTORIAL_TIPO_BAJA_INCIDENCIA = "4";
+    public static final String HISTORIAL_TIPO_TRASPASOS = "5";
+    public static final String HISTORIAL_TIPO_ALTA_ACTIVO = "6";
+    public static final String HISTORIAL_TIPO_MODIFICACION_ACTIVO = "7";
 
     public static final int PICK_IMAGE_FROM_CAMERA = 1;
     public static final int PICK_IMAGE_FROM_GALLERY = 2;

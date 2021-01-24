@@ -114,6 +114,7 @@ public class Hellman extends AppCompatActivity {
     //CAFv2
     private RelativeLayout MainFragmentHolder;
     private Button btn_inventario, btn_alta, btn_ajustes, btn_administracion;
+    private TextView btn_historial;
     private ImageView img_logo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +131,7 @@ public class Hellman extends AppCompatActivity {
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_hellman);
         img_logo = findViewById(R.id.logo);
+        btn_historial = findViewById(R.id.btn_historial);
         Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
         /*if(ID_CEDIS.equals("2")){
             Glide.with(this).load(R.drawable.contract).into(img_logo);
@@ -171,7 +173,12 @@ public class Hellman extends AppCompatActivity {
             MainFragmentHolder.setVisibility(View.VISIBLE);*/
             startActivity(new Intent(this, com.Hellman.CAFv2.Ajustes.Main.class));
         });
-
+        if(GlobalPreferences.NIVEL_USUARIO == 1){
+            btn_historial.setOnClickListener(v->{
+                startActivity(new Intent(this, com.Hellman.CAFv2.Historial.Main.class));
+            });
+            btn_historial.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initViews() {

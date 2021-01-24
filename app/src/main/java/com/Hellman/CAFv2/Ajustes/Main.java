@@ -49,12 +49,7 @@ public class Main extends AppCompatActivity {
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_main_ajustes);
         findViewById(R.id.btn_test).setOnClickListener(v->{
-            BluetoothManager btm = new BluetoothManager();
-            try {
-                btm.init();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            new SendPrint().execute();
 
             /*new SendPrint().execute();*/
             /*new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/").build().create(api_network_blank.class).setData("", new Callback<Response>() {
@@ -119,7 +114,7 @@ public class Main extends AppCompatActivity {
                 String EPC = "189900000000000000000007";
                 String TipoActivo = "Papel";
                 String Oficina = "Johannes Wattendorff";
-                String DescripcionActivo = "AIRE ACONDICIONADO TIPO MINISPLIT HI-WALL MARCA YORK";
+                String DescripcionActivo = "TEST";
                 String desc_1 = "",desc_2 = "" ,desc_3 = "" ,desc_4 = "";
                 if(DescripcionActivo.length() <= 50){
                     desc_1 = DescripcionActivo;
@@ -231,7 +226,7 @@ public class Main extends AppCompatActivity {
                         "^IDR:SSGFX000.GRF^XZ\n" +
                         "<xpml><end/></xpml>"*/
                 Log.e("main_ajustes", "Starting process");
-                Socket clientSocket = new Socket("192.168.0.99", 9100);
+                Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                 outToServer.writeBytes(zpl_2);
                 clientSocket.close();

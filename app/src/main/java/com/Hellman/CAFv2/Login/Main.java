@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
 import com.Etiflex.Splash.Splash;
+import com.Hellman.CAFv2.Historial.ControladorHistorial;
 import com.Hellman.Hellman;
 import com.uhf.uhf.R;
 
@@ -83,6 +84,7 @@ public class Main extends AppCompatActivity {
                                     GlobalPreferences.NOMBRE_USUARIO = json.getString("Nombre");
                                     GlobalPreferences.CODIGO_USUARIO = json.getString("Codigo");
                                     GlobalPreferences.NIVEL_USUARIO = Integer.parseInt(json.getString("Status"));
+                                    GlobalPreferences.mHistorial = new ControladorHistorial();
 
                                     startActivity(new Intent(Main.this, Hellman.class));
                                     progressDialog.dismiss();

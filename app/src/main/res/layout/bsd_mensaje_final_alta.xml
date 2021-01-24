@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:text="¡Subida finalizada!\nLa información se guardó correctamente, ¿Que deseas hacer ahora?"
+        android:text="¡Alta exitosa!\nLa información se guardó correctamente\n¿Que deseas hacer ahora?"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:layout_marginTop="15dp"

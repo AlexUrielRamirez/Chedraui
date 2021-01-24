@@ -314,7 +314,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/done/baseline_done_24.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/access_time/baseline_access_time_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -324,8 +324,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="done_white" />
+                            <entry key="outputName" value="ic_historial_negro" />
                             <entry key="sourceFile" value="C:\Users\Integracion 2" />
                           </map>
                         </option>

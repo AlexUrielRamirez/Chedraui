@@ -426,6 +426,9 @@ public class admin_impresion extends Fragment {
                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                 String desc_1 = " ",desc_2 = " " ,desc_3 = " " ,desc_4 = " ";
                 for (int position = 0; position < arrayLists[0].size(); position++){
+                    if(!arrayLists[0].get(position).getStatus().equals("5")){
+                        GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_REIMPRESION, arrayLists[0].get(position).getIdCaf());
+                    }
                     if(arrayLists[0].get(position).isPrint()){
                         /*Cortar cadena*/
                         String Descripcion = arrayLists[0].get(position).getDescripcion();

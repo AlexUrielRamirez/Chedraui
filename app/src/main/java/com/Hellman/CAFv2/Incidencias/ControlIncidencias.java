@@ -154,6 +154,7 @@ public class ControlIncidencias extends android.app.Fragment {
                                         if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("succes")){
                                             for(int position = 0; position < Main.main_list_insidencias.size(); position++){
                                                 if(Main.main_list_insidencias.get(position).getIdCAF().equals(IdCAF)){
+                                                    GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_BAJA_INCIDENCIA, Main.main_list_insidencias.get(position).getIdCAF());
                                                     Main.tag_list_insidencias.remove(position);
                                                     Main.main_list_insidencias.remove(position);
                                                     GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;

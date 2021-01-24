@@ -207,6 +207,7 @@ public class admin_incidences extends Fragment {
                                             public void success(Response response, Response response2) {
                                                 try{
                                                     if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("succes")){
+                                                        GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_BAJA_INCIDENCIA, child_list.get(position).getIdCAF());
                                                         getData();
                                                         dialog.dismiss();
                                                         progressDialog.dismiss();
@@ -278,54 +279,57 @@ public class admin_incidences extends Fragment {
         }
 
         String getDate(String date){
+            try {
+                String[] parts = date.split(" ");
+                String Fecha = parts[0];
+                String Hora = parts[1];
 
-            String[] parts = date.split(" ");
-            String Fecha = parts[0];
-            String Hora = parts[1];
+                String dia = Fecha.substring(8, 10);
+                String mes = Fecha.substring(5, 7);
+                switch (mes){
+                    case "01":
+                        mes = "Enero";
+                        break;
+                    case "02":
+                        mes = "Febrero";
+                        break;
+                    case "03":
+                        mes = "Marzo";
+                        break;
+                    case "04":
+                        mes = "Abril";
+                        break;
+                    case "05":
+                        mes = "Mayo";
+                        break;
+                    case "06":
+                        mes = "Junio";
+                        break;
+                    case "07":
+                        mes = "Julio";
+                        break;
+                    case "08":
+                        mes = "Agosto";
+                        break;
+                    case "09":
+                        mes = "Septiembre";
+                        break;
+                    case "10":
+                        mes = "Octubre";
+                        break;
+                    case "11":
+                        mes = "Noviembre";
+                        break;
+                    case "12":
+                        mes = "Diciembre";
+                        break;
+                }
+                String anio = Fecha.substring(0, 4);
 
-            String dia = Fecha.substring(8, 10);
-            String mes = Fecha.substring(5, 7);
-            switch (mes){
-                case "01":
-                    mes = "Enero";
-                    break;
-                case "02":
-                    mes = "Febrero";
-                    break;
-                case "03":
-                    mes = "Marzo";
-                    break;
-                case "04":
-                    mes = "Abril";
-                    break;
-                case "05":
-                    mes = "Mayo";
-                    break;
-                case "06":
-                    mes = "Junio";
-                    break;
-                case "07":
-                    mes = "Julio";
-                    break;
-                case "08":
-                    mes = "Agosto";
-                    break;
-                case "09":
-                    mes = "Septiembre";
-                    break;
-                case "10":
-                    mes = "Octubre";
-                    break;
-                case "11":
-                    mes = "Noviembre";
-                    break;
-                case "12":
-                    mes = "Diciembre";
-                    break;
+                return " el " + dia + " del " + mes + " de " + anio + " a las " + Hora + " horas";
+            }catch (ArrayIndexOutOfBoundsException  e){
+                return ", fecha no especificada";
             }
-            String anio = Fecha.substring(0, 4);
-
-            return " el " + dia + " del " + mes + " de " + anio + " a las " + Hora + " horas";
         }
 
         @Override

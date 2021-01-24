@@ -253,6 +253,7 @@ public class admin_activo extends Fragment {
                     @Override
                     public void success(Response response, Response response2) {
                         try {
+                            GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_MODIFICACION_ACTIVO, json.getString("IdCAF"));
                             String resp = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
                             if(resp.equals("succes")){
                                 if(EXIST_FILE_1){
@@ -269,7 +270,7 @@ public class admin_activo extends Fragment {
                             }else{
                                 finishChanges();
                             }
-                        }catch (IOException e){
+                        }catch (JSONException | IOException e){
                             Toast.makeText(getContext(), "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                         }

@@ -504,6 +504,7 @@ public class admin_traspasos extends Fragment {
                             new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_insert_traspaso.class).setData(data, new Callback<Response>() {
                                 @Override
                                 public void success(Response response, Response response2) {
+                                    GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_TRASPASOS, child_list.get(position).getIdCAF());
                                     pd.dismiss();
                                     Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show();
                                 }

@@ -384,6 +384,7 @@ public class Main extends AppCompatActivity {
             rep = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
             Log.e("main_alta","server response--->"+rep);
             JSONObject jsonCAF = new JSONObject(rep);
+            GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_ACTIVO, jsonCAF.getString("IdCAF"));
             if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
                 new printTags().execute(jsonCAF);
             }
@@ -391,8 +392,10 @@ public class Main extends AppCompatActivity {
                 UploadData(jsonCAF);
             }else{
                 progressDialog.dismiss();
+                showFinalDialog();
                 Toast.makeText(Main.this, "Se crearon los nuevos registros con éxito", Toast.LENGTH_SHORT).show();
             }
+
         }catch (IOException | JSONException e){
             Log.e("main_alta","upload_io_json_error->"+e.getMessage()+"\n--->"+rep);
             progressDialog.dismiss();
