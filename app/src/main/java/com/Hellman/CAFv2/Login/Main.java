@@ -83,6 +83,7 @@ public class Main extends AppCompatActivity {
                                     GlobalPreferences.ID_USUARIO = json.getString("Id");
                                     GlobalPreferences.NOMBRE_USUARIO = json.getString("Nombre");
                                     GlobalPreferences.CODIGO_USUARIO = json.getString("Codigo");
+                                    GlobalPreferences.ID_CEDIS = json.getString("IdCedis");
                                     GlobalPreferences.NIVEL_USUARIO = Integer.parseInt(json.getString("Status"));
                                     GlobalPreferences.mHistorial = new ControladorHistorial();
 

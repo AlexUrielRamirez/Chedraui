@@ -94,9 +94,8 @@ public class Hellman extends AppCompatActivity {
 
     private interface ANUploadXLSX{
         @Multipart
-        @POST("/upload_data.php")
+        @POST("/upload_excel.php")
         void setData(
-                @Part("Type") String Type,
                 @Part("file") TypedFile file,
                 Callback<Response> callback
         );
@@ -114,7 +113,7 @@ public class Hellman extends AppCompatActivity {
     //CAFv2
     private RelativeLayout MainFragmentHolder;
     private Button btn_inventario, btn_alta, btn_ajustes, btn_administracion;
-    private TextView btn_historial;
+    private TextView btn_excel, btn_historial;
     private ImageView img_logo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +177,7 @@ public class Hellman extends AppCompatActivity {
                 startActivity(new Intent(this, com.Hellman.CAFv2.Historial.Main.class));
             });
             btn_historial.setVisibility(View.VISIBLE);
+            btn_excel.setVisibility(View.VISIBLE);
         }
     }
 
@@ -259,7 +259,8 @@ public class Hellman extends AppCompatActivity {
             }
             startActivityForResult(Intent.createChooser(intent,"Seleccionando txt"), GlobalPreferences.INTENT_RESULT_ADD_FILE);
         });
-        findViewById(R.id.btn_add_file_xls).setOnClickListener(v->{
+        btn_excel =  findViewById(R.id.btn_add_file_xls);
+        btn_excel.setOnClickListener(v->{
             String[] mimeTypes = {"application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
 
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -371,7 +372,7 @@ public class Hellman extends AppCompatActivity {
         if(requestCode == GlobalPreferences.INTENT_RESULT_ADD_FILE_EXCEL && resultCode == RESULT_OK && data != null) {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" + getFileName(data.getData()));
             Log.e("Excel","dentro excel");
-            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/demo/android/").build().create(ANUploadXLSX.class).setData("2", new TypedFile("multipart/form-data", file), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders").build().create(ANUploadXLSX.class).setData( new TypedFile("multipart/form-data", file), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     Log.e("Excel","succes");

@@ -131,6 +131,7 @@
             android:textSize="13.5sp"
             android:textColor="@color/black"
             android:text="Nombre"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/img_detalle" />

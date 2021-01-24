@@ -224,7 +224,7 @@ public class Main extends AppCompatActivity {
                 /**Se cargó un activo?*/
                 if(ProductLoaded){
                     jsonCAF.put("ProductLoaded","true");
-                    jsonCAF.put("Descripcion", "");
+                    jsonCAF.put("Descripcion", DescripcionActivo);
                     jsonCAF.put("IdActivo", IdActivo);
                     jsonCAF.put("NumeroActivo", NumeroActivo);
                     jsonCAF.put("TipoActivo", "");
@@ -384,6 +384,14 @@ public class Main extends AppCompatActivity {
             rep = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
             Log.e("main_alta","server response--->"+rep);
             JSONObject jsonCAF = new JSONObject(rep);
+
+            SearchModel model = new SearchModel();
+            model.setId(jsonCAF.optString("IdActivo"));
+            model.setNumero(jsonCAF.optString("NumeroActivo"));
+            model.setNombre(jsonCAF.optString("Descripcion"));
+            model.setDescripcion(jsonCAF.optString("Descripcion"));
+            setUpResult(model);
+
             GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_ACTIVO, jsonCAF.getString("IdCAF"));
             if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
                 new printTags().execute(jsonCAF);
@@ -969,7 +977,7 @@ public class Main extends AppCompatActivity {
                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                 String desc_1 = " ",desc_2 = " " ,desc_3 = " " ,desc_4 = " ";
                 /*Cortar cadena*/
-                String Descripcion = "test";
+                String Descripcion = json.getString("Descripcion");
                 int lenght = Descripcion.length();
                 if(lenght <= 50){
                     desc_1 = Descripcion;
