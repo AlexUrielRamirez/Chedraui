@@ -152,6 +152,22 @@
             app:layout_constraintTop_toBottomOf="@id/btn_alta"
             android:layout_marginTop="50dp"/>
 
+        <TextView
+            android:id="@+id/btn_historial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_historial_negro"
+            android:background="@drawable/fake_card_white"
+            android:padding="10dp"
+            android:drawablePadding="8dp"
+            android:text="Historial"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            android:gravity="center_vertical"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout

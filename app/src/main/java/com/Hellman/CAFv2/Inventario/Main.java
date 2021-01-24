@@ -523,7 +523,8 @@ public class Main extends AppCompatActivity {
                                             if(main_list.get(position).getEPC().equals(EPC) && main_list.get(position).getStatus() == 0){
                                                 main_list.get(position).setStatus(1);
                                                 Main.this.runOnUiThread(() -> {
-                                                    adapter.notifyItemChanged(final_position, main_list.get(final_position));
+                                                    //adapter.notifyItemChanged(final_position, main_list.get(final_position));
+                                                    adapter.notifyDataSetChanged();
                                                     conter = conter + 1;
                                                     mProgress.setProgress(conter);
                                                     txt_contador.setText(conter+"/"+ main_list.size());
@@ -621,6 +622,7 @@ public class Main extends AppCompatActivity {
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     dialog.setContentView(R.layout.alert_insidence);
                     TextView NombreCreador = dialog.findViewById(R.id.et_persona_alta);
+                    NombreCreador.setText(GlobalPreferences.NOMBRE_USUARIO);
                     dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
                         dialog.dismiss();
                     });
@@ -629,7 +631,7 @@ public class Main extends AppCompatActivity {
                         signaturePad.clear();
                     });
                     dialog.findViewById(R.id.btn_continuar).setOnClickListener(v2->{
-                        if(NombreCreador.getText().length() > 3 && !signaturePad.isEmpty()){
+                        if(!signaturePad.isEmpty()){
                             ProgressDialog pd_insidencia = new ProgressDialog(context);
                             pd_insidencia.setMessage("Por favor espere...");
                             pd_insidencia.show();
@@ -645,7 +647,7 @@ public class Main extends AppCompatActivity {
                                 fos.write(bitmapdata);
                                 fos.flush();
                                 fos.close();
-                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), NombreCreador.getText().toString(),new TypedFile("multipart/form-data", f), new Callback<Response>() {
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), GlobalPreferences.NOMBRE_USUARIO,new TypedFile("multipart/form-data", f), new Callback<Response>() {
                                     @Override
                                     public void success(Response response, Response response2) {
                                         try{
@@ -658,6 +660,7 @@ public class Main extends AppCompatActivity {
                                                     txt_contador.setText(conter+"/"+ main_list.size());
                                                 }
                                                 Toast.makeText(context, "Incidencia generada correctamente", Toast.LENGTH_SHORT).show();*/
+                                                GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_INCIDENCIA, main_list.get(position).getId());
                                                 main_list.remove(position);
                                                 adapter.notifyDataSetChanged();
                                                 mProgress.setMax(main_list.size());
@@ -711,13 +714,11 @@ public class Main extends AppCompatActivity {
             if(main_list.get(position).getStatus() == 1){
                 holder.status.setText("ENCONTRADO");
                 holder.tag_status.setCardBackgroundColor(context.getColor(R.color.green_2));
-            }else if(main_list.get(position).getStatus() == 2){
-                holder.status.setText("INSIDENCIA");
+            }else {
+                holder.status.setText("NO ENCONTRADO");
                 holder.tag_status.setCardBackgroundColor(context.getColor(R.color.menu_orange));
             }
         }
-
-
 
         private void setUpDetailData(ModelInventario model) {
             Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
@@ -731,6 +732,16 @@ public class Main extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return main_list.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
         }
 
         @Override
@@ -930,6 +941,7 @@ public class Main extends AppCompatActivity {
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;
                 getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("ControlIncidencias")).commit();
                 FragmentHolder.setVisibility(View.GONE);
+                AlertLayout.setVisibility(View.GONE);
                 break;
             default:
                 conter = 0;

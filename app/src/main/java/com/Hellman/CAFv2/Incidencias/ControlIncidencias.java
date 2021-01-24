@@ -121,7 +121,8 @@ public class ControlIncidencias extends android.app.Fragment {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.setContentView(R.layout.alert_insidence);
-            EditText et_persona_alta = dialog.findViewById(R.id.et_persona_alta);
+            TextView et_persona_alta = dialog.findViewById(R.id.et_persona_alta);
+            et_persona_alta.setText(GlobalPreferences.NOMBRE_USUARIO);
             dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
                 dialog.dismiss();
             });
@@ -146,17 +147,19 @@ public class ControlIncidencias extends android.app.Fragment {
                             fos.flush();
                             fos.close();
 
-                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), IdCAF, IdIncidencia, et_persona_alta.getText().toString(), new Callback<Response>() {
+                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), IdCAF, IdIncidencia, GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
                                 @Override
                                 public void success(Response response, Response response2) {
                                     try{
                                         if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("succes")){
                                             for(int position = 0; position < Main.main_list_insidencias.size(); position++){
                                                 if(Main.main_list_insidencias.get(position).getIdCAF().equals(IdCAF)){
+                                                    GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_BAJA_INCIDENCIA, Main.main_list_insidencias.get(position).getIdCAF());
                                                     Main.tag_list_insidencias.remove(position);
                                                     Main.main_list_insidencias.remove(position);
                                                     GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;
                                                     //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("ControlIncidencias")).commit();
+                                                    HideAlertLayoutButton();
                                                     Main.FragmentHolder.setVisibility(View.GONE);
                                                     break;
                                                 }
@@ -201,6 +204,7 @@ public class ControlIncidencias extends android.app.Fragment {
                     Main.tag_list_insidencias.remove(position);
                     Main.main_list_insidencias.remove(position);
                     GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_INVENTORY;
+                    HideAlertLayoutButton();
                     //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("ControlIncidencias")).commit();
                     Main.FragmentHolder.setVisibility(View.GONE);
                     break;
@@ -237,6 +241,10 @@ public class ControlIncidencias extends android.app.Fragment {
 
             }
         });
+    }
+
+    private void HideAlertLayoutButton(){
+        Main.AlertLayout.setVisibility(View.GONE);
     }
 
 }

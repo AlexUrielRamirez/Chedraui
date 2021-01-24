@@ -40,6 +40,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uhf.uhf.R;
 
 import org.json.JSONArray;
@@ -76,7 +77,7 @@ public class Main extends AppCompatActivity {
 
     private RelativeLayout CameraHolder;
     private ConstraintLayout PanelBuscador;
-    private EditText et_buscador_activo, et_persona_asignada, et_descripcion, et_cantidad;
+    private EditText et_buscador_activo, et_persona_asignada, et_descripcion, et_centro_costo, et_cantidad;
     private RadioGroup rg_tipo_etiqueta;
     private RadioButton rb_etiqueta_papel, rb_etiqueta_metal;
     private TextView btn_encontrar_activo_numero, btn_encontrar_activo_nombre, spinner_departamento, spinner_oficina, contador_letras_descripcion, txt_epc_enlazado;
@@ -230,6 +231,7 @@ public class Main extends AppCompatActivity {
                     jsonCAF.put("IdUbicacion", "0");
                     jsonCAF.put("Cedis",ID_CEDIS);
                     jsonCAF.put("Area",IdArea);
+                    jsonCAF.put("CentroCosto", et_centro_costo.getText());
                     jsonCAF.put("Oficina",IdOficina);
                 }else{
                     jsonCAF.put("ProductLoaded","false");
@@ -240,6 +242,7 @@ public class Main extends AppCompatActivity {
                     jsonCAF.put("IdUbicacion", "0");
                     jsonCAF.put("Cedis",ID_CEDIS);
                     jsonCAF.put("Area",IdArea);
+                    jsonCAF.put("CentroCosto", et_centro_costo.getText());
                     jsonCAF.put("Oficina",IdOficina);
                 }
 
@@ -381,6 +384,7 @@ public class Main extends AppCompatActivity {
             rep = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
             Log.e("main_alta","server response--->"+rep);
             JSONObject jsonCAF = new JSONObject(rep);
+            GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_ACTIVO, jsonCAF.getString("IdCAF"));
             if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
                 new printTags().execute(jsonCAF);
             }
@@ -388,8 +392,10 @@ public class Main extends AppCompatActivity {
                 UploadData(jsonCAF);
             }else{
                 progressDialog.dismiss();
+                showFinalDialog();
                 Toast.makeText(Main.this, "Se crearon los nuevos registros con éxito", Toast.LENGTH_SHORT).show();
             }
+
         }catch (IOException | JSONException e){
             Log.e("main_alta","upload_io_json_error->"+e.getMessage()+"\n--->"+rep);
             progressDialog.dismiss();
@@ -459,6 +465,7 @@ public class Main extends AppCompatActivity {
         img_1 = findViewById(R.id.img_1);
         img_2 = findViewById(R.id.img_2);
         et_persona_asignada = findViewById(R.id.et_persona_asignada);
+        et_centro_costo = findViewById(R.id.et_centro_costo);
         rg_tipo_etiqueta = findViewById(R.id.rg_tipo_etiqueta);
         rb_etiqueta_papel = findViewById(R.id.rb_etiqueta_papel);
         rb_etiqueta_metal = findViewById(R.id.rb_etiqueta_metal);
@@ -632,12 +639,30 @@ public class Main extends AppCompatActivity {
                 //new printTags().execute(main_list_epcs);
             }else{
                 progressDialog.dismiss();
-                Toast.makeText(Main.this, "Proceso finalizado con éxito", Toast.LENGTH_SHORT).show();
+                showFinalDialog();
             }
         }else{
             progressDialog.dismiss();
-            Toast.makeText(Main.this, "Proceso finalizado con éxito", Toast.LENGTH_SHORT).show();
+            showFinalDialog();
         }
+    }
+
+    private void showFinalDialog(){
+        BottomSheetDialog bsd = new BottomSheetDialog(this);
+        bsd.setContentView(R.layout.bsd_mensaje_final_alta);
+        bsd.findViewById(R.id.btn_igual).setOnClickListener(v->{
+            bsd.dismiss();
+        });
+        bsd.findViewById(R.id.btn_nuevo).setOnClickListener(v->{
+            bsd.dismiss();
+            startActivity(new Intent(this, Main.class));
+            this.finish();
+        });
+        bsd.findViewById(R.id.btn_salir).setOnClickListener(v->{
+            bsd.dismiss();
+            this.finish();
+        });
+        bsd.show();
     }
 
     @Override
