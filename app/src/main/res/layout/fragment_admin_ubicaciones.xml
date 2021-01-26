@@ -16,9 +16,9 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_marginStart="10dp"
-            android:text="Ubicaciones registradas"
+            android:text="Departamentos/Oficinas\nSelecciona un departamento para ver las oficinas"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView20"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

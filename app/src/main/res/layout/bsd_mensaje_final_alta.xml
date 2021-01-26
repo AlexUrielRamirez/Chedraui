@@ -28,7 +28,7 @@
         android:id="@+id/btn_igual"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subir un activo igual"
+        android:text="DaR DE ALTA ACTIVO SIMILAR"
         android:layout_margin="5dp"
         android:background="@color/blue_selected"
         android:textColor="@color/white"/>
@@ -36,16 +36,17 @@
         android:id="@+id/btn_nuevo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subir un activo diferente"
+        android:text="DAR DE ALTA UN ACTIVO NUEVO"
         android:layout_margin="5dp"
-        android:background="@color/blue_selected"
-        android:textColor="@color/white"/>
+        android:background="@drawable/fake_card_white"
+
+        android:textColor="@color/black"/>
     <Button
         android:id="@+id/btn_salir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Salir"
         android:layout_margin="5dp"
-        android:background="@android:color/holo_red_dark"
+        android:background="@color/blue_selected"
         android:textColor="@color/white"/>
 </LinearLayout>

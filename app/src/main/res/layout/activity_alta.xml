@@ -194,7 +194,49 @@
                     android:padding="8dp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white">
 
+                <TextView
+                    android:id="@+id/textView30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monto original"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="4dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="50dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toEndOf="@id/textView30"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$"
+                        android:textColor="@color/black"/>
+                    <EditText
+                        android:id="@+id/et_centro_costo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="999999999.99"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:inputType="numberDecimal"/>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                 android:id="@+id/card_tipo"
                 android:layout_width="match_parent"
@@ -226,46 +268,6 @@
                     android:drawableRight="@drawable/drop_arrow_black"/>
 
             </LinearLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:background="@drawable/fake_card_white">
-
-                <TextView
-                    android:id="@+id/textView30"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monto original"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:padding="4dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView30">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$"
-                        android:textColor="@color/black"/>
-                    <EditText
-                        android:id="@+id/et_centro_costo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="999.99"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textSize="18sp"
-                        android:inputType="numberDecimal"/>
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/Panel_preview"
                 android:layout_width="match_parent"
@@ -319,71 +321,6 @@
                     app:layout_constraintStart_toEndOf="@+id/cardView3"
                     app:layout_constraintTop_toBottomOf="@id/txt_descripcion_preview" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:background="@drawable/fake_card_white"
-                android:animateLayoutChanges="true">
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tipo de etiqueta"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:padding="4dp" />
-
-                <RadioGroup
-                    android:id="@+id/rg_tipo_etiqueta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/textView15">
-                    <RadioButton
-                        android:id="@+id/rb_etiqueta_papel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Papel"
-                        android:layout_marginEnd="25dp"
-                        android:checked="true"/>
-                    <RadioButton
-                        android:id="@+id/rb_etiqueta_metal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Metálica"
-                        android:layout_marginStart="25sp"/>
-                </RadioGroup>
-
-                <TextView
-                    android:id="@+id/txt_epc_enlazado"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rg_tipo_etiqueta"
-                    android:visibility="gone"/>
-                <Button
-                    android:id="@+id/btn_enlazar_etiqueta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/white"
-                    android:background="@color/blue_selected"
-                    android:text="Enlazar etiqueta"
-                    app:layout_constraintTop_toBottomOf="@id/txt_epc_enlazado"
-                    android:visibility="gone"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -517,6 +454,72 @@
                     app:layout_constraintBottom_toBottomOf="@id/txt_cantidad"
                     android:background="@drawable/fake_card_white"
                     android:textSize="18sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/fake_card_white"
+                android:animateLayoutChanges="true">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sel. tipo de etiqueta"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="4dp" />
+
+                <RadioGroup
+                    android:id="@+id/rg_tipo_etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    app:layout_constraintStart_toEndOf="@id/textView15"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <RadioButton
+                        android:id="@+id/rb_etiqueta_papel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Papel"
+                        android:layout_marginEnd="25dp"
+                        android:checked="true"/>
+                    <RadioButton
+                        android:id="@+id/rb_etiqueta_metal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Metálica"
+                        android:layout_marginStart="5sp"/>
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/txt_epc_enlazado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rg_tipo_etiqueta"
+                    android:visibility="gone"/>
+                <Button
+                    android:id="@+id/btn_enlazar_etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/white"
+                    android:background="@color/blue_selected"
+                    android:text="Enlazar etiqueta"
+                    app:layout_constraintTop_toBottomOf="@id/txt_epc_enlazado"
+                    android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <TextView

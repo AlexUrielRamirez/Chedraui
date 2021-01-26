@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@color/blue_selected"
-        android:text="Develop Blank"
+        android:text="Test"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btn_guardar"
         app:layout_constraintEnd_toEndOf="parent"

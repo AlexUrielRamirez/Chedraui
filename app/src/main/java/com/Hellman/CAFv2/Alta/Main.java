@@ -658,6 +658,7 @@ public class Main extends AppCompatActivity {
     private void showFinalDialog(){
         BottomSheetDialog bsd = new BottomSheetDialog(this);
         bsd.setContentView(R.layout.bsd_mensaje_final_alta);
+        bsd.setCancelable(false);
         bsd.findViewById(R.id.btn_igual).setOnClickListener(v->{
             bsd.dismiss();
         });

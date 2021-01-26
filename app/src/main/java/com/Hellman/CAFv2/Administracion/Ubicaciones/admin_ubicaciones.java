@@ -64,7 +64,7 @@ public class admin_ubicaciones extends Fragment {
     public RecyclerView rv_areas, rv_oficinas;
     public static RelativeLayout Holder_rv_oficinas;
 
-    public static TextView txt_indicador_area;
+    public static TextView txt_indicador_area, txt_indicador;
 
     public ConstraintLayout Panel_loading_oficinas;
 
@@ -92,6 +92,7 @@ public class admin_ubicaciones extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
         btn_add_ubicacion = view.findViewById(R.id.btn_add_ubicacion);
+        txt_indicador = view.findViewById(R.id.textView19);
         rv_areas = view.findViewById(R.id.rv_areas);
         rv_oficinas = view.findViewById(R.id.rv_oficinas);
         Holder_rv_oficinas = view.findViewById(R.id.Holder_rv_oficinas);
@@ -324,7 +325,7 @@ public class admin_ubicaciones extends Fragment {
                     break;
                 case 2:
                     holder.letter.setBackgroundColor(getContext().getColor(R.color.menu_purple));
-                    holder.letter.setText("U");
+                    holder.letter.setText("O");
                     holder.item.setOnClickListener(v->{
                         Toast.makeText(context, "Oficina activa", Toast.LENGTH_SHORT).show();
                     });
