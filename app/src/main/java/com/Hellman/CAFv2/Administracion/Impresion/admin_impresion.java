@@ -1,6 +1,9 @@
 package com.Hellman.CAFv2.Administracion.Impresion;
 
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +28,8 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.tabs.TabLayout;
 import com.uhf.uhf.R;
 
 import org.json.JSONArray;
@@ -43,6 +48,8 @@ import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
+
+import static android.app.Activity.RESULT_OK;
 
 public class admin_impresion extends Fragment {
 
@@ -67,8 +74,8 @@ public class admin_impresion extends Fragment {
     private TextView txt_progress;
 
     //General Data
-    private RecyclerView rv_tags;
-    private ArrayList<ModelTags> main_list;
+    private RecyclerView rv_tags_papel, rv_tags_metal;
+    private ArrayList<ModelTags> main_list, main_list_metal;
     private Button btn_print;
 
     //Printing
@@ -82,6 +89,22 @@ public class admin_impresion extends Fragment {
         );
     }
 
+    //MetalTagsTools
+    private final int CODE_BAR_FOR_METAL = 250;
+    public String CurrentMetalNumber, CurrentIdCAF;
+    public int CURRENT_METAL_TAG_POSITION = 0;
+    interface api_network_update_tag{
+        @FormUrlEncoded
+        @POST("/update_metal_tag.php")
+        void setData(
+                @Field("IdCAF") String IdCAF,
+                @Field("EPC") String EPC,
+                Callback<Response> callback
+        );
+    }
+
+    //Tabs
+    private TabLayout tabs;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_impresion, container, false);
@@ -91,6 +114,7 @@ public class admin_impresion extends Fragment {
     }
 
     private void initViews(View view) {
+        tabs = view.findViewById(R.id.tabs_impresion);
         Panel_etiquetas = view.findViewById(R.id.Panel_etiquetas);
         Panel_loading = view.findViewById(R.id.Panel_loading);
         Spinner_Departamento = view.findViewById(R.id.spinner_Departamento);
@@ -99,9 +123,38 @@ public class admin_impresion extends Fragment {
         pb_loading_ofices = view.findViewById(R.id.pb_loading_ofices);
         btn_continuar = view.findViewById(R.id.btn_continuar);
         txt_progress = view.findViewById(R.id.txt_progress);
-        rv_tags = view.findViewById(R.id.rv_tags);
+        rv_tags_papel = view.findViewById(R.id.rv_tags_papel);
+        rv_tags_metal = view.findViewById(R.id.rv_tags_metal);
         btn_print = view.findViewById(R.id.btn_imprimir);
+        tabs.addTab(tabs.newTab().setText("PAPEL"));
+        tabs.addTab(tabs.newTab().setText("METAL"));
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        rv_tags_papel.setVisibility(View.VISIBLE);
+                        btn_print.setVisibility(View.VISIBLE);
+                        rv_tags_metal.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        rv_tags_papel.setVisibility(View.GONE);
+                        btn_print.setVisibility(View.GONE);
+                        rv_tags_metal.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         txt_cedis_actual.setText("Cedis actual: " + GlobalPreferences.NOMBRE_CEDIS);
         Spinner_Departamento.setOnClickListener(v->{
             menu_area.show();
@@ -120,7 +173,8 @@ public class admin_impresion extends Fragment {
                 Toast.makeText(getContext(), "Seleccione una ubicación válida", Toast.LENGTH_SHORT).show();
             }
         });
-        rv_tags.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        rv_tags_papel.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        rv_tags_metal.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         btn_print.setOnClickListener(v->{
             txt_progress.setText("Analizando registros...");
             Panel_loading.setVisibility(View.VISIBLE);
@@ -215,6 +269,7 @@ public class admin_impresion extends Fragment {
         Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionImpresion/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
                 JSONArray json = response.optJSONArray("Data");
                 main_list = new ArrayList<>();
+                main_list_metal = new ArrayList<>();
                 try {
                     for (int i = 0; i < json.length(); i++) {
                         ModelTags model = new ModelTags();
@@ -227,27 +282,41 @@ public class admin_impresion extends Fragment {
                         model.setNombreArea(jsonObject.optString("NombreArea"));
                         model.setNombreOficina(jsonObject.optString("NombreOficina"));
                         model.setTipoActivo(jsonObject.optString("Tipo"));
+                        model.setTipoEtiqueta(jsonObject.optString("TipoEtiqueta"));
                         model.setStatus(jsonObject.optString("Status"));
                         model.setPrint(false);
-                        main_list.add(model);
+                        switch (model.getTipoEtiqueta()){
+                            case "Papel":
+                                main_list.add(model);
+                                break;
+                            case "Metal":
+                                main_list_metal.add(model);
+                                break;
+                        }
                     }
-                    rv_tags.setAdapter(new rv_adapter());
+
+                    rv_tags_papel.setAdapter(new rv_adapter(main_list));
+                    rv_tags_metal.setAdapter(new rv_adapter(main_list_metal));
                     Panel_loading.setVisibility(View.GONE);
                     Panel_etiquetas.setVisibility(View.VISIBLE);
                 } catch (JSONException | NullPointerException e) {
-                    Log.e("Validacion", "JSON | Null Exception" + e);
+                    Log.e("Validacion", "JSON | Null Exception" + e.getMessage());
                     Panel_loading.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "No se encontraron resultados válidos", Toast.LENGTH_SHORT).show();
                 }
-
             }, error -> {
                 Panel_loading.setVisibility(View.GONE);
+                Log.e("Validacion", "Retrofit error: " + error.getMessage());
                 Toast.makeText(getContext(), "No se encontraron resultados válidos", Toast.LENGTH_SHORT).show();
         }));
     }
 
     private class rv_adapter extends RecyclerView.Adapter<rv_adapter.ViewHolder> implements View.OnClickListener{
         Context context;
+        private ArrayList<ModelTags> child_list;
+        public rv_adapter(ArrayList<ModelTags> list){
+            this.child_list = list;
+        }
         @Override
         public rv_adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_tag,parent,false);
@@ -258,26 +327,38 @@ public class admin_impresion extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + main_list.get(position).getNumeroActivo()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
-            holder.Descripcion.setText(main_list.get(position).getDescripcion());
-            holder.NumeroActivo.setText("EPC: "+main_list.get(position).getEPC());
-            if(!main_list.get(position).getStatus().equals("5")){
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
+            holder.Descripcion.setText(child_list.get(position).getDescripcion());
+            holder.NumeroActivo.setText("EPC: "+child_list.get(position).getEPC());
+            if(!child_list.get(position).getStatus().equals("5")){
                 holder.status_indicator.setImageDrawable(getContext().getDrawable(R.drawable.done_circle_green));
             }
             holder.item_holder.setOnClickListener(v->{
-                if(main_list.get(position).isPrint()){
-                    holder.indicator_selected.setVisibility(View.GONE);
-                    main_list.get(position).setPrint(false);
-                }else{
-                    holder.indicator_selected.setVisibility(View.VISIBLE);
-                    main_list.get(position).setPrint(true);
+                switch (child_list.get(position).getTipoEtiqueta()){
+                    case "Papel":
+                        if(child_list.get(position).isPrint()){
+                            holder.indicator_selected.setVisibility(View.GONE);
+                            child_list.get(position).setPrint(false);
+                        }else{
+                            holder.indicator_selected.setVisibility(View.VISIBLE);
+                            child_list.get(position).setPrint(true);
+                        }
+                        break;
+                    case "Metal":
+                        CurrentIdCAF = child_list.get(position).getIdCaf();
+                        CurrentMetalNumber = child_list.get(position).getNumeroActivo();
+                        CURRENT_METAL_TAG_POSITION = position;
+                        Intent intent = new Intent();
+                        intent.setComponent(new ComponentName("com.etiflex.sdl", "com.zebra.sdl.SDLguiActivity"));
+                        startActivityForResult(intent, CODE_BAR_FOR_METAL);
+                        break;
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return main_list.size();
+            return child_list.size();
         }
 
         @Override
@@ -306,6 +387,55 @@ public class admin_impresion extends Fragment {
                 status_indicator = itemView.findViewById(R.id.status_indicator);
                 item_holder = itemView.findViewById(R.id.item_holder);
                 indicator_selected = itemView.findViewById(R.id.selected);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if(data != null){
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Actualizando índices,  por favor espere...");
+                progressDialog.setCancelable(false);
+                BottomSheetDialog bsd = new BottomSheetDialog(getContext());
+                bsd.setCancelable(false);
+                bsd.setContentView(R.layout.bsd_enlazar_etiqueta);
+                TextView txt_accion = bsd.findViewById(R.id.txt_accion);
+                String newEPC = data.getDataString().substring(0,24);
+                String msg = "Estás a punto de enlazar el EPC:\n"+newEPC+"\nAl activo: "+CurrentMetalNumber+"\n¿Deseas continuar?";
+                bsd.findViewById(R.id.btn_continuar).setOnClickListener(v -> {
+                    progressDialog.show();
+                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionImpresion/").build().create(api_network_update_tag.class).setData(CurrentIdCAF, newEPC, new Callback<Response>() {
+                        @Override
+                        public void success(Response response, Response response2) {
+                            main_list_metal.get(CURRENT_METAL_TAG_POSITION).setEPC(newEPC);
+                            rv_tags_metal.getAdapter().notifyItemChanged(CURRENT_METAL_TAG_POSITION);
+                            CURRENT_METAL_TAG_POSITION = 0;
+                            CurrentMetalNumber = "";
+                            CurrentIdCAF = "";
+                            progressDialog.dismiss();
+                            bsd.dismiss();
+                            Toast.makeText(getContext(), "Cambios realizados correctamente", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Toast.makeText(getContext(), "Algo salió  mal, revise su  conexión", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+                    });
+                });
+                bsd.findViewById(R.id.btn_cancelar).setOnClickListener(v->{
+                    CurrentMetalNumber = "";
+                    CurrentIdCAF = "";
+                    bsd.dismiss();
+                });
+                txt_accion.setText(msg);
+                bsd.show();
+            }else{
+                Toast.makeText(getContext(), "No se identificó el EPC a enlazar", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -339,6 +469,7 @@ public class admin_impresion extends Fragment {
         private String NombreArea;
         private String NombreOficina;
         private String TipoActivo;
+        private String TipoEtiqueta;
         private String Status;
         private boolean Print;
 
@@ -396,6 +527,14 @@ public class admin_impresion extends Fragment {
 
         public void setTipoActivo(String tipoActivo) {
             TipoActivo = tipoActivo;
+        }
+
+        public String getTipoEtiqueta() {
+            return TipoEtiqueta;
+        }
+
+        public void setTipoEtiqueta(String tipoEtiqueta) {
+            TipoEtiqueta = tipoEtiqueta;
         }
 
         public String getStatus() {

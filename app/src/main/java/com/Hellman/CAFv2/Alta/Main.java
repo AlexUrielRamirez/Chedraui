@@ -202,7 +202,13 @@ public class Main extends AppCompatActivity {
         });
         btn_tipo_activo.setOnClickListener(v-> menu_tipos.show());
         spinner_departamento.setOnClickListener(v-> menu_area.show());
-        spinner_oficina.setOnClickListener(v-> menu_oficinas.show());
+        spinner_oficina.setOnClickListener(v->{
+            if(!IdArea.equals("0")){
+                menu_oficinas.show();
+            }else{
+                Toast.makeText(this, "Primero seleccione un Departamento", Toast.LENGTH_SHORT).show();
+            }
+        });
         btn_photos_from_camera.setOnClickListener(v->{
             CURRENT_IMAGE = IMAGE_1;
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);

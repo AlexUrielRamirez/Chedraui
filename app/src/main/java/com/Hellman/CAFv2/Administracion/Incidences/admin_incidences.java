@@ -2,6 +2,7 @@ package com.Hellman.CAFv2.Administracion.Incidences;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Etiflex.Splash.GlobalPreferences;
+import com.Hellman.CAFv2.Administracion.Impresion.admin_impresion;
 import com.Hellman.CAFv2.Administracion.Ubicaciones.admin_ubicaciones;
 import com.Hellman.CAFv2.BuscadorEPC.Buscador;
 import com.Hellman.CAFv2.Incidencias.ControlIncidencias;
@@ -61,6 +63,8 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
 
+import static android.app.Activity.RESULT_OK;
+
 public class admin_incidences extends Fragment {
 
     public admin_incidences() {}
@@ -73,6 +77,10 @@ public class admin_incidences extends Fragment {
     private ConstraintLayout Panel_loading;
     private RecyclerView rv_incidencias;
     private ArrayList<ModelIncidencias> main_list_incidencias;
+
+    private final int CODE_BAR_FOR_METAL = 250;
+    public ModelIncidencias CURRENT_MODEL = null;
+    public BottomSheetDialog bsd;
 
     interface api_network_clean_incidencia {
         @Multipart
@@ -168,82 +176,17 @@ public class admin_incidences extends Fragment {
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
             holder.item.setOnClickListener(v->{
-                BottomSheetDialog bsd = new BottomSheetDialog(getContext());
+                bsd = new BottomSheetDialog(getContext());
                 bsd.setContentView(R.layout.bsd_admin_incidencias);
                 if(child_list.get(position).getStatus() == 1){
                     bsd.findViewById(R.id.btn_resolver_incidencia).setOnClickListener(v1->{
-                        ProgressDialog progressDialog = new ProgressDialog(context);
-                        final Dialog dialog = new Dialog(context);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        dialog.setContentView(R.layout.alert_insidence);
-                        TextView NombreCreador = dialog.findViewById(R.id.et_persona_alta);
-                        NombreCreador.setText(GlobalPreferences.NOMBRE_USUARIO);
-                        dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
-                            dialog.dismiss();
-                        });
-                        final SignaturePad signaturePad = dialog.findViewById(R.id.signature_pad);
-                        dialog.findViewById(R.id.btn_limpiar_firma).setOnClickListener(v3->{
-                            signaturePad.clear();
-                        });
-                        dialog.findViewById(R.id.btn_continuar).setOnClickListener(v2->{
-                            if(!signaturePad.isEmpty()){
-                                    progressDialog.setMessage("Actualizando índices...");
-                                    progressDialog.show();
-                                    try{
-                                        File f = new File(getContext().getCacheDir(), "tmp_bitmap");
-                                        f.createNewFile();
-                                        Bitmap bitmap = signaturePad.getSignatureBitmap();
-                                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
-                                        byte[] bitmapdata = bos.toByteArray();
-                                        FileOutputStream fos = new FileOutputStream(f);
-                                        fos.write(bitmapdata);
-                                        fos.flush();
-                                        fos.close();
-
-                                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), child_list.get(position).getIdCAF(), child_list.get(position).getIdIncidencia(), GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
-                                            @Override
-                                            public void success(Response response, Response response2) {
-                                                try{
-                                                    if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("succes")){
-                                                        GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_BAJA_INCIDENCIA, child_list.get(position).getIdCAF());
-                                                        getData();
-                                                        dialog.dismiss();
-                                                        progressDialog.dismiss();
-                                                        bsd.dismiss();
-                                                        Toast.makeText(getContext(), "Incidencia resuelta con éxito", Toast.LENGTH_SHORT).show();
-                                                    }else{
-                                                        Toast.makeText(getContext(), "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
-                                                        progressDialog.dismiss();
-                                                    }
-
-                                                }catch (IOException e){
-                                                    Toast.makeText(getContext(), "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
-                                                    progressDialog.dismiss();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void failure(RetrofitError error) {
-                                                progressDialog.dismiss();
-                                                Log.e("ControlIncidencias", "Error->" + error.getMessage());
-                                                Toast.makeText(getContext(), "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-
-                                    }catch (IOException e){
-                                        Toast.makeText(getContext(), "Por favor, revise los permisos de almacenamiento", Toast.LENGTH_SHORT).show();
-                                    }
-                            }else{
-                                Toast.makeText(getContext(), "Por favor, ingrese una firma válida", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        dialog.show();
+                        CURRENT_MODEL = child_list.get(position);
+                        Intent intent = new Intent();
+                        intent.setComponent(new ComponentName("com.etiflex.sdl", "com.zebra.sdl.SDLguiActivity"));
+                        startActivityForResult(intent, CODE_BAR_FOR_METAL);
                     });
                 }else{
                     bsd.findViewById(R.id.btn_resolver_incidencia).setVisibility(View.GONE);
-                    bsd.findViewById(R.id.separador_1).setVisibility(View.GONE);
                 }
                 bsd.findViewById(R.id.btn_buscar_activo).setOnClickListener(v1->{
                     GlobalPreferences.CURRENT_TAG = main_list_incidencias.get(position).getEPC();
@@ -260,9 +203,7 @@ public class admin_incidences extends Fragment {
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcionActivo());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumeroActivo());
             holder.txtUbicacionActivo.setText("Ubicación: " + child_list.get(position).getNombreArea() + " > " + child_list.get(position).getNombreOficina());
-
             String txt = null;
-
             switch (child_list.get(position).getStatus()){
                 case 0:
                     holder.txtStatus.setText("ENCONTRADO");
@@ -359,7 +300,91 @@ public class admin_incidences extends Fragment {
             }
         }
     }
-    
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if(data != null){
+                String EPC = data.getDataString().substring(0,24);
+                if(EPC.equals(CURRENT_MODEL.getEPC())){
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    final Dialog dialog = new Dialog(getContext());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    dialog.setContentView(R.layout.alert_insidence);
+                    TextView NombreCreador = dialog.findViewById(R.id.et_persona_alta);
+                    NombreCreador.setText(GlobalPreferences.NOMBRE_USUARIO);
+                    dialog.findViewById(R.id.btn_volver).setOnClickListener(v2->{
+                        dialog.dismiss();
+                    });
+                    final SignaturePad signaturePad = dialog.findViewById(R.id.signature_pad);
+                    dialog.findViewById(R.id.btn_limpiar_firma).setOnClickListener(v3->{
+                        signaturePad.clear();
+                    });
+                    dialog.findViewById(R.id.btn_continuar).setOnClickListener(v2->{
+                        if(!signaturePad.isEmpty()){
+                            progressDialog.setMessage("Actualizando índices...");
+                            progressDialog.show();
+                            try{
+                                File f = new File(getContext().getCacheDir(), "tmp_bitmap");
+                                f.createNewFile();
+                                Bitmap bitmap = signaturePad.getSignatureBitmap();
+                                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                                byte[] bitmapdata = bos.toByteArray();
+                                FileOutputStream fos = new FileOutputStream(f);
+                                fos.write(bitmapdata);
+                                fos.flush();
+                                fos.close();
+
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), CURRENT_MODEL.getIdCAF(), CURRENT_MODEL.getIdIncidencia(), GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
+                                    @Override
+                                    public void success(Response response, Response response2) {
+                                        try{
+                                            if(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine().equals("succes")){
+                                                GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_BAJA_INCIDENCIA, CURRENT_MODEL.getIdCAF());
+                                                getData();
+                                                dialog.dismiss();
+                                                progressDialog.dismiss();
+                                                bsd.dismiss();
+                                                Toast.makeText(getContext(), "Incidencia resuelta con éxito", Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                Toast.makeText(getContext(), "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
+                                            }
+
+                                        }catch (IOException e){
+                                            Toast.makeText(getContext(), "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        progressDialog.dismiss();
+                                        Log.e("ControlIncidencias", "Error->" + error.getMessage());
+                                        Toast.makeText(getContext(), "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }catch (IOException e){
+                                Toast.makeText(getContext(), "Por favor, revise los permisos de almacenamiento", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getContext(), "Por favor, ingrese una firma válida", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dialog.show();
+                }else{
+                    Toast.makeText(getContext(), "Error, el EPC no coincide con el activo actual", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(getContext(), "No se identificó el EPC", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private class ModelIncidencias{
         private String IdIncidencia;
         private String IdCAF;
