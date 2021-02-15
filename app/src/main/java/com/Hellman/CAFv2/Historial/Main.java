@@ -58,7 +58,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new Methods().CambiarColorStatusBar(this, R.color.blue_selected);
         setContentView(R.layout.activity_main_historial);
-
+        findViewById(R.id.btn_onbackpressed).setOnClickListener(v -> Main.this.finish());
         rv_historial = findViewById(R.id.rv_historial);
         rv_historial.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL + "/HellmanCAF/webservices/Historial/getHistorial.php", null, response -> {

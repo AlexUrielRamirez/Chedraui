@@ -123,7 +123,6 @@ public class Main extends AppCompatActivity {
                 Callback<Response> callback
         );
     }
-
     interface guardar_caf_activo_existente{
         @FormUrlEncoded
         @POST("/insert_activo_existente.php")
@@ -153,6 +152,11 @@ public class Main extends AppCompatActivity {
 
     private ArrayList<String> main_list_epcs, main_list_final_areas, main_list_final_oficinas;
     private JSONObject jsonCAF;
+
+    //Printing elemtns
+    private int pCounter = 0;
+    private int pTotal = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,6 +221,8 @@ public class Main extends AppCompatActivity {
             progressDialog.setMessage("Subiendo información...");
             progressDialog.show();
             ContadorNewCAF = 0;
+            pCounter = 0;
+            pTotal = 0;
             try {
                 /**CREAMOS JSON*/
                 jsonCAF = new JSONObject();
@@ -394,6 +400,7 @@ public class Main extends AppCompatActivity {
 
             GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_ACTIVO, jsonCAF.getString("IdCAF"));
             if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
+                pTotal++;
                 new printTags().execute(jsonCAF);
             }
             if(ContadorNewCAF < TotalNewCAF){
@@ -975,71 +982,75 @@ public class Main extends AppCompatActivity {
             JSONObject json = jsonObjects[0];
             try {
                 Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
-                DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-                String desc_1 = " ",desc_2 = " " ,desc_3 = " " ,desc_4 = " ";
-                /*Cortar cadena*/
-                String Descripcion = json.getString("Descripcion");
-                int lenght = Descripcion.length();
-                if(lenght <= 50){
-                    desc_1 = Descripcion;
-                }else if(lenght <= 100){
-                    desc_1 = Descripcion.substring(0, 50);
-                    desc_2 = Descripcion.substring(51);
-                }else if(lenght <= 150){
-                    desc_1 = Descripcion.substring(0, 50);
-                    desc_2 = Descripcion.substring(51, 100);
-                    desc_3 = Descripcion.substring(101);
+                if(clientSocket.isConnected()){
+                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                    String desc_1 = " ",desc_2 = " " ,desc_3 = " " ,desc_4 = " ";
+                    /*Cortar cadena*/
+                    String Descripcion = json.getString("Descripcion");
+                    int lenght = Descripcion.length();
+                    if(lenght <= 50){
+                        desc_1 = Descripcion;
+                    }else if(lenght <= 100){
+                        desc_1 = Descripcion.substring(0, 50);
+                        desc_2 = Descripcion.substring(51);
+                    }else if(lenght <= 150){
+                        desc_1 = Descripcion.substring(0, 50);
+                        desc_2 = Descripcion.substring(51, 100);
+                        desc_3 = Descripcion.substring(101);
+                    }
+                    String zpl = "^XA\n" +
+                            "^RS,,,3,N,,,2\n" +
+                            "^RR10\n" +
+                            "^XZ\n" +
+                            "<xpml><page quantity='0' pitch='24.0 mm'></xpml>^XA\n" +
+                            "^SZ2^JMA\n" +
+                            "^MCY^PMN\n" +
+                            "^PW388\n" +
+                            "~JSN\n" +
+                            "^JZY\n" +
+                            "^LH0,0^LRN\n" +
+                            "^XZ\n" +
+                            "<xpml></page></xpml><xpml><page quantity='1' pitch='24.0 mm'></xpml>~DGR:SSGFX000.GRF,371,7,:Z64:eJwdkL1KA0EURs9m4y7iuFEsTLEkFhYpIzYjCWGfwEeQdFpOsHCRBEYU7FKKna/gE8iIoBZifIJkJYUWFmIKA1H0bm5xD8P9m+8D74E8GoNryd7o90fg98tjC6HjyEHVEmQQS8FAM4EU71MKLXiVtgjv9gVKhHYKCzbM2zxX4itHhZGg3WRX5uualsybmmrIRpPEq7ImSSpLj3BgwvMUdN2/1wJTushfWTTL0MoVO47Ds6wwcUxV2xulvovrPGvfakMl7VLOaLxNUY4tUVR0bA+sqRmqvZOh1kQ7vtMpe8cl0low+9CYTdW5W8EpNRlYsnj9qif/LPuRprCxrIZdgiS0s/dcUX590fpNub6G9z2aax/34Qn2Ld6luMTcJWWIRWEwPb2Z+/mX+0mksxyBKOIfImphyA==:3890\n" +
+                            "^XA\n" +
+                            "^FO27,157\n" +
+                            "^BY2^BCN,15,N,N^FD>;"+json.getString("EPC")+"^FS\n" +
+                            "^FO3,54\n" +
+                            "^BQN,2,4^FDLA,"+json.getString("EPC")+"^FS\n" +
+                            "^FT86,186\n" +
+                            "^CI0\n" +
+                            "^A0N,14,19^FD"+json.getString("EPC")+"^FS\n" +
+                            "^FT99,28\n" +
+                            "^A0N,14,18^FD"+json.getString("NombreTipo")+"^FS\n" +
+                            "^FT99,66\n" +
+                            "^A0N,14,18^FD"+json.getString("NombreOficina")+"^FS\n" +
+                            "^FT99,47\n" +
+                            "^A0N,14,18^FD"+json.getString("NombreArea")+"^FS\n" +
+                            "^FT283,44\n" +
+                            "^A0N,37,49^FD"+json.getString("EPC").substring(0,4)+"^FS\n" +
+                            "^FO292,48\n" +
+                            "^BY1^BCN,12,N,N^FD>;"+json.getString("EPC").substring(0,4)+"^FS\n" +
+                            "^FT99,84\n" +
+                            "^A0N,20,14^FD"+desc_1+"^FS\n" +
+                            "^FT99,104\n" +
+                            "^A0N,20,14^FD"+desc_2+"^FS\n" +
+                            "^FT99,124\n" +
+                            "^A0N,20,14^FD"+desc_3+"^FS\n" +
+                            "^FT99,145\n" +
+                            "^A0N,20,14^FD"+desc_4+"^FS\n" +
+                            "^FO20,7\n" +
+                            "^XGR:SSGFX000.GRF,1,1^FS\n" +
+                            "^PQ1,0,1,Y\n" +
+                            "^RFW,H,2,12,1^FD"+json.getString("EPC")+"^FS\n"+
+                            "^XZ\n" +
+                            "<xpml></page></xpml>^XA\n" +
+                            "^IDR:SSGFX000.GRF^XZ\n" +
+                            "<xpml><end/></xpml>";
+                    outToServer.writeBytes(zpl);
+                    clientSocket.close();
+                    return true;
+                }else{
+                    return false;
                 }
-                String zpl = "^XA\n" +
-                        "^RS,,,3,N,,,2\n" +
-                        "^RR10\n" +
-                        "^XZ\n" +
-                        "<xpml><page quantity='0' pitch='24.0 mm'></xpml>^XA\n" +
-                        "^SZ2^JMA\n" +
-                        "^MCY^PMN\n" +
-                        "^PW388\n" +
-                        "~JSN\n" +
-                        "^JZY\n" +
-                        "^LH0,0^LRN\n" +
-                        "^XZ\n" +
-                        "<xpml></page></xpml><xpml><page quantity='1' pitch='24.0 mm'></xpml>~DGR:SSGFX000.GRF,371,7,:Z64:eJwdkL1KA0EURs9m4y7iuFEsTLEkFhYpIzYjCWGfwEeQdFpOsHCRBEYU7FKKna/gE8iIoBZifIJkJYUWFmIKA1H0bm5xD8P9m+8D74E8GoNryd7o90fg98tjC6HjyEHVEmQQS8FAM4EU71MKLXiVtgjv9gVKhHYKCzbM2zxX4itHhZGg3WRX5uualsybmmrIRpPEq7ImSSpLj3BgwvMUdN2/1wJTushfWTTL0MoVO47Ds6wwcUxV2xulvovrPGvfakMl7VLOaLxNUY4tUVR0bA+sqRmqvZOh1kQ7vtMpe8cl0low+9CYTdW5W8EpNRlYsnj9qif/LPuRprCxrIZdgiS0s/dcUX590fpNub6G9z2aax/34Qn2Ld6luMTcJWWIRWEwPb2Z+/mX+0mksxyBKOIfImphyA==:3890\n" +
-                        "^XA\n" +
-                        "^FO27,157\n" +
-                        "^BY2^BCN,15,N,N^FD>;"+json.getString("EPC")+"^FS\n" +
-                        "^FO3,54\n" +
-                        "^BQN,2,4^FDLA,"+json.getString("EPC")+"^FS\n" +
-                        "^FT86,186\n" +
-                        "^CI0\n" +
-                        "^A0N,14,19^FD"+json.getString("EPC")+"^FS\n" +
-                        "^FT99,28\n" +
-                        "^A0N,14,18^FD"+json.getString("NombreTipo")+"^FS\n" +
-                        "^FT99,66\n" +
-                        "^A0N,14,18^FD"+json.getString("NombreOficina")+"^FS\n" +
-                        "^FT99,47\n" +
-                        "^A0N,14,18^FD"+json.getString("NombreArea")+"^FS\n" +
-                        "^FT283,44\n" +
-                        "^A0N,37,49^FD"+json.getString("EPC").substring(0,4)+"^FS\n" +
-                        "^FO292,48\n" +
-                        "^BY1^BCN,12,N,N^FD>;"+json.getString("EPC").substring(0,4)+"^FS\n" +
-                        "^FT99,84\n" +
-                        "^A0N,20,14^FD"+desc_1+"^FS\n" +
-                        "^FT99,104\n" +
-                        "^A0N,20,14^FD"+desc_2+"^FS\n" +
-                        "^FT99,124\n" +
-                        "^A0N,20,14^FD"+desc_3+"^FS\n" +
-                        "^FT99,145\n" +
-                        "^A0N,20,14^FD"+desc_4+"^FS\n" +
-                        "^FO20,7\n" +
-                        "^XGR:SSGFX000.GRF,1,1^FS\n" +
-                        "^PQ1,0,1,Y\n" +
-                        "^RFW,H,2,12,1^FD"+json.getString("EPC")+"^FS\n"+
-                        "^XZ\n" +
-                        "<xpml></page></xpml>^XA\n" +
-                        "^IDR:SSGFX000.GRF^XZ\n" +
-                        "<xpml><end/></xpml>";
-                outToServer.writeBytes(zpl);
-                clientSocket.close();
-                return true;
             } catch (IOException e) {
                 Log.e("main_alta", "IO Error -> "+e.getMessage());
                 return false;
@@ -1053,7 +1064,12 @@ public class Main extends AppCompatActivity {
         protected void onPostExecute(Boolean bool) {
             super.onPostExecute(bool);
             if(bool){
-            }else{
+                pCounter++;
+            }
+            if(pTotal == TotalNewCAF){
+                if(pCounter < pTotal){
+                    Log.e("main_alta", "Mostrar alerta de error");
+                }
             }
         }
     }
