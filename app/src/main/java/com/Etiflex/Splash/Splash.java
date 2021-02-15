@@ -79,7 +79,16 @@ public class Splash extends AppCompatActivity {
             }
         });
 
-        if(settings.getString("first_log", "true").equals("false")){
+        new Handler().postDelayed(() -> {
+            GlobalPreferences.ID_CEDIS = settings.getString("IdCedis", "1");
+            GlobalPreferences.NOMBRE_CEDIS = settings.getString("NombreCedis", "No especificado");
+            GlobalPreferences.SERVER_PRINTER_IP = settings.getString("SERVER_PRINTER_IP", "0.0.0.0");
+            GlobalPreferences.URL = settings.getString("SERVER_IP", "0.0.0.0");
+            startActivity(new Intent(Splash.this, Main.class));
+            Splash.this.finish();
+        }, 1500);
+
+        /*if(settings.getString("first_log", "true").equals("false")){
             new Handler().postDelayed(() -> {
                 GlobalPreferences.ID_CEDIS = settings.getString("IdCedis", "1");
                 GlobalPreferences.NOMBRE_CEDIS = settings.getString("NombreCedis", "No especificado");
@@ -120,7 +129,7 @@ public class Splash extends AppCompatActivity {
                 PanelStartUp.setVisibility(View.VISIBLE);
                 animation.start();
             }, 3000);
-        }
+        }*/
     }
 
 }

@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
-            android:id="@+id/btn_back"
+            android:id="@+id/btn_onbackpressed"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/back_blanco"

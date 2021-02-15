@@ -410,6 +410,7 @@ public class Main extends AppCompatActivity {
                                         PanelUbicacion.setVisibility(View.VISIBLE);
                                         Toast.makeText(Main.this, "¡Proceso finalizado con exito!", Toast.LENGTH_SHORT).show();
                                         pd.dismiss();
+                                        Main.this.finish();
                                     } else {
                                         Log.e("Main","\"Error de php\"");
                                         Toast.makeText(Main.this, "Algo salió mal, intente nuevamente o contacte a un desarrollador", Toast.LENGTH_SHORT).show();
