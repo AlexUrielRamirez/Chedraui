@@ -80,7 +80,7 @@ public class Main extends AppCompatActivity {
     private EditText et_buscador_activo, et_persona_asignada, et_descripcion, et_centro_costo, et_cantidad;
     private RadioGroup rg_tipo_etiqueta;
     private RadioButton rb_etiqueta_papel, rb_etiqueta_metal;
-    private TextView btn_encontrar_activo_numero, btn_encontrar_activo_nombre, spinner_departamento, spinner_oficina, contador_letras_descripcion, txt_epc_enlazado;
+    private TextView btn_encontrar_activo_numero, spinner_departamento, spinner_oficina, contador_letras_descripcion, txt_epc_enlazado;
     private ImageButton btn_camara_por_numero;
     private RecyclerView rv_buscador;
     private ArrayList<SearchModel> main_list_buscador;
@@ -105,32 +105,13 @@ public class Main extends AppCompatActivity {
         searchItem(search_key);
         SearchingIsAboutToStart = false;
     };
-    
-    //Ubicaciones
+
     private PopupMenu menu_area, menu_oficinas, menu_tipos;
     private ArrayList<ModelUbicaciones> main_list_areas, main_list_oficinas, main_list_tipos;
     private String IdArea = "0", IdOficina = "0", IdTipo, tipo_etiqueta = "Papel", TipoActivo = "0", DescripcionActivo = "";
     private Button btn_enlazar_etiqueta;
     private final int CODE_BAR_FOR_METAL = 250;
     private String GenEPC = "false", MetalEPC = "none";
-    interface guardar_caf_activo_nuevo{
-        @Multipart
-        @POST("/insert_nuevo_activo.php")
-        void setData(
-                @Part("data") String data,
-                @Part("file_1")TypedFile file_1,
-                @Part("file_2")TypedFile file_2,
-                Callback<Response> callback
-        );
-    }
-    interface guardar_caf_activo_existente{
-        @FormUrlEncoded
-        @POST("/insert_activo_existente.php")
-        void setData(
-                @Field("data") String data,
-                Callback<Response> callback
-        );
-    }
     interface upload_caf{
         @Multipart
         @POST("/uploadCAF.php")
@@ -149,13 +130,7 @@ public class Main extends AppCompatActivity {
                 Callback<Response> callback
         );
     }
-
-    private ArrayList<String> main_list_epcs, main_list_final_areas, main_list_final_oficinas;
     private JSONObject jsonCAF;
-
-    //Printing elemtns
-    private int pCounter = 0;
-    private int pTotal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,8 +202,6 @@ public class Main extends AppCompatActivity {
             progressDialog.setMessage("Subiendo información...");
             progressDialog.show();
             ContadorNewCAF = 0;
-            pCounter = 0;
-            pTotal = 0;
             try {
                 /**CREAMOS JSON*/
                 jsonCAF = new JSONObject();
@@ -280,59 +253,6 @@ public class Main extends AppCompatActivity {
                 Log.e("main_alta","prepared json error--->"+e.getMessage());
             }
             UploadData(jsonCAF);
-
-            //Preparar Producto
-            /*TotalNewCAF = 0;
-            progressDialog.setMessage("Subiendo información...");
-            progressDialog.show();
-            main_list_epcs = new ArrayList<>();
-            main_list_final_areas = new ArrayList<>();
-            main_list_final_oficinas = new ArrayList<>();
-            switch (rg_tipo_etiqueta.getCheckedRadioButtonId()){
-                case R.id.rb_etiqueta_papel:
-                    tipo_etiqueta = "Papel";
-                    GenEPC = "true";
-                    MetalEPC = "none";
-                    if(et_cantidad.getText().length() != 0) {
-                        TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
-                    }else{
-                        TotalNewCAF = 0;
-                    }
-                    break;
-                case R.id.rb_etiqueta_metal:
-                    tipo_etiqueta = "Metal";
-                    GenEPC = "false";
-                    MetalEPC = txt_epc_enlazado.getText().toString();
-                    TotalNewCAF = 1;
-                    break;
-            }
-            String prepared_data = null;
-            if(ProductLoaded){
-                prepared_data = "{" +
-                        "\"NumeroActivo\":\""+NumeroActivo+"\"," +
-                        "\"IdActivo\":\""+IdActivo+"\"," +
-                        "\"IdCedis\":\""+ GlobalPreferences.ID_CEDIS +"\"," +
-                        "\"IdArea\":\""+IdArea+"\"," +
-                        "\"IdOficina\":\""+IdOficina+"\"," +
-                        "\"PersonaAsignada\":\""+et_persona_asignada.getText().toString()+"\"," +
-                        "\"GenEPC\":\""+GenEPC+"\"," +
-                        "\"MetalEPC\":\""+MetalEPC+"\"," +
-                        "\"TipoEtiqueta\":\""+tipo_etiqueta+"\"}";
-            }else{
-                DescripcionActivo = et_descripcion.getText().toString();
-                prepared_data = "{" +
-                        "\"Descripcion\":\""+et_descripcion.getText().toString()+"\"," +
-                        "\"IdCedis\":\""+ GlobalPreferences.ID_CEDIS +"\"," +
-                        "\"IdArea\":\""+IdArea+"\"," +
-                        "\"IdOficina\":\""+IdOficina+"\"," +
-                        "\"Tipo\":\""+IdTipo+"\"," +
-                        "\"PersonaAsignada\":\""+et_persona_asignada.getText().toString()+"\"," +
-                        "\"GenEPC\":\""+GenEPC+"\"," +
-                        "\"MetalEPC\":\""+MetalEPC+"\"," +
-                        "\"mNumeroActivo\":\""+MetalEPC.substring(0, 4)+"\"," +
-                        "\"TipoEtiqueta\":\""+tipo_etiqueta+"\"}";
-            }
-            uploadCAF(prepared_data);*/
         });
         btn_enlazar_etiqueta.setOnClickListener(v->{
             Intent intent = new Intent();
@@ -406,7 +326,6 @@ public class Main extends AppCompatActivity {
 
             GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_ALTA_ACTIVO, jsonCAF.getString("IdCAF"));
             if(jsonCAF.getString("TipoEtiqueta").equals("Papel")){
-                pTotal++;
                 new printTags().execute(jsonCAF);
             }
             if(ContadorNewCAF < TotalNewCAF){
@@ -578,80 +497,6 @@ public class Main extends AppCompatActivity {
         }, error -> {
             Log.e("Validacion", "Volley error" + error);
         }));
-    }
-
-    private void uploadCAF(String data){
-        Log.e("main_alta", "Comenzando subida");
-        Log.e("main_alta", "DATA--->"+data);
-        if(ProductLoaded){
-            if(!IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && TotalNewCAF > 0){
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(guardar_caf_activo_existente.class).setData(data, new Callback<Response>() {
-                    @Override
-                    public void success(Response response, Response response2) {
-                        try {
-                            String resp = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
-                            if(GenEPC.equals("true")){
-                                JSONObject json = new JSONObject(resp);
-                                main_list_epcs.add(json.getString("EPC"));
-                            }
-                            ContadorNewCAF = ContadorNewCAF + 1;
-                            if(ContadorNewCAF < TotalNewCAF){
-                                uploadCAF(resp);
-                            }else{
-                                finishUpload();
-                            }
-                        }catch (IOException e){
-                            Log.e("MainAlta", "Excepción de lecturas");
-                        }catch (JSONException e){
-                            Log.e("MainAlta", "Excepción de código EPC");
-                            Log.e("MainAlta", "Error--->"+e.getMessage());
-                            progressDialog.dismiss();
-                            Toast.makeText(Main.this, "Algo salió mal, contacte a un desarrollador", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e("Main", "Error de conexión");
-                    }
-                });
-            }else{
-                Toast.makeText(this, "Por favor, introduzca información válida", Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            if(file_img_1 != null && file_img_2 != null && !IdArea.equals("0") && !IdOficina.equals("0") && et_persona_asignada.getText().length() > 0 && TotalNewCAF > 0 && et_descripcion.getText().length() > 0){
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo").build().create(guardar_caf_activo_nuevo.class).setData(data, new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
-                        @Override
-                        public void success(Response response, Response response2) {
-                            try {
-                                String respuesta = new BufferedReader(new InputStreamReader(response.getBody().in())).readLine();
-                                if(GenEPC.equals("true")){
-                                    JSONObject json = new JSONObject(respuesta);
-                                    main_list_epcs.add(json.getString("EPC"));
-                                }
-                                ContadorNewCAF = ContadorNewCAF + 1;
-                                if(ContadorNewCAF < TotalNewCAF){
-                                    ProductLoaded = true;
-                                    uploadCAF(respuesta);
-                                }else{
-                                    finishUpload();
-                                }
-                            }catch (IOException e){
-                                Log.e("MainAlta", "Excepción de respuesta de servidor");
-                            }catch (JSONException e){
-                                Log.e("MainAlta", "Excepción de código epc");
-                            }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("MainAlta", "Error->"+error.getMessage());
-                        }
-                });
-            }else{
-                Toast.makeText(this, "Por favor, introduzca información válida", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void finishUpload(){
@@ -1070,113 +915,9 @@ public class Main extends AppCompatActivity {
         protected void onPostExecute(Boolean bool) {
             super.onPostExecute(bool);
             if(bool){
-                pCounter++;
-            }
-            if(pTotal == TotalNewCAF){
-                if(pCounter < pTotal){
-                    Log.e("main_alta", "Mostrar alerta de error");
-                }
+
             }
         }
     }
 
-    /*private class printTags extends AsyncTask<ArrayList<String>, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(ArrayList<String>... arrayLists) {
-            try {
-                Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
-                DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-                String desc_1 = "",desc_2 = "" ,desc_3 = "" ,desc_4 = "";
-                if(DescripcionActivo.length() <= 50){
-                    desc_1 = DescripcionActivo;
-                    desc_2 = "";
-                    desc_3 = "";
-                    desc_4 = "";
-                }else if(DescripcionActivo.length() >= 50 && DescripcionActivo.length() <= 100){
-                    desc_1 = DescripcionActivo.substring(0,50);
-                    desc_2 = DescripcionActivo.substring(50,DescripcionActivo.length());
-                    desc_3 = "";
-                    desc_4 = "";
-                }else if(DescripcionActivo.length() >= 100){
-                    desc_1 = DescripcionActivo.substring(0,50);
-                    desc_2 = DescripcionActivo.substring(50,100);
-                    desc_3 = DescripcionActivo.substring(100,DescripcionActivo.length());
-                    desc_4 = "";
-                }
-                for(int position = 0; position < arrayLists[0].size(); position++){
-                    String zpl_2 = "^XA\n" +
-                            "^RS,,,3,N,,,2\n" +
-                            "^RR10\n" +
-                            "^XZ\n" +
-                            "<xpml><page quantity='0' pitch='24.0 mm'></xpml>^XA\n" +
-                            "^SZ2^JMA\n" +
-                            "^MCY^PMN\n" +
-                            "^PW573\n" +
-                            "~JSN\n" +
-                            "^JZY\n" +
-                            "^LH0,0^LRN\n" +
-                            "^XZ\n" +
-                            "<xpml></page></xpml><xpml><page quantity='1' pitch='24.0 mm'></xpml>~DGR:SSGFX000.GRF,790,10,:Z64:eJxNU7Fq21AUPc9qrUISmdChDlZlOnUrwhnymjiuP8DQfoAhhgwdI5NCJLCM2qmTmg8o7o+Y+JVCvQSU0UOoVDx4KcjFBRtMk94rpRANjwPSOefdc48AQCbIH91fBjk6SC9WOeqOzW4Giot0uFCMSjG02GF0GgKhZDSjN0aPgBjxkdKhmfxiTIq6bDKNjq2EFZ6SYfkrW23OgZfvz/lr8jsRbCqGwHe4TCaFS/xh1IBwxQ9GeyjY4hOjx0HREQOW0YOHCdYsbTSFQpcHetDZUDi94psnpQBHLKglBpov6oyCKjqWx3bn+3hTSVlmVYMpxizt1lDXIkarHs50nwWvWzj+kGXVauPsm8d2bReN3ymjngPTy7iOi/oi49oTPIl9RbaNj9BCqVCeGhPoA+LuzK0VimvyPVH7DudMWcGmAIgrEtQmAHH1AMSFIenmIC4sb0kxWDRNJduRJO722HQyX1SiutLhtIEq7fJQtVvMnULOLy3mzoSvriXvd6jdYGVn+6XEaN5Hi0jWgHkVr2L/5wTiqoTjUE4DysrA24G3pEGCjaC/TkecqVDm9tjinHXV340o1E2ld94d+XSpUlCwO6Gk5e4Gwn028Ci158Cvwpqz6tOkZpeL8Rl4PeSseOeHy7iX96A8De28G1uzmHLcIbo+4m7sqfu9Ehe8vyxquhz0XtZJErWyTpa+/O9pcX17k9XjXp9xENXnd73/e6vufoH8X/gHTBHUuQ==:F2F6\n" +
-                            "^XA\n" +
-                            "^FO36,233\n" +
-                            "^BY3^BCN,22,N,N^FD>;"+arrayLists[0].get(position)+"^FS\n" +
-                            "^FO4,84\n" +
-                            "^BQN,2,6^FDLA,"+arrayLists[0].get(position)+"^FS\n" +
-                            "^FT118,276\n" +
-                            "^CI0\n" +
-                            "^A0N,21,28^FD"+arrayLists[0].get(position)+"^FS\n" +
-                            "^FT146,43\n" +
-                            "^A0N,21,27^FD"+btn_tipo_activo.getText().toString()+"^FS\n" +
-                            "^FT146,99\n" +
-                            "^A0N,21,27^FD"+spinner_oficina.getText().toString()+"^FS\n" +
-                            "^FT146,71\n" +
-                            "^A0N,21,27^FD"+spinner_departamento.getText().toString()+"^FS\n" +
-                            "^FT417,65\n" +
-                            "^A0N,54,72^FD"+arrayLists[0].get(position).substring(0, 4)+"^FS\n" +
-                            "^FO432,71\n" +
-                            "^BY2^BCN,18,N,N^FD>;"+arrayLists[0].get(position).substring(0, 4)+"^FS\n" +
-                            "^FT146,139\n" +
-                            "^A0N,29,20^FD"+desc_1+"\n" +
-                            "^FT146,169\n" +
-                            "^A0N,29,20^F"+desc_2+"^FS\n" +
-                            "^FT146,199\n" +
-                            "^A0N,29,20^FD"+desc_3+"^FS\n" +
-                            "^FO30,10\n" +
-                            "^XGR:SSGFX000.GRF,1,1^FS\n" +
-                            "^PQ1,0,1,Y\n" +
-                            "^RFW,H,2,12,1^FD"+arrayLists[0].get(position)+"^FS\n"+
-                            "^XZ\n" +
-                            "<xpml></page></xpml>^XA\n" +
-                            "^IDR:SSGFX000.GRF^XZ\n" +
-                            "<xpml><end/></xpml>";
-                    outToServer.writeBytes(zpl_2);
-                    Thread.sleep(800);
-                }
-                clientSocket.close();
-                return true;
-            } catch (IOException e) {
-                Log.e("main_alta", "IO Error -> "+e.getMessage());
-                //Toast.makeText(Main.this, "Error, no se pudo conectar con la impresora", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-                return false;
-            } catch (InterruptedException e){
-                Log.e("main_alta", "Interruped Error -> "+e.getMessage());
-                //Toast.makeText(Main.this, "Error, se interrumpió la conexión con la impresora", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean bool) {
-            super.onPostExecute(bool);
-            progressDialog.dismiss();
-            if(bool){
-                Toast.makeText(Main.this, "Proceso finalizado con éxito", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(Main.this, "Algo salió mal, intente nuevamente", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/
 }
