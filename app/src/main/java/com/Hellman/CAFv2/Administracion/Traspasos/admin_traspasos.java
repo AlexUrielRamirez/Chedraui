@@ -97,6 +97,7 @@ public class admin_traspasos extends Fragment {
     public boolean SearchingIsAboutToStart = false;
     private String search_key;
     final Handler handler = new Handler();
+    boolean should_search = true;
     final Runnable runnable = () -> {
         searchItem(search_key, "1");
         SearchingIsAboutToStart = false;
@@ -106,6 +107,7 @@ public class admin_traspasos extends Fragment {
     private PopupMenu menu_cedis, menu_area, menu_oficinas;
     private ArrayList<ModelUbicaciones> main_list_cedis, main_list_areas, main_list_oficinas;
     private String IdCedis, IdArea = "0", IdOficina = "0";
+    private ProgressDialog pd_downloading;
 
     private interface api_network_get_ubications{
         @FormUrlEncoded
@@ -124,7 +126,6 @@ public class admin_traspasos extends Fragment {
                 Callback<Response> callback
         );
     }
-
     private interface api_network_insert_traspaso{
         @FormUrlEncoded
         @POST("/InsertTraspaso.php")
@@ -144,6 +145,8 @@ public class admin_traspasos extends Fragment {
     }
 
     private void initViews(View view) {
+        pd_downloading = new ProgressDialog(getContext());
+        pd_downloading.setMessage("Obteniendo información");
         rv_traspasos = view.findViewById(R.id.rv_traspasos);
         rv_traspasos.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         rv_busqueda = view.findViewById(R.id.rv_busqueda);
@@ -163,8 +166,10 @@ public class admin_traspasos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(SearchingIsAboutToStart){
-                    handler.removeCallbacks(runnable);
+                if(should_search){
+                    if(SearchingIsAboutToStart){
+                        handler.removeCallbacks(runnable);
+                    }
                 }
             }
 
@@ -255,6 +260,7 @@ public class admin_traspasos extends Fragment {
     }
 
     private void getData(){
+        pd_downloading.show();
         main_list_traspasos = new ArrayList<>();
         Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos/getTraspasos.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
@@ -273,14 +279,19 @@ public class admin_traspasos extends Fragment {
                     model.setDescripcion(jsonObject.optString("DescripcionActivo"));
 
                     main_list_traspasos.add(model);
+                    pd_downloading.dismiss();
 
                 }
                 rv_traspasos.setAdapter(new rv_adapter(main_list_traspasos));
             } catch (JSONException | NullPointerException e) {
+                pd_downloading.dismiss();
+                Toast.makeText(getContext(), "No hay información para mostrar", Toast.LENGTH_SHORT).show();
                 Log.e("Validacion", "JSON | Null Exception" + e);
             }
 
         }, error -> {
+            pd_downloading.dismiss();
+            Toast.makeText(getContext(), "Error, revise su conexión", Toast.LENGTH_SHORT).show();
             Log.e("Validacion", "Volley error" + error);
         }));
     }
@@ -507,6 +518,11 @@ public class admin_traspasos extends Fragment {
                                     GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_TRASPASOS, child_list.get(position).getIdCAF());
                                     pd.dismiss();
                                     bsd.dismiss();
+                                    Panel_crear.setVisibility(View.GONE);
+                                    should_search = false;
+                                    et_buscador_activo.setText("");
+                                    should_search = true;
+                                    getData();
                                     Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -570,10 +586,7 @@ public class admin_traspasos extends Fragment {
                     jsonObject = json.getJSONObject(i);
                     model.setId(jsonObject.optString("Id"));
                     model.setNombre(jsonObject.optString("Nombre"));
-
-
                     main_list_cedis.add(model);
-
                 }
 
             } catch (JSONException | NullPointerException e) {

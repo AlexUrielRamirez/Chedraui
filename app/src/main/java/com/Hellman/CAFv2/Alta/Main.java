@@ -131,6 +131,7 @@ public class Main extends AppCompatActivity {
         );
     }
     private JSONObject jsonCAF;
+    boolean PrinterConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,60 +200,42 @@ public class Main extends AppCompatActivity {
             startActivityForResult(i, PICK_IMAGE_FROM_GALLERY);
         });
         btn_continuar_alta.setOnClickListener(v-> {
-            progressDialog.setMessage("Subiendo información...");
-            progressDialog.show();
-            ContadorNewCAF = 0;
             try {
-                /**CREAMOS JSON*/
-                jsonCAF = new JSONObject();
+                progressDialog.setMessage("Verificando impresora...");
+                progressDialog.show();
+                PrinterConnected = false;
+                Thread check = new Thread(() -> {
+                    try {
+                        Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
+                        if(clientSocket.isBound()){
+                            PrinterConnected = true;
+                        }
+                    } catch (IOException e) {
 
-                /**Se cargó un activo?*/
-                if(ProductLoaded){
-                    jsonCAF.put("ProductLoaded","true");
-                    jsonCAF.put("Descripcion", DescripcionActivo);
-                    jsonCAF.put("IdActivo", IdActivo);
-                    jsonCAF.put("NumeroActivo", NumeroActivo);
-                    jsonCAF.put("TipoActivo", "");
-                    jsonCAF.put("IdUbicacion", "0");
-                    jsonCAF.put("Cedis",ID_CEDIS);
-                    jsonCAF.put("Area",IdArea);
-                    jsonCAF.put("CentroCosto", et_centro_costo.getText());
-                    jsonCAF.put("Oficina",IdOficina);
+                    }
+                });
+                check.start();
+                check.join();
+
+                if(PrinterConnected){
+                    BeginUpload();
                 }else{
-                    jsonCAF.put("ProductLoaded","false");
-                    jsonCAF.put("Descripcion", et_descripcion.getText().toString());
-                    jsonCAF.put("IdActivo", "");
-                    jsonCAF.put("NumeroActivo", "");
-                    jsonCAF.put("TipoActivo", IdTipo);
-                    jsonCAF.put("IdUbicacion", "0");
-                    jsonCAF.put("Cedis",ID_CEDIS);
-                    jsonCAF.put("Area",IdArea);
-                    jsonCAF.put("CentroCosto", et_centro_costo.getText());
-                    jsonCAF.put("Oficina",IdOficina);
+                    progressDialog.dismiss();
+                    BottomSheetDialog bsd = new BottomSheetDialog(this);
+                    bsd.setContentView(R.layout.bsd_no_printer);
+                    bsd.setCancelable(false);
+                    bsd.findViewById(R.id.btn_continuar).setOnClickListener(v1->{
+                        BeginUpload();
+                        bsd.dismiss();
+                    });
+                    bsd.findViewById(R.id.btn_cancel).setOnClickListener(v2->{
+                        bsd.dismiss();
+                    });
+                    bsd.show();
                 }
-
-                /**Qué tipo de etiqueta tiene?*/
-                switch (rg_tipo_etiqueta.getCheckedRadioButtonId()){
-                    case R.id.rb_etiqueta_papel:
-                        jsonCAF.put("TipoEtiqueta","Papel");
-                        /**Cargamos EPC falso la primera vez*/
-                        jsonCAF.put("EPC", "000000000000000000000000");
-                        TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
-                        break;
-                    case R.id.rb_etiqueta_metal:
-                        jsonCAF.put("TipoEtiqueta","Metal");
-                        jsonCAF.put("EPC", txt_epc_enlazado.getText().toString());
-                        TotalNewCAF = 1;
-                        break;
-                }
-                /**Cargar persona asignada*/
-                jsonCAF.put("PersonaAsignada", et_persona_asignada.getText().toString());
-
-                Log.e("main_alta","prepared json --->"+jsonCAF.toString());
-            }catch (JSONException e){
-                Log.e("main_alta","prepared json error--->"+e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            UploadData(jsonCAF);
         });
         btn_enlazar_etiqueta.setOnClickListener(v->{
             Intent intent = new Intent();
@@ -271,6 +254,60 @@ public class Main extends AppCompatActivity {
             }
         });
         txt_limpiar_activo.setOnClickListener(v->clearItem());
+    }
+
+    private void BeginUpload(){
+        progressDialog.setMessage("Subiendo información...");
+        ContadorNewCAF = 0;
+        try {
+            /**CREAMOS JSON*/
+            jsonCAF = new JSONObject();
+            /**Se cargó un activo?*/
+            if(ProductLoaded){
+                jsonCAF.put("ProductLoaded","true");
+                jsonCAF.put("Descripcion", DescripcionActivo);
+                jsonCAF.put("IdActivo", IdActivo);
+                jsonCAF.put("NumeroActivo", NumeroActivo);
+                jsonCAF.put("TipoActivo", "");
+                jsonCAF.put("IdUbicacion", "0");
+                jsonCAF.put("Cedis",ID_CEDIS);
+                jsonCAF.put("Area",IdArea);
+                jsonCAF.put("CentroCosto", et_centro_costo.getText());
+                jsonCAF.put("Oficina",IdOficina);
+            }else{
+                jsonCAF.put("ProductLoaded","false");
+                jsonCAF.put("Descripcion", et_descripcion.getText().toString());
+                jsonCAF.put("IdActivo", "");
+                jsonCAF.put("NumeroActivo", "");
+                jsonCAF.put("TipoActivo", IdTipo);
+                jsonCAF.put("IdUbicacion", "0");
+                jsonCAF.put("Cedis",ID_CEDIS);
+                jsonCAF.put("Area",IdArea);
+                jsonCAF.put("CentroCosto", et_centro_costo.getText());
+                jsonCAF.put("Oficina",IdOficina);
+            }
+
+            /** Qué tipo de etiqueta tiene?*/
+            switch (rg_tipo_etiqueta.getCheckedRadioButtonId()){
+                case R.id.rb_etiqueta_papel:
+                    jsonCAF.put("TipoEtiqueta","Papel");
+                    /**Cargamos EPC falso la primera vez*/
+                    jsonCAF.put("EPC", "000000000000000000000000");
+                    TotalNewCAF = Integer.parseInt(et_cantidad.getText().toString());
+                    break;
+                case R.id.rb_etiqueta_metal:
+                    jsonCAF.put("TipoEtiqueta","Metal");
+                    jsonCAF.put("EPC", txt_epc_enlazado.getText().toString());
+                    TotalNewCAF = 1;
+                    break;
+            }
+            /** Cargar persona asignada*/
+            jsonCAF.put("PersonaAsignada", et_persona_asignada.getText().toString());
+            Log.e("main_alta","prepared json --->"+jsonCAF.toString());
+        }catch (JSONException e){
+            Log.e("main_alta","prepared json error--->"+e.getMessage());
+        }
+        UploadData(jsonCAF);
     }
 
     private void UploadData(JSONObject jsonCAF) {
@@ -604,7 +641,7 @@ public class Main extends AppCompatActivity {
 
     private void searchItem(String key) {
         main_list_buscador = new ArrayList<>();
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getSearch.php?key=" + key.substring(0, 4), null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getSearch.php?key=" + key, null, response -> {
             JSONArray json= response.optJSONArray("Data");
             try {
 
@@ -640,6 +677,7 @@ public class Main extends AppCompatActivity {
             }
 
         },error -> {
+            Log.e("Alta", "Error de conexión->"+error.getMessage());
             Toast.makeText(this, "Error de conexión", Toast.LENGTH_SHORT).show();
         }));
     }

@@ -132,22 +132,10 @@ public class Hellman extends AppCompatActivity {
         img_logo = findViewById(R.id.logo);
         btn_historial = findViewById(R.id.btn_historial);
         Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
-        /*if(ID_CEDIS.equals("2")){
-            Glide.with(this).load(R.drawable.contract).into(img_logo);
-        }else{
-            Glide.with(this).load(R.drawable.hellman_icon).into(img_logo);
-        }*/
         initViews();
         tag_list = new ArrayList<>();
 
         btn_inventario.setOnClickListener(v->{
-            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), new CAF_Inventario(), FRAGMENT_INVENTARIO).commit();
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
-            MainFragmentHolder.setAnimation(animation);
-            animation.start();
-            PAGE_STATE = PAGE_STATE_INVENTORY;
-            MainFragmentHolder.setVisibility(View.VISIBLE);*/
-            PAGE_STATE = PAGE_STATE_SETTING_UBICATION;
             startActivity(new Intent(this, Main.class));
         });
 
@@ -156,20 +144,10 @@ public class Hellman extends AppCompatActivity {
         });
 
         btn_alta.setOnClickListener(v->{
-            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_AltaActivo.newInstance("", ""), FRAGMENT_ALTA).commit();
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
-            MainFragmentHolder.setAnimation(animation);
-            animation.start();
-            MainFragmentHolder.setVisibility(View.VISIBLE);*/
             startActivity(new Intent(this, com.Hellman.CAFv2.Alta.Main.class));
         });
 
         btn_ajustes.setOnClickListener(v->{
-            /*getSupportFragmentManager().beginTransaction().replace(MainFragmentHolder.getId(), CAF_Ajustes.newInstance("", ""), FRAGMENT_AJUSTES).commit();
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_up_in);
-            MainFragmentHolder.setAnimation(animation);
-            animation.start();
-            MainFragmentHolder.setVisibility(View.VISIBLE);*/
             startActivity(new Intent(this, com.Hellman.CAFv2.Ajustes.Main.class));
         });
         if(GlobalPreferences.NIVEL_USUARIO == 1){
@@ -182,7 +160,6 @@ public class Hellman extends AppCompatActivity {
     }
 
     private void initViews() {
-
         findViewById(R.id.textView2).setOnClickListener(v->{
             Fragment Lecturas = getSupportFragmentManager().findFragmentByTag("Lecturas");
             if(Lecturas != null){
@@ -280,9 +257,6 @@ public class Hellman extends AppCompatActivity {
             }
             startActivityForResult(Intent.createChooser(intent,"Seleccionando archivo excel"), GlobalPreferences.INTENT_RESULT_ADD_FILE_EXCEL);
         });
-
-        //CAFv2
-
         MainFragmentHolder = findViewById(R.id.MainFragmentHolder);
 
         btn_alta = findViewById(R.id.btn_alta);
