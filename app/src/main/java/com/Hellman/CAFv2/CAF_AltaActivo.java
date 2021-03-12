@@ -285,7 +285,7 @@ public class CAF_AltaActivo extends Fragment {
                 setUpResult(child_list.get(position));
             });
 
-            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
+            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/"+child_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(160).into(holder.img_activo);
 
             holder.nombre.setText(child_list.get(position).getNombre());
             holder.descripcion.setText(child_list.get(position).getDescripcion());

@@ -185,7 +185,7 @@ public class admin_impresion extends Fragment {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(getContext(), Spinner_Departamento);
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -227,7 +227,7 @@ public class admin_impresion extends Fragment {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(getContext(), Spinner_Oficina);
         pb_loading_ofices.setVisibility(View.VISIBLE);
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -266,7 +266,7 @@ public class admin_impresion extends Fragment {
 
     private void getData(){
         txt_progress.setText("Consiguiendo recursos de lectura...");
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionImpresion/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionImpresion/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
                 JSONArray json = response.optJSONArray("Data");
                 main_list = new ArrayList<>();
                 main_list_metal = new ArrayList<>();
@@ -327,7 +327,7 @@ public class admin_impresion extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
             holder.Descripcion.setText(child_list.get(position).getDescripcion());
             holder.NumeroActivo.setText("EPC: "+child_list.get(position).getEPC());
             if(!child_list.get(position).getStatus().equals("5")){
@@ -407,7 +407,7 @@ public class admin_impresion extends Fragment {
                 String msg = "Estás a punto de enlazar el EPC:\n"+newEPC+"\nAl activo: "+CurrentMetalNumber+"\n¿Deseas continuar?";
                 bsd.findViewById(R.id.btn_continuar).setOnClickListener(v -> {
                     progressDialog.show();
-                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionImpresion/").build().create(api_network_update_tag.class).setData(CurrentIdCAF, newEPC, new Callback<Response>() {
+                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionImpresion/").build().create(api_network_update_tag.class).setData(CurrentIdCAF, newEPC, new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
                             main_list_metal.get(CURRENT_METAL_TAG_POSITION).setEPC(newEPC);
@@ -650,7 +650,7 @@ public class admin_impresion extends Fragment {
             super.onPostExecute(bool);
             if(bool){
                 txt_progress.setText("Actualizando índices");
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionImpresion/").build().create(api_network_update.class).setData(IdCAFS.substring(0, IdCAFS.length() - 1), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionImpresion/").build().create(api_network_update.class).setData(IdCAFS.substring(0, IdCAFS.length() - 1), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         Panel_loading.setVisibility(View.GONE);

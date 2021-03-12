@@ -346,7 +346,7 @@ public class Hellman extends AppCompatActivity {
         if(requestCode == GlobalPreferences.INTENT_RESULT_ADD_FILE_EXCEL && resultCode == RESULT_OK && data != null) {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" + getFileName(data.getData()));
             Log.e("Excel","dentro excel");
-            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders").build().create(ANUploadXLSX.class).setData( new TypedFile("multipart/form-data", file), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders").build().create(ANUploadXLSX.class).setData( new TypedFile("multipart/form-data", file), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     Log.e("Excel","succes");

@@ -82,7 +82,6 @@ public class admin_traspasos extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     private RecyclerView rv_traspasos;
@@ -108,6 +107,7 @@ public class admin_traspasos extends Fragment {
     private ArrayList<ModelUbicaciones> main_list_cedis, main_list_areas, main_list_oficinas;
     private String IdCedis, IdArea = "0", IdOficina = "0";
     private ProgressDialog pd_downloading;
+    private TextView txt_error;
 
     private interface api_network_get_ubications{
         @FormUrlEncoded
@@ -158,6 +158,7 @@ public class admin_traspasos extends Fragment {
             Panel_crear.setVisibility(View.VISIBLE);
         });
         et_buscador_activo = view.findViewById(R.id.et_buscador_activo);
+        txt_error = view.findViewById(R.id.txt_error);
         et_buscador_activo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -190,7 +191,7 @@ public class admin_traspasos extends Fragment {
 
     private void searchItem(String key, String Type){
         Panel_carga_buscando.setVisibility(View.VISIBLE);
-        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_search_result.class).setData(key, Type, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionTraspasos").build().create(api_network_get_search_result.class).setData(key, Type, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try {
@@ -261,8 +262,9 @@ public class admin_traspasos extends Fragment {
 
     private void getData(){
         pd_downloading.show();
+        txt_error.setVisibility(View.GONE);
         main_list_traspasos = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos/getTraspasos.php", null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionTraspasos/getTraspasos.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
             try {
                 for (int i = 0; i < json.length(); i++) {
@@ -286,12 +288,13 @@ public class admin_traspasos extends Fragment {
             } catch (JSONException | NullPointerException e) {
                 pd_downloading.dismiss();
                 Toast.makeText(getContext(), "No hay información para mostrar", Toast.LENGTH_SHORT).show();
+                txt_error.setVisibility(View.VISIBLE);
                 Log.e("Validacion", "JSON | Null Exception" + e);
             }
 
         }, error -> {
             pd_downloading.dismiss();
-            Toast.makeText(getContext(), "Error, revise su conexión", Toast.LENGTH_SHORT).show();
+            txt_error.setVisibility(View.VISIBLE);
             Log.e("Validacion", "Volley error" + error);
         }));
     }
@@ -312,11 +315,11 @@ public class admin_traspasos extends Fragment {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + child_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombre());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcion());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumero());
-            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_get_ubications.class).setData(child_list.get(position).getUbicaciones(), new Callback<Response>() {
+            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionTraspasos").build().create(api_network_get_ubications.class).setData(child_list.get(position).getUbicaciones(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     try {
@@ -412,7 +415,7 @@ public class admin_traspasos extends Fragment {
                             IdCedis = main_list_cedis.get(i).getId();
                             main_list_areas = new ArrayList<>();
                             menu_area = new PopupMenu(context, spinnerArea);
-                            Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+IdCedis, null, response -> {
+                            Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+IdCedis, null, response -> {
                                 JSONArray json = response.optJSONArray("Data");
                                 pb_loading_departamentos.setVisibility(View.VISIBLE);
                                 try {
@@ -436,7 +439,7 @@ public class admin_traspasos extends Fragment {
                                                 IdArea = main_list_areas.get(i3).getId();
                                                 main_list_oficinas = new ArrayList<>();
                                                 menu_oficinas = new PopupMenu(context, spinnerOficina);
-                                                Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response2 -> {
+                                                Volley.newRequestQueue(context).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response2 -> {
                                                     JSONArray json2 = response2.optJSONArray("Data");
                                                     pb_loading_ofices.setVisibility(View.VISIBLE);
                                                     try {
@@ -512,7 +515,7 @@ public class admin_traspasos extends Fragment {
                         if(!IdOficina.equals(child_list.get(position).getIdOficina())){
                             pd.show();
                             String data = "{\"Cedis\":\""+IdCedis+"\", \"Area\":\""+IdArea+"\", \"Oficina\":\""+IdOficina+"\", \"IdCAF\":\""+child_list.get(position).getIdCAF()+"\"}";
-                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionTraspasos").build().create(api_network_insert_traspaso.class).setData(data, new Callback<Response>() {
+                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionTraspasos").build().create(api_network_insert_traspaso.class).setData(data, new Callback<Response>() {
                                 @Override
                                 public void success(Response response, Response response2) {
                                     GlobalPreferences.mHistorial.GuardarHistorico(GlobalPreferences.ID_CEDIS, GlobalPreferences.ID_USUARIO, GlobalPreferences.HISTORIAL_TIPO_TRASPASOS, child_list.get(position).getIdCAF());
@@ -541,7 +544,7 @@ public class admin_traspasos extends Fragment {
                 });
                 bsd.show();
             });
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumero()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + child_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombre());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcion());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumero());
@@ -576,7 +579,7 @@ public class admin_traspasos extends Fragment {
 
     private void getCedis() {
         main_list_cedis = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getCedis.php", null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getCedis.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -600,7 +603,7 @@ public class admin_traspasos extends Fragment {
 
     private void getAreas() {
         main_list_areas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {

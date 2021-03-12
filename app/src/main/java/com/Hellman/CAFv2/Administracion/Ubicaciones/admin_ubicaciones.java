@@ -197,7 +197,7 @@ public class admin_ubicaciones extends Fragment {
                         "}";
                 break;
         }
-        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionUbicaciones/").build().create(api_network_create_ubicacion.class).setData(ChildTXTJson, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionUbicaciones/").build().create(api_network_create_ubicacion.class).setData(ChildTXTJson, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try{
@@ -233,7 +233,7 @@ public class admin_ubicaciones extends Fragment {
     private void getAreas() {
         Panel_loading_oficinas.setVisibility(View.VISIBLE);
         main_list_areas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+ GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+ GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -262,7 +262,7 @@ public class admin_ubicaciones extends Fragment {
 
     private void getOficinas(String IdArea) {
         main_list_oficinas = new ArrayList<>();
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {

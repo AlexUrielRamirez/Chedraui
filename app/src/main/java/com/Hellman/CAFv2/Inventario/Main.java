@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Addons.ProgressBarAnimation;
 import com.Etiflex.Splash.GlobalPreferences;
 import com.Etiflex.Splash.Methods;
+import com.Hellman.CAFv2.BuscadorEPC.Buscador;
 import com.Hellman.CAFv2.Incidencias.ControlIncidencias;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -167,7 +168,9 @@ public class Main extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == 134){
-            mReader.realTimeInventory((byte) 0xff, (byte) 0x01);
+            if(GlobalPreferences.PAGE_STATE == PAGE_STATE_INVENTORY){
+                mReader.realTimeInventory((byte) 0xff, (byte) 0x01);
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -262,7 +265,7 @@ public class Main extends AppCompatActivity {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(Main.this, Spinner_Departamento);
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -304,7 +307,7 @@ public class Main extends AppCompatActivity {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(Main.this, Spinner_Oficina);
         pb_loading_ofices.setVisibility(View.VISIBLE);
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -346,7 +349,7 @@ public class Main extends AppCompatActivity {
 
         conter = 0;
         txt_download_progress.setText("Consiguiendo recursos de lectura...");
-        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
+        Volley.newRequestQueue(ctx).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Inventario/getData.php?IdArea="+IdArea+"&IdOficina="+IdOficina, null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list = new ArrayList<>();
             tag_list = new ArrayList<>();
@@ -397,7 +400,7 @@ public class Main extends AppCompatActivity {
                         }
                         String id_list = ids.toString();
                         id_list = id_list.substring(0, id_list.length() - 1);
-                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario").build().create(api_network.class).setData(id_list, new Callback<Response>() {
+                        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Inventario").build().create(api_network.class).setData(id_list, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 try {
@@ -452,7 +455,7 @@ public class Main extends AppCompatActivity {
 
     private void DownloadInsidences() {
         txt_download_progress.setText("Consiguiendo registros de insidencias...");
-        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario/getIncidencias.php", null, response -> {
+        Volley.newRequestQueue(Main.this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Inventario/getIncidencias.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list_insidencias = new ArrayList<>();
             tag_list_insidencias = new ArrayList<>();
@@ -582,7 +585,7 @@ public class Main extends AppCompatActivity {
         }, 1500);
     }
 
-    public static class rv_adapter extends RecyclerView.Adapter<rv_adapter.ViewHolder> implements View.OnClickListener{
+    public class rv_adapter extends RecyclerView.Adapter<rv_adapter.ViewHolder> implements View.OnClickListener{
         private View.OnClickListener listener;
         Context context;
         @Override
@@ -595,7 +598,7 @@ public class Main extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(rv_adapter.ViewHolder holder, int position) {
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + main_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + main_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(240).into(holder.img);
             holder.item_holder.setOnClickListener(v->{
 
                 GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_DETAILS;
@@ -611,11 +614,13 @@ public class Main extends AppCompatActivity {
                     btn_insidencia.setBackgroundColor(context.getColor(R.color.menu_orange));
                 }
                 btn_buscar.setOnClickListener(v_1->{
-                    GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_SEARCHING;
+                    /*GlobalPreferences.PAGE_STATE = GlobalPreferences.PAGE_STATE_SEARCHING;
                     GlobalPreferences.CURRENT_TAG = main_list.get(position).getEPC();
                     CurrentEPC.setText(GlobalPreferences.CURRENT_TAG);
                     //setAntennaPower("30");
-                    Buscador.setVisibility(View.VISIBLE);
+                    Buscador.setVisibility(View.VISIBLE);*/
+                    GlobalPreferences.CURRENT_TAG = main_list.get(position).getEPC();
+                    startActivity(new Intent(Main.this, com.Hellman.CAFv2.BuscadorEPC.Buscador.class));
                 });
                 btn_insidencia.setOnClickListener(v1->{
                     final Dialog dialog = new Dialog(context);
@@ -648,7 +653,7 @@ public class Main extends AppCompatActivity {
                                 fos.write(bitmapdata);
                                 fos.flush();
                                 fos.close();
-                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), GlobalPreferences.NOMBRE_USUARIO,new TypedFile("multipart/form-data", f), new Callback<Response>() {
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Incidencias").build().create(api_network_alta_insidencia.class).setData(main_list.get(position).getId(), GlobalPreferences.NOMBRE_USUARIO,new TypedFile("multipart/form-data", f), new Callback<Response>() {
                                     @Override
                                     public void success(Response response, Response response2) {
                                         try{
@@ -722,7 +727,7 @@ public class Main extends AppCompatActivity {
         }
 
         private void setUpDetailData(ModelInventario model) {
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + model.getNumero()).override(360).into(ImgDetalle);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + model.getNumero()).placeholder(R.drawable.empty_photo).override(360).into(ImgDetalle);
             NombreDetalle.setText("Nombre: "+model.getNombre());
             DescripcionDetalle.setText("Descripción: "+model.getDescripcion());
             AlmacenDetalle.setText("Isal: "+model.getDescripcion());

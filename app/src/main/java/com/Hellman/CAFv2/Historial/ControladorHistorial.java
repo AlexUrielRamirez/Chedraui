@@ -29,7 +29,7 @@ public class ControladorHistorial {
                        "\"IdUsuario\":\""+IdUsuario+"\"," +
                        "\"Tipo\":\""+Tipo+"\"," +
                        "\"IdReferencia\":\""+IdReferencia+"\"}";
-        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL + "/HellmanCAF/webservices/Historial").build().create(api_network_save_hitory.class).setData(data, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL + "/HellmannCAF/webservices/Historial").build().create(api_network_save_hitory.class).setData(data, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
             }

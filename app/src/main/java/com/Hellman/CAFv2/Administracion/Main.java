@@ -96,7 +96,7 @@ public class Main extends AppCompatActivity {
             EditText et_contrasena = bsd.findViewById(R.id.et_contrasena);
             bsd.findViewById(R.id.btn_continuar).setOnClickListener(v->{
                 if(et_contrasena.getText().length() != 0){
-                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Administracion").build().create(check_admin_pass.class).setData(et_contrasena.getText().toString(), new Callback<Response>() {
+                    new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Administracion").build().create(check_admin_pass.class).setData(et_contrasena.getText().toString(), new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
                             try {

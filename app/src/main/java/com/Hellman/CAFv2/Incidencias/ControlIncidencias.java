@@ -147,7 +147,7 @@ public class ControlIncidencias extends android.app.Fragment {
                             fos.flush();
                             fos.close();
 
-                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), IdCAF, IdIncidencia, GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
+                            new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), IdCAF, IdIncidencia, GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
                                 @Override
                                 public void success(Response response, Response response2) {
                                     try{
@@ -216,17 +216,17 @@ public class ControlIncidencias extends android.app.Fragment {
     }
 
     private void getData(){
-        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Inventario").build().create(api_network_get_data.class).setData(IdCAF, new Callback<Response>() {
+        new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Inventario").build().create(api_network_get_data.class).setData(IdCAF, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try{
                     JSONObject json = new JSONObject(new BufferedReader(new InputStreamReader(response.getBody().in())).readLine());
                     local__epc = json.getString("EPC");
-                    Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+json.getString("Numero")).override(240).into(img_incidencia);
+                    Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/"+json.getString("Numero")).placeholder(R.drawable.empty_photo).override(240).into(img_incidencia);
                     txt_nombre.setText(json.getString("Nombre"));
                     txt_descripcion.setText(json.getString("Descripcion"));
                     txt_numero.setText("Número de activo " + json.getString("Numero"));
-                    Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+json.getString("Numero")+"_ref").override(480).into(img_referencia);
+                    Glide.with(getContext()).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/"+json.getString("Numero")+"_ref").placeholder(R.drawable.empty_photo).override(480).into(img_referencia);
                     txt_ubicacion.setText("Ubicación: " + json.getString("Area") + ", " + json.getString("Oficina"));
                     txt_encargado.setText("Persona Asignada: " + json.getString("PAsignada"));
                 }catch (IOException e){

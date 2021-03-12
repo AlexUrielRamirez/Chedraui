@@ -118,7 +118,7 @@ public class admin_incidences extends Fragment {
     private void getData(){
         main_list_incidencias = new ArrayList<>();
         Panel_loading.setVisibility(View.VISIBLE);
-        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AdministracionIncidencias/getAllIncidences.php", null, response -> {
+        Volley.newRequestQueue(getContext()).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/AdministracionIncidencias/getAllIncidences.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -198,7 +198,7 @@ public class admin_incidences extends Fragment {
                 });
                 bsd.show();
             });
-            Glide.with(context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).override(140).into(holder.img_activo);
+            Glide.with(context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + child_list.get(position).getNumeroActivo()).placeholder(R.drawable.empty_photo).override(140).into(holder.img_activo);
             holder.txtNombreActivo.setText(child_list.get(position).getNombreActivo());
             holder.txtDescripcionActivo.setText(child_list.get(position).getDescripcionActivo());
             holder.txtNumeroActivo.setText("Número de activo: " + child_list.get(position).getNumeroActivo());
@@ -338,7 +338,7 @@ public class admin_incidences extends Fragment {
                                 fos.flush();
                                 fos.close();
 
-                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), CURRENT_MODEL.getIdCAF(), CURRENT_MODEL.getIdIncidencia(), GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
+                                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Incidencias").build().create(api_network_clean_incidencia.class).setData(new TypedFile("multipart/form-data", f), CURRENT_MODEL.getIdCAF(), CURRENT_MODEL.getIdIncidencia(), GlobalPreferences.NOMBRE_USUARIO, new Callback<Response>() {
                                     @Override
                                     public void success(Response response, Response response2) {
                                         try{

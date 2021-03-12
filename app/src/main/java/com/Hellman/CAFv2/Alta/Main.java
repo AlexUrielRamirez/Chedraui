@@ -58,6 +58,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -200,42 +201,9 @@ public class Main extends AppCompatActivity {
             startActivityForResult(i, PICK_IMAGE_FROM_GALLERY);
         });
         btn_continuar_alta.setOnClickListener(v-> {
-            try {
-                progressDialog.setMessage("Verificando impresora...");
-                progressDialog.show();
-                PrinterConnected = false;
-                Thread check = new Thread(() -> {
-                    try {
-                        Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
-                        if(clientSocket.isBound()){
-                            PrinterConnected = true;
-                        }
-                    } catch (IOException e) {
-
-                    }
-                });
-                check.start();
-                check.join();
-
-                if(PrinterConnected){
-                    BeginUpload();
-                }else{
-                    progressDialog.dismiss();
-                    BottomSheetDialog bsd = new BottomSheetDialog(this);
-                    bsd.setContentView(R.layout.bsd_no_printer);
-                    bsd.setCancelable(false);
-                    bsd.findViewById(R.id.btn_continuar).setOnClickListener(v1->{
-                        BeginUpload();
-                        bsd.dismiss();
-                    });
-                    bsd.findViewById(R.id.btn_cancel).setOnClickListener(v2->{
-                        bsd.dismiss();
-                    });
-                    bsd.show();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            progressDialog.setMessage("Verificando impresora...");
+            progressDialog.show();
+            CheckPrinter();
         });
         btn_enlazar_etiqueta.setOnClickListener(v->{
             Intent intent = new Intent();
@@ -256,8 +224,54 @@ public class Main extends AppCompatActivity {
         txt_limpiar_activo.setOnClickListener(v->clearItem());
     }
 
+    private void CheckPrinter(){
+        PrinterConnected = false;
+        Thread check = new Thread(() -> {
+            try {
+                Socket clientSocket = new Socket(GlobalPreferences.SERVER_PRINTER_IP, 9100);
+                Main.this.runOnUiThread(() -> {
+                    if(clientSocket.isBound()){
+                        PrinterConnected = true;
+                        PrinterResult();
+                    }else{
+                        PrinterConnected = false;
+                        PrinterResult();
+                    }
+                });
+            } catch (IOException e) {
+                Log.e("Alta", "Error 'CheckPrinter();' -> " + e.getMessage());
+                Main.this.runOnUiThread(() -> {
+                    PrinterConnected = false;
+                    PrinterResult();
+                });
+            }
+        });
+        check.start();
+    }
+
+    private void PrinterResult(){
+        if(PrinterConnected){
+            BeginUpload();
+        }else{
+            progressDialog.dismiss();
+            BottomSheetDialog bsd = new BottomSheetDialog(this);
+            bsd.setContentView(R.layout.bsd_no_printer);
+            bsd.setCancelable(false);
+            ((TextView)bsd.findViewById(R.id.txt)).setText("¡Alerta!\nNo se ha podido enlazar la impresora con la IP\n"+GlobalPreferences.SERVER_PRINTER_IP);
+            bsd.findViewById(R.id.btn_continuar).setOnClickListener(v1->{
+                BeginUpload();
+                bsd.dismiss();
+            });
+            bsd.findViewById(R.id.btn_cancel).setOnClickListener(v2->{
+                bsd.dismiss();
+            });
+            bsd.show();
+        }
+    }
+
     private void BeginUpload(){
         progressDialog.setMessage("Subiendo información...");
+        progressDialog.show();
         ContadorNewCAF = 0;
         try {
             /**CREAMOS JSON*/
@@ -314,7 +328,7 @@ public class Main extends AppCompatActivity {
         ContadorNewCAF = ContadorNewCAF + 1;
         try {
             if(jsonCAF.getString("ProductLoaded").equals("false")){
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(upload_new_caf.class).setData(jsonCAF.toString(), new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AltaActivo/").build().create(upload_new_caf.class).setData(jsonCAF.toString(), new TypedFile("multipart/form-data", file_img_1), new TypedFile("multipart/form-data", file_img_2), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         handelUploadResponse(response);
@@ -328,7 +342,7 @@ public class Main extends AppCompatActivity {
                     }
                 });
             }else{
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/").build().create(upload_caf.class).setData(jsonCAF.toString(), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/AltaActivo/").build().create(upload_caf.class).setData(jsonCAF.toString(), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         handelUploadResponse(response);
@@ -383,7 +397,7 @@ public class Main extends AppCompatActivity {
     private void getTipos() {
         main_list_tipos = new ArrayList<>();
         menu_tipos = new PopupMenu(this, btn_tipo_activo);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getTipos.php", null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/AltaActivo/getTipos.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -460,7 +474,7 @@ public class Main extends AppCompatActivity {
     private void getAreas() {
         main_list_areas = new ArrayList<>();
         menu_area = new PopupMenu(this, spinner_departamento);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getAreas.php?IdCedis="+GlobalPreferences.ID_CEDIS, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -501,7 +515,7 @@ public class Main extends AppCompatActivity {
     private void getOficinas() {
         main_list_oficinas = new ArrayList<>();
         menu_oficinas = new PopupMenu(this, spinner_oficina);
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/Loaders/getOficinas.php?IdArea="+IdArea, null, response -> {
             JSONArray json = response.optJSONArray("Data");
 
             try {
@@ -641,7 +655,7 @@ public class Main extends AppCompatActivity {
 
     private void searchItem(String key) {
         main_list_buscador = new ArrayList<>();
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmanCAF/webservices/AltaActivo/getSearch.php?key=" + key, null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL+"/HellmannCAF/webservices/AltaActivo/getSearch.php?key=" + key, null, response -> {
             JSONArray json= response.optJSONArray("Data");
             try {
 
@@ -777,7 +791,7 @@ public class Main extends AppCompatActivity {
                 setUpResult(child_list.get(position));
             });
 
-            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/"+child_list.get(position).getNumero()).override(160).into(holder.img_activo);
+            Glide.with(child_context).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/"+child_list.get(position).getNumero()).placeholder(R.drawable.empty_photo).override(160).into(holder.img_activo);
 
             holder.nombre.setText(child_list.get(position).getNombre());
             holder.descripcion.setText(child_list.get(position).getDescripcion());
@@ -816,7 +830,7 @@ public class Main extends AppCompatActivity {
         NumeroActivo = result.getNumero();
         TipoActivo = result.getTipo();
         DescripcionActivo = result.getDescripcion();
-        Glide.with(this).load(GlobalPreferences.URL+"/HellmanCAF/assets/Activo/" + result.getNumero()).override(360).into(img_preview);
+        Glide.with(this).load(GlobalPreferences.URL+"/HellmannCAF/assets/Activo/" + result.getNumero()).placeholder(R.drawable.empty_photo).override(360).into(img_preview);
         txt_descripcion_preview.setText(DescripcionActivo);
         txt_numero_preview.setText("Número de activo: "+NumeroActivo);
         Card_Tipo.setVisibility(View.GONE);

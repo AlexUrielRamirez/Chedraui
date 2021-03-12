@@ -72,7 +72,7 @@ public class Main extends AppCompatActivity {
             txt_error.setVisibility(View.GONE);
             if(et_usuario.getText().length() > 0 && et_contrasena.getText().length() > 0){
                 progressDialog.show();
-                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmanCAF/webservices/Login").build().create(api_network.class).setData(et_usuario.getText().toString(), et_contrasena.getText().toString(), new Callback<Response>() {
+                new RestAdapter.Builder().setEndpoint(GlobalPreferences.URL+"/HellmannCAF/webservices/Login").build().create(api_network.class).setData(et_usuario.getText().toString(), et_contrasena.getText().toString(), new Callback<Response>() {
                     @Override
                     public void success(Response response, Response response2) {
                         try{

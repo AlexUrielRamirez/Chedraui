@@ -61,7 +61,7 @@ public class Main extends AppCompatActivity {
         findViewById(R.id.btn_onbackpressed).setOnClickListener(v -> Main.this.finish());
         rv_historial = findViewById(R.id.rv_historial);
         rv_historial.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL + "/HellmanCAF/webservices/Historial/getHistorial.php", null, response -> {
+        Volley.newRequestQueue(this).add(new JsonObjectRequest(Request.Method.GET, GlobalPreferences.URL + "/HellmannCAF/webservices/Historial/getHistorial.php", null, response -> {
             JSONArray json = response.optJSONArray("Data");
             main_list = new ArrayList<>();
             try {
@@ -126,7 +126,7 @@ public class Main extends AppCompatActivity {
             }
             String info = "El usuario " + main_list.get(position).getNombreUsuario() ;
             holder.txt_info.setText(info + TypeAction);
-            Glide.with(Main.this).load("http://rfidmx.com/HellmanCAF/assets/Activo/0623").override(240).placeholder(R.drawable.empty_photo).into(holder.img_activo);
+            Glide.with(Main.this).load("http://rfidmx.com/HellmannCAF/assets/Activo/0623").override(240).placeholder(R.drawable.empty_photo).into(holder.img_activo);
             holder.txt_descripcion.setText(main_list.get(position).getDescripcionActivo());
         }
 

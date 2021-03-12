@@ -12,7 +12,7 @@ public class GlobalPreferences {
     public static boolean DEVELOP_MODE = false;
 
     public static String DEVICE;
-    public static String URL = GlobalPreferences.URL+"/HellmanCAF/webservices/";
+    public static String URL = GlobalPreferences.URL+"/HellmannCAF/webservices/";
     public static String SERVER_PRINTER_IP;
 
     public static String ID_USUARIO;
