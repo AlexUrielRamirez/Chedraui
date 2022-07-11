@@ -4,17 +4,45 @@
     android:id="@+id/MainHolder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.Hellman.CAFv2.CAF_Inventario"
+    tools:context="com.SCAF.CAFv2.CAF_Inventario"
     android:background="@color/white">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:id="@+id/Header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/blue_selected"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btn_onbackpressed"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:src="@drawable/back_blanco" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:text="Inventario"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/Header"
+        android:padding="7dp"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -95,258 +123,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/cardView"
-        app:layout_constraintTop_toBottomOf="@id/Header"
-        android:padding="7dp"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/PanelDetalle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/Header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/white"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/img_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/hellman_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/nombre_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="13.5sp"
-            android:textColor="@color/black"
-            android:text="Nombre"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_detalle" />
-        <TextView
-            android:id="@+id/descripcion_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="13.5sp"
-            android:textColor="@color/black"
-            android:text="Nombre"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nombre_detalle" />
-        <TextView
-            android:id="@+id/almacen_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="13.5sp"
-            android:textColor="@color/black"
-            android:text="Nombre"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/descripcion_detalle" />
-        <TextView
-            android:id="@+id/categoria_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="13.5sp"
-            android:textColor="@color/black"
-            android:text="Nombre"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/almacen_detalle" />
-
-        <Button
-            android:id="@+id/btn_buscar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blue_selected"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categoria_detalle"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="Buscar"
-            android:textColor="@color/white"
-            android:drawableLeft="@drawable/wifi_blanco"
-            android:padding="10dp"/>
-        <Button
-            android:id="@+id/btn_insidencia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffbf00"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_buscar"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="Crear Incidencia"
-            android:textColor="@color/white"
-            android:drawableLeft="@drawable/folder_blanco"
-            android:padding="10dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_buscador"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/Header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/white"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/holder_epc_buscador"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="10dp"
-            android:background="@drawable/fake_card_white"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="Buscando EPC" />
-
-            <TextView
-                android:id="@+id/txt_epc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="0000000000000000000000"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/holder_potencia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/fake_card_white"
-            android:orientation="vertical"
-            android:padding="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/holder_epc_buscador">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="Ajuste de potencia" />
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginStart="10dp"
-                android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/txt_indicador_potencia"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="30"
-                    android:textColor="@color/black"/>
-                <SeekBar
-                    android:id="@+id/sb_potencia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="30"
-                    android:progress="30"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/Potencia"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="50dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/vertical_progress_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/holder_potencia" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="100db -"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/Potencia"
-            app:layout_constraintTop_toTopOf="@+id/Potencia" />
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="75db -"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/Potencia"
-            app:layout_constraintTop_toBottomOf="@+id/textView14"
-            app:layout_constraintBottom_toTopOf="@id/textView16"/>
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="50db -"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/Potencia"
-            app:layout_constraintTop_toBottomOf="@+id/textView15"
-            app:layout_constraintBottom_toTopOf="@id/textView17"/>
-
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="50db -"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/textView18"
-            app:layout_constraintEnd_toStartOf="@+id/Potencia"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="0db -"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/Potencia"
-            app:layout_constraintEnd_toStartOf="@+id/Potencia" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Panel_ubicacion"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clickable="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -453,40 +235,8 @@
                 android:textStyle="bold"/>
 
         </LinearLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/Panel_descarga"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:background="@color/white"
-            android:focusable="true"
-            android:visibility="gone">
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lottie"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="loading_airplane.json"
-                app:lottie_loop="true" />
-
-            <TextView
-                android:id="@+id/txt_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:textColor="@color/black"
-                android:text="Cargando..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lottie" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <RelativeLayout
         android:id="@+id/fragment_holder"
@@ -496,32 +246,179 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/Header"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PanelDetalle"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/blue_selected"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/Header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white"
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/btn_onbackpressed"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:src="@drawable/back_blanco" />
+            android:id="@+id/img_detalle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/pepsico_logo_filled"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"/>
 
         <TextView
+            android:id="@+id/nombre_detalle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:text="Inventario"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="13.5sp"
+            android:textColor="@color/black"
+            android:text="Nombre"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_detalle" />
 
+        <TextView
+            android:id="@+id/descripcion_detalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Nombre"
+            android:textColor="@color/black"
+            android:textSize="13.5sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_detalle"
+            app:layout_constraintTop_toTopOf="@+id/img_detalle" />
+
+        <TextView
+            android:id="@+id/almacen_detalle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_detalle" />
+        <TextView
+            android:id="@+id/categoria_detalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="13.5sp"
+            android:textColor="@color/black"
+            android:text="Nombre"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/almacen_detalle" />
+
+        <Button
+            android:id="@+id/btn_buscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_selected"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/categoria_detalle"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Buscar"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/wifi_blanco"
+            android:padding="10dp"/>
+        <Button
+            android:id="@+id/btn_insidencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_white_round_corners_stroke_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_buscar"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Crear Incidencia"
+            android:textColor="@color/black"
+            android:drawableLeft="@drawable/folder_black"
+            android:padding="10dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Panel_descarga"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@color/white"
+        android:focusable="true"
+        android:visibility="visible">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="loading_airplane.json"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/txt_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:textColor="@color/black"
+            android:text="Iniciando variables..."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lottie" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/panel_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/btn_volver_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@drawable/back_simple_black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atrás"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_volver_empty"
+            app:layout_constraintStart_toEndOf="@+id/btn_volver_empty"
+            app:layout_constraintTop_toTopOf="@+id/btn_volver_empty" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/empty_lottie"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_fileName="astronaut_empty.json"
+            app:lottie_loop="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="¡Vaya!\nNo hay información para mostrar"
+            android:layout_marginTop="10dp"
+            android:textSize="17sp"
+            app:layout_goneMarginTop="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_lottie" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

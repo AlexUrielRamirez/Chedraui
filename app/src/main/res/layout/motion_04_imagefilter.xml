@@ -24,8 +24,6 @@
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/image"
         android:background="@color/light_blue"
-        android:src="@drawable/ic_launcher"
-        app:altSrc="@drawable/ic_launcher"
         android:layout_width="64dp"
         android:layout_height="64dp"/>
 

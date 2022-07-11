@@ -11,29 +11,18 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="37.5dp">
+        android:layout_marginEnd="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="37.5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17.5dp"
-                android:text="¡Antes de continuar!"
-                android:textColor="@color/black"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"/>
+            android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:text="Por favor, ingrese la información correspondiente"
                 android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
                 android:textColor="@color/black"
                 android:layout_marginTop="15dp"
                 android:layout_margin="10dp"/>
@@ -47,8 +36,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="Nombre de quién genera la incidencia"/>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Sesión iniciada como:"/>
 
                 <TextView
                     android:id="@+id/et_persona_alta"
@@ -60,6 +50,34 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Motivo de incidencia"
+                    android:layout_marginStart="4dp"/>
+                <Spinner
+                    android:id="@+id/txt_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comentario"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"/>
+                <EditText
+                    android:id="@+id/et_comentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:background="@drawable/fake_card_white"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:hint="Ingrese un comentario"
+                    android:padding="8dp"
+                    android:layout_marginBottom="4dp"/>
             </LinearLayout>
 
             <TextView
@@ -72,11 +90,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="8dp"
-                android:layout_margin="10dp">
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
                 <com.github.gcacace.signaturepad.views.SignaturePad
                     android:id="@+id/signature_pad"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="90dp"
                     app:penColor="@android:color/black"
                     android:background="@color/gray_light"/>
                 <ImageView
@@ -92,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="8dp">
                 <TextView
                     android:id="@+id/btn_volver"
                     android:layout_width="match_parent"
@@ -102,7 +121,7 @@
                     android:background="@color/rojo_etiflex"
                     android:layout_marginTop="25dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginEnd="10dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:layout_gravity="center_horizontal"
@@ -118,7 +137,7 @@
                     android:background="@color/blue_selected"
                     android:layout_marginTop="25dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginEnd="10dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:layout_gravity="center_horizontal"
@@ -130,19 +149,5 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_centerHorizontal="true"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="false"
-        app:lottie_fileName="alert_lottie.json"
-        android:elevation="2dp"/>
-    <View
-        android:layout_width="77dp"
-        android:layout_height="77dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/shape_blank_circle"/>
 
 </RelativeLayout>

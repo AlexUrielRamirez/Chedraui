@@ -29,7 +29,7 @@
         android:layout_height="200dp"
         android:background="@color/menu_purple"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_done_white_48dp" />
 
     <TextView
         android:id="@+id/label"

@@ -10,9 +10,19 @@
     <color name="menu_orange">#FFA500</color>
     <color name="menu_purple">#b6378e</color>
 
+    <color name="main">#E73F2C</color>
+    <color name="main_contrast">#a83528</color>
+
     <color name="gray_light">#c2c2c2</color>
     <color name="gray_extra_light">#D2D2D2</color>
     <color name="blue_selected">#1157A2</color>
     <color name="green_2">#4BD05E</color>
+
+    <color name="dark_contrast">#313E46</color>
+    <color name="dark_main">#181818</color>
+
+    <color name="main_yellow_dhl">#1066A9</color>
+    <color name="main_red_dhl">#FFFFFF</color>
+    <color name="volaris_main">#a22a84</color>
 
 </resources>

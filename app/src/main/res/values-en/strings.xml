@@ -7,8 +7,20 @@
     <drawable name="list_normal">#00000000</drawable>
     <drawable name="list_pressed">#FF333333</drawable>
 
-    <string name="app_name">hellmann CAF</string>
+    <string name="app_name">Volaris Bag Track</string>
     <string name="menu_settings">Settings</string>
+
+    <string-array name="status_strings">
+        <item>Ocioso</item>
+        <item>Obsoleto</item>
+        <item>Proceso de Vta</item>
+        <item>Inventariado</item>
+        <item>Faltante</item>
+        <item>Sobrante</item>
+        <item>Depreciación Acelerada</item>
+        <item>Reactivación</item>
+        <item>Escisión</item>
+    </string-array>
 
     <!--new adds data-->
     <string name="start_scan">Start scan</string>

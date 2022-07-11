@@ -64,7 +64,7 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintVertical_bias="0.24000001"
             motion:layout_constraintVertical_chainStyle="packed"
-            motion:srcCompat="@drawable/ic_launcher" />
+            motion:srcCompat="@drawable/ic_done_white_48dp" />
 
         <Constraint
             android:id="@id/textView"

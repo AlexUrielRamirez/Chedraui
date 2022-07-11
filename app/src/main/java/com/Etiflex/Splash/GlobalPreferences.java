@@ -3,20 +3,31 @@ package com.Etiflex.Splash;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Etiflex.Splash.ROC.ModelInventory;
-import com.Hellman.CAFv2.Historial.ControladorHistorial;
+import com.SCAF.CAFv2.Historial.ControladorHistorial;
+import com.SCAF.CAFv2.Inventario.Main;
+import com.SCAF.SQLiteTools.SQLiteHelper;
 
 import java.util.ArrayList;
 
 public class GlobalPreferences {
 
     public static boolean DEVELOP_MODE = false;
+    public static Main.ModelInventario current_inventory_item;
+    public static com.SCAF.CAFv2.Administracion.Incidences.Main.model_incidencia current_incidencia_model;
+    public static com.SCAF.CAFv2.Administracion.Usuarios.Main.model_usuarios current_user_item;
 
     public static String DEVICE;
     public static String URL = GlobalPreferences.URL+"/HellmannCAF/webservices/";
+
+    public static String TMP_IP = "192.168.0.1";
+    public static String FILTRO_ITEM = "0";
+    public static String FILTRO_CAJA = "0";
+    public static String FILTRO_PALLET = "0";
+
     public static String SERVER_PRINTER_IP;
 
     public static String ID_USUARIO;
-    public static String NOMBRE_USUARIO;
+    public static String NOMBRE_USUARIO = "Indefinido";
     public static String CODIGO_USUARIO;
     public static String ID_CEDIS;
     public static String NOMBRE_CEDIS;
@@ -75,5 +86,132 @@ public class GlobalPreferences {
     public static final String FRAGMENT_ALTA = "CAF_FragmentAlta";
     public static final String FRAGMENT_AJUSTES = "CAF_Ajustes";
     public static final String FRAGMENT_INVENTARIO = "CAF_Inventario";
+
+    //DATABASE VARIABLES
+
+    public static SQLiteHelper db_manager;
+
+    private class model_incidencia{
+        private String IdIncidencia;
+        private String IdActivo;
+        private String NombreActivo;
+        private String NombreAlta;
+        private String Motivo;
+        private String Comentario;
+        private String FechaAlta;
+        private String NombreBaja;
+        private String FechaBaja;
+        private String EPC;
+        private String ActivoFijo;
+        private String DenominacionDelActivoFijo;
+        private int StatusIncidencia;
+
+        public String getIdIncidencia() {
+            return IdIncidencia;
+        }
+
+        public void setIdIncidencia(String idIncidencia) {
+            IdIncidencia = idIncidencia;
+        }
+
+        public String getIdActivo() {
+            return IdActivo;
+        }
+
+        public void setIdActivo(String idActivo) {
+            IdActivo = idActivo;
+        }
+
+        public String getNombreActivo() {
+            return NombreActivo;
+        }
+
+        public void setNombreActivo(String nombreActivo) {
+            NombreActivo = nombreActivo;
+        }
+
+        public String getNombreAlta() {
+            return NombreAlta;
+        }
+
+        public void setNombreAlta(String nombreAlta) {
+            NombreAlta = nombreAlta;
+        }
+
+        public String getMotivo() {
+            return Motivo;
+        }
+
+        public void setMotivo(String motivo) {
+            Motivo = motivo;
+        }
+
+        public String getComentario() {
+            return Comentario;
+        }
+
+        public void setComentario(String comentario) {
+            Comentario = comentario;
+        }
+
+        public String getFechaAlta() {
+            return FechaAlta;
+        }
+
+        public String getNombreBaja() {
+            return NombreBaja;
+        }
+
+        public void setNombreBaja(String nombreBaja) {
+            NombreBaja = nombreBaja;
+        }
+
+        public String getFechaBaja() {
+            return FechaBaja;
+        }
+
+        public void setFechaBaja(String fechaBaja) {
+            FechaBaja = fechaBaja;
+        }
+
+        public void setFechaAlta(String fechaAlta) {
+            FechaAlta = fechaAlta;
+        }
+
+        public String getEPC() {
+            return EPC;
+        }
+
+        public void setEPC(String EPC) {
+            this.EPC = EPC;
+        }
+
+        public String getActivoFijo() {
+            return ActivoFijo;
+        }
+
+        public void setActivoFijo(String activoFijo) {
+            ActivoFijo = activoFijo;
+        }
+
+        public String getDenominacionDelActivoFijo() {
+            return DenominacionDelActivoFijo;
+        }
+
+        public void setDenominacionDelActivoFijo(String denominacionDelActivoFijo) {
+            DenominacionDelActivoFijo = denominacionDelActivoFijo;
+        }
+
+        public int getStatusIncidencia() {
+            return StatusIncidencia;
+        }
+
+        public void setStatusIncidencia(int statusIncidencia) {
+            StatusIncidencia = statusIncidencia;
+        }
+    }
+
+    public static ArrayList<String> tag_list_global = new ArrayList<>();
+    public static String DESDE = "";
 
 }

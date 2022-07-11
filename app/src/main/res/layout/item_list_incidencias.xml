@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.SCAF.CAFv2.Administracion.Incidences.ManageIncidence">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/txt_nombre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nombre activo"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="8dp"/>
+
+        <TextView
+            android:id="@+id/txt_epc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EPC: 12345123451234300000001"
+            android:textSize="15sp"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nombre" />
+
+        <TextView
+            android:id="@+id/txt_alta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Creda por: Alejandro Ramírez"
+            android:layout_margin="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_epc" />
+
+        <TextView
+            android:id="@+id/txt_motivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Motivo: Activo en mal estado"
+            android:layout_margin="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_alta" />
+
+        <TextView
+            android:id="@+id/txt_comentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="El activo en la zona se encontraba roto de las ruedas"
+            android:textStyle="italic"
+            android:layout_margin="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_motivo" />
+
+        <TextView
+            android:id="@+id/txt_estado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ESTADO"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_comentario"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/gray_light"
+            app:layout_constraintTop_toBottomOf="@id/txt_estado"
+            android:layout_margin="4dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -86,8 +86,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\neggh\AndroidStudioProjects\ETIFLEX_DEMO\app\src\main\res\drawable\hellman_icon_mini.png" />
-                                                <entry key="scalingPercent" value="46" />
+                                                <entry key="imagePath" value="C:\Users\neggh\OneDrive\Escritorio\logo_transparent.jpg" />
+                                                <entry key="scalingPercent" value="53" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -314,7 +314,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/access_time/baseline_access_time_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/qr_code/baseline_qr_code_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -324,7 +324,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_historial_negro" />
+                            <entry key="color" value="e73f2c" />
+                            <entry key="outputName" value="qr_main" />
                             <entry key="sourceFile" value="C:\Users\Integracion 2" />
                           </map>
                         </option>

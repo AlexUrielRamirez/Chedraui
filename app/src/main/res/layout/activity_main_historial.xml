@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.Hellman.CAFv2.Historial.Main">
+    tools:context="com.SCAF.CAFv2.Historial.Main">
     <LinearLayout
         android:id="@+id/Header"
         android:layout_width="match_parent"

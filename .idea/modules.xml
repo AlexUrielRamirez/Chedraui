@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ETIFLEX_DEMO.iml" filepath="$PROJECT_DIR$/.idea/modules/ETIFLEX_DEMO.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ETIFLEX_DEMO.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ETIFLEX_DEMO.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chedraui.iml" filepath="$PROJECT_DIR$/.idea/modules/Chedraui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Chedraui.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Chedraui.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Chedraui.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Chedraui.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Chedraui.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Chedraui.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Chedraui.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Chedraui.app.unitTest.iml" />
     </modules>
   </component>
 </project>

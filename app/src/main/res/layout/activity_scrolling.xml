@@ -60,117 +60,345 @@
             android:padding="10dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingTop="15dp">
-
-        <ImageView
-            android:id="@+id/logo"
+        android:background="@color/white">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginStart="25sp"
-            android:layout_marginEnd="25sp"
-            android:src="@drawable/hellman_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btn_inventario"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:background="@drawable/fake_card_white"
-            android:drawableTop="@drawable/inventario_black"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="Inventario"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/btn_alta"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/logo" />
-
-        <Button
-            android:id="@+id/btn_alta"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:background="@drawable/fake_card_white"
-            android:drawableTop="@drawable/alta_activo"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="Alta Activo"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@id/btn_inventario"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/logo"  />
-        <Button
-            android:id="@+id/btn_administracion"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:background="@drawable/fake_card_white"
-            android:drawableTop="@drawable/admin_black"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="Administración"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/btn_alta"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_inventario"
-            android:layout_marginTop="50dp"/>
-
-        <Button
-            android:id="@+id/btn_ajustes"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:background="@drawable/fake_card_white"
-            android:drawableTop="@drawable/ic_baseline_settings_24"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="Configuración"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@id/btn_inventario"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_alta"
-            android:layout_marginTop="50dp"/>
-
-        <TextView
-            android:id="@+id/btn_add_file_xls"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#257245"
-            android:drawableLeft="@drawable/excel_icon_drawable"
-            android:drawablePadding="10dp"
-            android:layout_marginTop="25dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="8dp"
-            android:text="Añadir datos desde Excel"
-            android:textColor="@color/white"
-            android:textSize="17.5sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/btn_administracion"
-            app:layout_constraintEnd_toEndOf="@id/btn_ajustes"
-            app:layout_constraintTop_toBottomOf="@id/btn_administracion" />
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"
+                android:text="Sistema de Control de Activo Fijo"
+                android:textSize="18sp"/>
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/logo_large_white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="visible"/>
 
-        <TextView
-            android:id="@+id/btn_historial"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_historial_negro"
-            android:background="@drawable/fake_card_white"
-            android:padding="10dp"
-            android:drawablePadding="8dp"
-            android:text="Historial"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_file_xls"
-            app:layout_constraintStart_toStartOf="@id/btn_administracion"
-            app:layout_constraintEnd_toEndOf="@id/btn_ajustes"
-            android:visibility="gone"
-            android:gravity="center_vertical|center_horizontal"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+                <LinearLayout
+                    android:id="@+id/btn_inventario"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_height="75dp"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_rounded_mi_gray"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_alta"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/inventory_white" />
+                        <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Inventario"
+                                    android:textColor="@color/white"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:maxLength="20"
+                                    android:text="Asegure el activo."
+                                    android:textColor="@color/white" />
+                            </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/btn_alta"
+                    android:layout_width="0dp"
+                    android:layout_height="75dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_rounded_mi_gray"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toEndOf="@id/btn_inventario"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/upload_white"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alta de activo"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="Añada nuevos activos."
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:maxLength="20"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/btn_administracion"
+                    android:layout_width="0dp"
+                    android:layout_height="75dp"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_rounded_mi_gray"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/btn_inventario"
+                    app:layout_constraintStart_toStartOf="@id/btn_inventario"
+                    app:layout_constraintTop_toBottomOf="@id/btn_inventario"
+                    android:layout_marginTop="10dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/admin_white"
+                        android:layout_marginEnd="10dp"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Administración"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="Modifique la información."
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:maxLength="20"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/btn_ajustes"
+                    android:layout_width="0dp"
+                    android:layout_height="75dp"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_rounded_mi_gray"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="@id/btn_alta"
+                    app:layout_constraintEnd_toEndOf="@id/btn_alta"
+                    app:layout_constraintTop_toBottomOf="@id/btn_alta"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ajustes_white"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ajustes"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="Ajuste los parámetros."
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:maxLength="20"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginTop="15dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/excel_background"
+                    android:scaleType="centerCrop" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/degrade_white_transparent_left_right"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:textColor="@color/black"
+                        android:text="Controle su información más fácilmente"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/black"
+                        android:text="Seleccione su archivo"
+                        android:drawableLeft="@drawable/done_green"
+                        android:textSize="18sp"
+                        android:drawablePadding="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/black"
+                        android:text="Guarde su información en sistema"
+                        android:drawableLeft="@drawable/done_green"
+                        android:textSize="18sp"
+                        android:drawablePadding="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/black"
+                        android:text="Actualice, modifique y asegure"
+                        android:drawableLeft="@drawable/done_green"
+                        android:textSize="18sp"
+                        android:drawablePadding="8dp"/>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="7dp">
+                        <TextView
+                            android:id="@+id/btn_add_file_xls"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Subir archivo Excel"
+                            android:textStyle="bold"
+                            android:textSize="17sp"
+                            android:textAllCaps="false"
+                            android:textColor="#175935"
+                            android:background="@color/white"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"/>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                app:cardBackgroundColor="#F7F7F7"
+                app:cardCornerRadius="8dp">
+                <LinearLayout
+                    android:id="@+id/contents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:textColor="@color/black"
+                        android:background="#F7F7F7"
+                        android:text="Incidencias recientes"
+                        android:textSize="17sp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#257245"
+                android:drawableLeft="@drawable/excel_icon_drawable"
+                android:drawablePadding="10dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:padding="8dp"
+                android:text="Añadir datos desde Excel"
+                android:textColor="@color/white"
+                android:textSize="17.5sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/btn_administracion"
+                app:layout_constraintEnd_toEndOf="@id/btn_ajustes"
+                app:layout_constraintTop_toBottomOf="@id/btn_administracion" />
+            <TextView
+                android:id="@+id/btn_historial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_historial_negro"
+                android:background="@drawable/fake_card_white"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:text="Historial"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/btn_add_file_xls"
+                app:layout_constraintStart_toStartOf="@id/btn_administracion"
+                app:layout_constraintEnd_toEndOf="@id/btn_ajustes"
+                android:visibility="gone"
+                android:gravity="center_vertical|center_horizontal"/>
+        </LinearLayout>
+        
+        
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/MainFragmentHolder"

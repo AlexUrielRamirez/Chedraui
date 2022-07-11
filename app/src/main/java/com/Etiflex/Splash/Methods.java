@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 
@@ -32,6 +34,11 @@ public class Methods {
         try {
             new ToneGenerator(AudioManager.STREAM_MUSIC, 100).startTone(ToneGenerator.TONE_CDMA_PIP,100);
         }catch (RuntimeException e){}
+    }
+
+    public void showKeyboard(Activity activity, EditText et){
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public void circularRevealActivity(View ROOT, RelativeLayout ColoredPanel) {

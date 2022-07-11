@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">hellmann CAF</string>
+    <string name="app_name">Volaris Bag Track</string>
     <string name="MaskNo">Máscara Deshabilitada</string>
     <string name="com_port">Puerto Serie</string>
     <string name="Read_flash_error">Error en lector Flash</string>
@@ -12,6 +12,18 @@
     <string name="action">Acción:</string>
     <string name="alert_diag_title">Alerta</string>
     <string name="already_lock">Ya bloqueado</string>
+
+    <string-array name="status_strings">
+        <item>Ocioso</item>
+        <item>Obsoleto</item>
+        <item>Proceso de Vta</item>
+        <item>Inventariado</item>
+        <item>Faltante</item>
+        <item>Sobrante</item>
+        <item>Depreciación Acelerada</item>
+        <item>Reactivación</item>
+        <item>Escisión</item>
+    </string-array>
 
     <string name="device_key">device_type</string>
     <string name="default_device_key">NA</string>

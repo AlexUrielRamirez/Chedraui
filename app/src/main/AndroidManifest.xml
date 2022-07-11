@@ -16,31 +16,77 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.Hellman.CAFv2.Historial.Main"
+        <activity android:name="com.PICKING.CatchEpc"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.CAFv2.Ajustes.Main"
+            android:name="com.PICKING.config_ip"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.CAFv2.Login.Main"
+            android:name="com.PICKING.Create.Picking_items"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.CAFv2.Alta.Main"
+            android:name="com.PICKING.Consult.Inventory"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.PICKING.Consult.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.PICKING.Create.Picking"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.PICKING.Create.Instructions"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.PICKING.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Administracion.Incidences.ManageIncidence"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Administracion.Incidences.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Administracion.Usuarios.NewUser"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Administracion.Usuarios.EditUser"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Administracion.Usuarios.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.ToolEPCLauncher"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Inventario.Details"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Historial.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Ajustes.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Login.Main"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.SCAF.CAFv2.Alta.Main"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.Hellman.CAFv2.BuscadorEPC.Buscador"
+            android:name="com.SCAF.CAFv2.BuscadorEPC.Buscador"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.CAFv2.Administracion.Main"
+            android:name="com.SCAF.CAFv2.Administracion.Main"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.CAFv2.Inventario.Main"
+            android:name="com.SCAF.CAFv2.Inventario.Main"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
-            android:name="com.Hellman.GenericFileProvider"
+            android:name="com.SCAF.GenericFileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -50,10 +96,10 @@
         </provider>
 
         <activity
-            android:name="com.Hellman.ControlActivoFijo"
+            android:name="com.SCAF.ControlActivoFijo"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.Hellman.Hellman"
+            android:name="com.SCAF.MainMenu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <service

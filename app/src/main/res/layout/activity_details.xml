@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.SCAF.CAFv2.Inventario.Details">
+    <LinearLayout
+        android:id="@+id/Header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/blue_selected"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btn_onbackpressed"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:src="@drawable/back_blanco" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:text="Detalle del activo"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#E6E6E6"
+        app:layout_constraintTop_toBottomOf="@id/Header"
+        app:layout_constraintBottom_toTopOf="@id/constraintLayout4">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/PanelDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView5"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/pepsico_logo_filled" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txt_denominacion"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Denominación del activo"
+                android:textColor="#327BC3"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cardView5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cardView5"
+                app:layout_constraintTop_toTopOf="@+id/cardView5" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView5"
+                android:layout_marginTop="12dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="Inforrmación del activo"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:background="@color/gray_light"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:id="@+id/txt_sociedad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Sociedad: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_activo_fijo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Activo fijo: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_sn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="SN°"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_fecha_capitalizacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Fecha capitalización: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_valor_adquisicion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Valor de adquisición: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_valor_libros"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Valor libros: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_supra_af"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Supra AF: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_no_serie"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="No. Serie: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_no_inventario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="No. Inventario: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_nota_inventario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Nota inventario: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_emplazamiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Emplazamiento: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_local"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Local: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                    <TextView
+                        android:id="@+id/txt_clase_af"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Clase AF: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#AEBFE1"/>
+                    <TextView
+                        android:id="@+id/txt_centro_coste"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Centro coste: "
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:background="#F7F7F7"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/btn_buscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/blue_selected"
+            android:drawableLeft="@drawable/wifi_blanco"
+            android:padding="10dp"
+            android:text="Buscar"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_incidencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/card_white_round_corners_stroke_gray"
+            android:drawableLeft="@drawable/folder_black"
+            android:padding="10dp"
+            android:text="Crear Incidencia"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_buscar"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
